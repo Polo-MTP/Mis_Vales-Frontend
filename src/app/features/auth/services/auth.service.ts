@@ -62,7 +62,25 @@ export class AuthService {
         this.router.navigate(['/distribuidora']);
         break;
       default:
-        this.router.navigate(['/auth/login']);
+        if (this.isAuthenticated()) {
+          this.fetchCurrentUser().subscribe({
+            next: () => {
+              const updatedRole = this.userRole();
+              if (updatedRole === 'Administrador') this.router.navigate(['/administrador']);
+              else if (updatedRole === 'Gerente General' || updatedRole === 'Gerente de Sucursal') this.router.navigate(['/gerente']);
+              else if (updatedRole === 'Coordinador') this.router.navigate(['/coordinador']);
+              else if (updatedRole === 'Verificador') this.router.navigate(['/verificador']);
+              else if (updatedRole === 'Distribuidora') this.router.navigate(['/distribuidora']);
+              else this.router.navigate(['/gerente']);
+            },
+            error: () => {
+              this.clearSession();
+              this.router.navigate(['/auth/login']);
+            }
+          });
+        } else {
+          this.router.navigate(['/auth/login']);
+        }
         break;
     }
   }
