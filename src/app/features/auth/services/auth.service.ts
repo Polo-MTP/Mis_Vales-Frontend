@@ -42,6 +42,32 @@ export class AuthService {
     this.currentUser.set(null);
   }
 
+  redirectUserByRole(): void {
+    const role = this.userRole();
+    switch (role) {
+      case 'Administrador':
+        this.router.navigate(['/administrador']);
+        break;
+      case 'Gerente General':
+      case 'Gerente de Sucursal':
+        this.router.navigate(['/gerente']);
+        break;
+      case 'Coordinador':
+        this.router.navigate(['/coordinador']);
+        break;
+      case 'Verificador':
+        this.router.navigate(['/verificador']);
+        break;
+      case 'Distribuidora':
+        this.router.navigate(['/distribuidora']);
+        break;
+      default:
+        this.router.navigate(['/auth/login']);
+        break;
+    }
+  }
+
+
   login(credentials: { email: string; password: string; recaptcha?: string }): Observable<ApiResponse<LoginResultData>> {
     return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/login`, credentials).pipe(
       tap(res => {

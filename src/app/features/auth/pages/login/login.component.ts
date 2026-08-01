@@ -143,7 +143,7 @@ export class LoginComponent {
         }
 
         if (res.success && res.data?.token) {
-          this.router.navigate(['/dashboard']);
+          this.authService.redirectUserByRole();
         }
       },
       error: (err) => {
@@ -168,7 +168,7 @@ export class LoginComponent {
         }
 
         if (res.success && res.data?.token) {
-          this.router.navigate(['/dashboard']);
+          this.authService.redirectUserByRole();
         }
       },
       error: (err) => {
@@ -187,7 +187,7 @@ export class LoginComponent {
       next: (res) => {
         this.isLoading.set(false);
         if (res.success && res.data?.token) {
-          this.router.navigate(['/dashboard']);
+          this.authService.redirectUserByRole();
         }
       },
       error: (err) => {

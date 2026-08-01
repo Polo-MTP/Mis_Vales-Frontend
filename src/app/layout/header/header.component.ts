@@ -13,7 +13,7 @@ import { AuthService } from '../../features/auth/services/auth.service';
         
         <!-- Logo Brand -->
         <div class="flex items-center space-x-3">
-          <a routerLink="/dashboard" class="flex items-center space-x-2 group">
+          <a [routerLink]="homeRoute" class="flex items-center space-x-2 group">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
               V
             </div>
@@ -59,6 +59,18 @@ import { AuthService } from '../../features/auth/services/auth.service';
 })
 export class HeaderComponent {
   authService = inject(AuthService);
+
+  get homeRoute(): string {
+    switch (this.authService.userRole()) {
+      case 'Administrador': return '/administrador';
+      case 'Gerente General':
+      case 'Gerente de Sucursal': return '/gerente';
+      case 'Coordinador': return '/coordinador';
+      case 'Verificador': return '/verificador';
+      case 'Distribuidora': return '/distribuidora';
+      default: return '/auth/login';
+    }
+  }
 
   logout(): void {
     this.authService.logout();
