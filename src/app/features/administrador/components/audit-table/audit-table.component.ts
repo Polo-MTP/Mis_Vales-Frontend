@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService } from '../../../auth/services/auth.service';
 import { LoginAttempt, PaginatedResponse } from '../../../../core/models/user.model';
 
 @Component({
@@ -59,7 +59,7 @@ import { LoginAttempt, PaginatedResponse } from '../../../../core/models/user.mo
         </table>
       </div>
 
-      <!-- Pagination Buttons -->
+      <!-- Pagination -->
       <div *ngIf="paginationData()" class="flex items-center justify-between pt-2 text-xs text-slate-500">
         <span>Mostrando {{ paginationData()?.from || 0 }} a {{ paginationData()?.to || 0 }} de {{ paginationData()?.total || 0 }} intentos</span>
         <div class="flex items-center space-x-2">

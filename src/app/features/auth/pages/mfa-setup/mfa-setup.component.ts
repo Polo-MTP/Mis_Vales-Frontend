@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { MfaSetupData } from '../../../../core/models/auth-response.model';
 

@@ -2,9 +2,9 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
-import { User, LoginAttempt, PaginatedResponse } from '../models/user.model';
-import { ApiResponse, LoginResultData, MfaSetupData } from '../models/auth-response.model';
+import { environment } from '../../../../environments/environment';
+import { User, LoginAttempt, PaginatedResponse } from '../../../core/models/user.model';
+import { ApiResponse, LoginResultData, MfaSetupData } from '../../../core/models/auth-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +15,9 @@ export class AuthService {
 
   readonly currentUser = signal<User | null>(this.getStoredUser());
   readonly token = signal<string | null>(localStorage.getItem('token'));
-  
+
   readonly isAuthenticated = computed(() => !!this.token());
-  readonly userRole = computed(() => this.currentUser()?.role?.name || 'Invitado');
+  readonly userRole = computed(() => this.currentUser()?.role?.name || 'Sin Rol');
 
   private getStoredUser(): User | null {
     const raw = localStorage.getItem('user');
@@ -40,16 +40,6 @@ export class AuthService {
     localStorage.removeItem('user');
     this.token.set(null);
     this.currentUser.set(null);
-  }
-
-  register(data: { name: string; email: string; password: string; password_confirmation: string; recaptcha?: string }): Observable<ApiResponse<{ user: User; token: string }>> {
-    return this.http.post<ApiResponse<{ user: User; token: string }>>(`${environment.apiUrl}/register`, data).pipe(
-      tap(res => {
-        if (res.success && res.data?.token && res.data?.user) {
-          this.setSession(res.data.user, res.data.token);
-        }
-      })
-    );
   }
 
   login(credentials: { email: string; password: string; recaptcha?: string }): Observable<ApiResponse<LoginResultData>> {

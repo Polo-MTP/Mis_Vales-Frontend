@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 
 @Component({
@@ -46,12 +46,6 @@ import { AlertComponent } from '../../../../shared/components/alert/alert.compon
             <span *ngIf="!isLoading()">Continuar</span>
             <span *ngIf="isLoading()">Verificando credenciales...</span>
           </button>
-
-          <div class="text-center pt-2">
-            <a routerLink="/auth/register" class="text-xs font-semibold text-blue-600 hover:text-blue-700">
-              ¿No tienes cuenta? Regístrate aquí
-            </a>
-          </div>
         </form>
 
         <!-- PASO 2: Verificación TOTP -->
