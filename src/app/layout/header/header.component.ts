@@ -45,11 +45,8 @@ import { AuthService } from '../../features/auth/services/auth.service';
 
         <!-- Guest Links -->
         <div *ngIf="!authService.isAuthenticated()" class="flex items-center space-x-3">
-          <a routerLink="/auth/login" class="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-blue-600 transition-colors">
+          <a routerLink="/auth/login" class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md shadow-blue-500/20 transition-all duration-200">
             Iniciar Sesión
-          </a>
-          <a routerLink="/auth/register" class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md shadow-blue-500/20 transition-all duration-200">
-            Crear Cuenta
           </a>
         </div>
 
