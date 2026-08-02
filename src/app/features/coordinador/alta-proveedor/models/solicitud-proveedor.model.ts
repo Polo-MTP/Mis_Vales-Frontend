@@ -1,0 +1,96 @@
+export interface Direccion {
+  id: number | null;
+  calle: string | null;
+  colonia: string | null;
+  numero_ext: string | null;
+  numero_int: string | null;
+  codigo_postal: string | null;
+  estado: string | null;
+  ciudad: string | null;
+}
+
+export interface DatosPersonales {
+  id: number | null;
+  nombre: string | null;
+  apellido_paterno: string | null;
+  apellido_materno: string | null;
+  curp: string | null;
+  fecha_nacimiento: string | null;
+  lugar_nacimiento: string | null;
+  direccion: Direccion;
+}
+
+export interface UsuarioResumen {
+  id: number | null;
+  name: string | null;
+  email: string | null;
+}
+
+export interface Sucursal {
+  id: number | null;
+  nombre: string | null;
+  codigo: string | null;
+  es_matriz: boolean | null;
+}
+
+export interface Evidencia {
+  tipo_documento: string;
+  url_archivo: string;
+}
+
+export interface LogAuditoria {
+  entidad_tipo: string;
+  campo: string;
+  valor_anterior: string | null;
+  valor_nuevo: string | null;
+  accion: string;
+  motivo?: string | null;
+  fecha_hora: string;
+  dispositivo?: string | null;
+}
+
+export type EstadoSolicitud =
+  | 'pendiente_verificacion'
+  | 'en_verificacion'
+  | 'verificado'
+  | 'rechazado'
+  | 'aprobado';
+
+export interface SolicitudProveedor {
+  id: number;
+  estado: EstadoSolicitud;
+  cumple: boolean | null;
+  comentario_verificador: string | null;
+  fecha_verificacion: string | null;
+  decision_gerente: string | null;
+  comentario_gerente: string | null;
+  limite_credito_asignado: number | null;
+  fecha_decision: string | null;
+  sucursal: Sucursal;
+  datos_personales: DatosPersonales;
+  coordinador: UsuarioResumen;
+  verificador: UsuarioResumen;
+  gerente: UsuarioResumen;
+  evidencias: Evidencia[];
+  logs_auditoria: LogAuditoria[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CrearSolicitudProveedorPayload {
+  nombre: string;
+  apellido_paterno: string;
+  apellido_materno?: string;
+  curp: string;
+  fecha_nacimiento?: string;
+  lugar_nacimiento?: string;
+  calle: string;
+  colonia: string;
+  numero_ext: string;
+  numero_int?: string;
+  codigo_postal: string;
+  estado: string;
+  ciudad: string;
+  verificador_id?: number;
+  evidencias?: Evidencia[];
+}
