@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { SolicitudService } from '../../services/solicitud.service';
-import { CrearSolicitudProveedorPayload } from '../../models/solicitud-proveedor.model';
+import { CrearSolicitudProveedorPayload } from '../../../../../core/models/solicitud-proveedor.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 
 @Component({
