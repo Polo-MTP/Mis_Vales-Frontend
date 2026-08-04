@@ -94,3 +94,32 @@ export interface CrearSolicitudProveedorPayload {
   verificador_id?: number;
   evidencias?: Evidencia[];
 }
+
+export interface EditarDatosPersonalesPayload {
+  nombre?: string;
+  apellido_paterno?: string;
+  apellido_materno?: string;
+  curp?: string;
+  fecha_nacimiento?: string;
+  lugar_nacimiento?: string;
+}
+
+export interface EditarDireccionPayload {
+  calle?: string;
+  colonia?: string;
+  numero_ext?: string;
+  numero_int?: string;
+  codigo_postal?: string;
+  estado?: string;
+  ciudad?: string;
+}
+
+export interface VerificarSolicitudPayload {
+  cumple: boolean;
+  comentario_verificador: string;
+  dispositivo?: string;
+  motivo_edicion?: string;
+  datos_personales?: EditarDatosPersonalesPayload;
+  direccion?: EditarDireccionPayload;
+  evidencias?: Evidencia[];
+}
