@@ -59,6 +59,12 @@ export type EstadoSolicitud =
 export interface SolicitudProveedor {
   id: number;
   estado: EstadoSolicitud;
+  razon_social: string | null;
+  rfc: string | null;
+  datos_familiares: Record<string, unknown> | null;
+  datos_vehiculos: Record<string, unknown> | null;
+  datos_vivienda: Record<string, unknown> | null;
+  referencia_laboral: string | null;
   cumple: boolean | null;
   comentario_verificador: string | null;
   fecha_verificacion: string | null;
@@ -78,6 +84,8 @@ export interface SolicitudProveedor {
 }
 
 export interface CrearSolicitudProveedorPayload {
+  razon_social: string;
+  rfc: string;
   nombre: string;
   apellido_paterno: string;
   apellido_materno?: string;
@@ -91,6 +99,10 @@ export interface CrearSolicitudProveedorPayload {
   codigo_postal: string;
   estado: string;
   ciudad: string;
+  referencia_laboral?: string;
+  datos_familiares?: Record<string, unknown>;
+  datos_vehiculos?: Record<string, unknown>;
+  datos_vivienda?: Record<string, unknown>;
   verificador_id?: number;
   evidencias?: Evidencia[];
 }

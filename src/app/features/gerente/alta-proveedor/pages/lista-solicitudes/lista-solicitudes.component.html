@@ -1,0 +1,76 @@
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+  <!-- Header -->
+  <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+    <h1 class="text-2xl font-black text-slate-800 tracking-tight">Solicitudes de Nuevo Distribuidor</h1>
+    <p class="text-xs text-slate-500 font-medium mt-1">Revisa el expediente y decide aprobar o rechazar.</p>
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex flex-wrap gap-2">
+    <button type="button" (click)="cambiarFiltro('verificado')"
+            [class.bg-blue-600]="filtroEstado() === 'verificado'"
+            [class.text-white]="filtroEstado() === 'verificado'"
+            [class.bg-white]="filtroEstado() !== 'verificado'"
+            [class.text-slate-600]="filtroEstado() !== 'verificado'"
+            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold transition-all">
+      Por Aprobar
+    </button>
+    <button type="button" (click)="cambiarFiltro('aprobado')"
+            [class.bg-blue-600]="filtroEstado() === 'aprobado'"
+            [class.text-white]="filtroEstado() === 'aprobado'"
+            [class.bg-white]="filtroEstado() !== 'aprobado'"
+            [class.text-slate-600]="filtroEstado() !== 'aprobado'"
+            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold transition-all">
+      Aprobadas
+    </button>
+    <button type="button" (click)="cambiarFiltro('rechazado')"
+            [class.bg-blue-600]="filtroEstado() === 'rechazado'"
+            [class.text-white]="filtroEstado() === 'rechazado'"
+            [class.bg-white]="filtroEstado() !== 'rechazado'"
+            [class.text-slate-600]="filtroEstado() !== 'rechazado'"
+            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold transition-all">
+      Rechazadas
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando()" class="text-center py-16 text-slate-400 text-sm">
+    Cargando solicitudes...
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!cargando() && error()" class="bg-red-50 text-red-700 border border-red-200 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <!-- Vacío -->
+  <div *ngIf="!cargando() && !error() && solicitudes().length === 0"
+       class="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center text-sm text-slate-400">
+    No hay solicitudes en este estado.
+  </div>
+
+  <!-- Lista -->
+  <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="space-y-3">
+    <div *ngFor="let s of solicitudes()" (click)="irADetalle(s.id)"
+         class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm
+                hover:shadow-md hover:border-blue-300 transition-all cursor-pointer
+                flex items-center justify-between gap-4">
+      <div>
+        <p class="font-bold text-slate-800">
+          {{ s.datos_personales.nombre }} {{ s.datos_personales.apellido_paterno }} {{ s.datos_personales.apellido_materno }}
+        </p>
+        <p class="text-xs text-slate-500 mt-0.5">
+          {{ s.sucursal.nombre }} · CURP: {{ s.datos_personales.curp }}
+        </p>
+        <p class="text-xs text-slate-400 mt-0.5">
+          Coordinador: {{ s.coordinador.name }} · Verificador: {{ s.verificador.name || 'Sin asignar' }}
+        </p>
+      </div>
+      <span class="shrink-0 text-xs font-bold px-3 py-1.5 rounded-full bg-slate-100 text-slate-600">
+        {{ s.estado }}
+      </span>
+    </div>
+  </div>
+
+</div>

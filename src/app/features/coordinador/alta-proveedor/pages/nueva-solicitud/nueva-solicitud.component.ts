@@ -26,6 +26,8 @@ export class NuevaSolicitudComponent {
   tiposDocumento = ['ine_frente', 'ine_reverso', 'comprobante_domicilio'];
 
   form = this.fb.group({
+    razon_social: ['', [Validators.required, Validators.maxLength(255)]],
+    rfc: ['', [Validators.required, Validators.minLength(13), Validators.maxLength(13)]],
     nombre: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_paterno: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_materno: ['', [Validators.maxLength(255)]],
@@ -39,6 +41,7 @@ export class NuevaSolicitudComponent {
     codigo_postal: ['', [Validators.required, Validators.maxLength(10)]],
     estado: ['', [Validators.required, Validators.maxLength(255)]],
     ciudad: ['', [Validators.required, Validators.maxLength(255)]],
+    referencia_laboral: ['', [Validators.maxLength(255)]],
     verificador_id: [''],
     evidencias: this.fb.array([])
   });
@@ -77,6 +80,8 @@ export class NuevaSolicitudComponent {
 
     const val = this.form.value;
     const payload: CrearSolicitudProveedorPayload = {
+      razon_social: val.razon_social!,
+      rfc: val.rfc!,
       nombre: val.nombre!,
       apellido_paterno: val.apellido_paterno!,
       apellido_materno: val.apellido_materno || undefined,
@@ -90,6 +95,7 @@ export class NuevaSolicitudComponent {
       codigo_postal: val.codigo_postal!,
       estado: val.estado!,
       ciudad: val.ciudad!,
+      referencia_laboral: val.referencia_laboral || undefined,
       verificador_id: val.verificador_id ? Number(val.verificador_id) : undefined,
       evidencias: this.evidencias.length > 0 ? this.evidencias.value : undefined
     };
