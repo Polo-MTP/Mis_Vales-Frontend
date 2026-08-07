@@ -22,14 +22,14 @@ export const VERIFICADOR_ROUTES: Routes = [
           ),
         title: 'Verificador - Solicitudes Pendientes'
       },
-     /* {
+      {
         path: 'verificar/:id',
         loadComponent: () =>
           import('./alta-proveedor/pages/detalle-verificacion/detalle-verificacion.component').then(
             (m) => m.DetalleVerificacionComponent
           ),
         title: 'Verificador - Inspección en Campo'
-      }*/
+      }
     ]
   }
 ];
