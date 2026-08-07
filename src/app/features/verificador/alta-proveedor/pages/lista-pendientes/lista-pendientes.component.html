@@ -29,11 +29,17 @@
       (click)="cambiarFiltro('en_verificacion')">
       En Verificación
     </button>
-    <button 
-      class="filter-chip" 
+    <button
+      class="filter-chip"
       [class.active]="filtroEstado() === 'verificado'"
       (click)="cambiarFiltro('verificado')">
       Completadas
+    </button>
+    <button
+      class="filter-chip"
+      [class.active]="filtroEstado() === 'rechazado'"
+      (click)="cambiarFiltro('rechazado')">
+      Rechazadas
     </button>
   </div>
 
@@ -101,7 +107,7 @@
               Capturado por: {{ solicitud.coordinador?.name || 'Coordinador' }}
             </span>
             <button class="btn-iniciar-visita">
-              Iniciar Visita
+              {{ solicitud.estado === 'verificado' || solicitud.estado === 'rechazado' ? 'Ver Detalle' : 'Iniciar Visita' }}
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>

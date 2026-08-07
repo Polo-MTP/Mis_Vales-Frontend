@@ -54,6 +54,10 @@ export class DetalleVerificacionComponent implements OnInit {
     return this.dictamenForm.get('evidencias') as FormArray;
   }
 
+  yaDictaminada(s: SolicitudProveedor | null = this.solicitud()): boolean {
+    return s?.estado === 'verificado' || s?.estado === 'rechazado';
+  }
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.cargarSolicitud(id);
@@ -68,6 +72,10 @@ export class DetalleVerificacionComponent implements OnInit {
         const s = res.data ?? null;
         this.solicitud.set(s);
         this.cargando.set(false);
+
+        if (s && this.yaDictaminada(s)) {
+          this.datosForm.disable();
+        }
 
         if (s) {
           this.datosForm.patchValue({

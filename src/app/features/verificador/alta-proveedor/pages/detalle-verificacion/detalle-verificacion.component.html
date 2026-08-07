@@ -85,8 +85,28 @@
       </form>
     </div>
 
+    <!-- Dictamen ya registrado (solo lectura) -->
+    <div *ngIf="yaDictaminada(s)"
+         class="rounded-3xl p-6 border shadow-sm space-y-2"
+         [class.bg-emerald-50]="s.estado === 'verificado'" [class.border-emerald-200]="s.estado === 'verificado'"
+         [class.bg-red-50]="s.estado === 'rechazado'" [class.border-red-200]="s.estado === 'rechazado'">
+      <h2 class="text-sm font-black uppercase tracking-tight"
+          [class.text-emerald-700]="s.estado === 'verificado'" [class.text-red-700]="s.estado === 'rechazado'">
+        {{ s.cumple ? 'Cumple' : 'No Cumple' }} — Dictamen ya registrado
+      </h2>
+      <p class="text-sm text-slate-700" *ngIf="s.comentario_verificador">{{ s.comentario_verificador }}</p>
+      <p class="text-xs text-slate-400">{{ s.fecha_verificacion }}</p>
+
+      <div *ngIf="s.evidencias.length > 0" class="grid grid-cols-2 gap-3 pt-2">
+        <a *ngFor="let ev of s.evidencias" [href]="ev.url_archivo" target="_blank" rel="noopener"
+           class="flex items-center justify-between bg-white/60 rounded-xl p-3 text-sm hover:bg-white transition-colors">
+          <span class="font-semibold text-slate-700">{{ ev.tipo_documento }}</span>
+        </a>
+      </div>
+    </div>
+
     <!-- Dictamen -->
-    <form [formGroup]="dictamenForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <form *ngIf="!yaDictaminada(s)" [formGroup]="dictamenForm" (ngSubmit)="onSubmit()" class="space-y-6">
 
       <app-alert [message]="errorDictamen()" type="error"></app-alert>
 
