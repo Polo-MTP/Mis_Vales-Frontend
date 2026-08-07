@@ -1,133 +1,142 @@
-<div class="dashboard-container">
-  <!-- Encabezado del Dashboard -->
-  <header class="dashboard-header">
-    <div class="header-title">
-      <h1>Panel de Inspección en Campo</h1>
-      <p>Selecciona una solicitud para realizar la visita y dictamen</p>
+<div class="w-[820px] mx-auto py-8 space-y-6">
+
+  <!-- Header -->
+  <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight">Panel de Inspección en Campo</h1>
+      <p class="text-xs text-slate-500 font-medium mt-1">Selecciona una solicitud para realizar la visita y dictamen.</p>
     </div>
-    
-    <!-- Botón de actualización manual optimizado para touch -->
-    <button class="btn-refresh" (click)="cargarSolicitudes()" [disabled]="cargando()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-refresh">
+    <button type="button" (click)="cargarSolicitudes()" [disabled]="cargando()"
+            class="shrink-0 inline-flex items-center gap-2 py-3 px-5 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-all">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
         <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
       </svg>
       Actualizar
     </button>
-  </header>
+  </div>
 
-  <!-- Barra de Filtros por Estado -->
-  <div class="filter-bar">
-    <button 
-      class="filter-chip" 
-      [class.active]="filtroEstado() === 'pendiente_verificacion'"
-      (click)="cambiarFiltro('pendiente_verificacion')">
+  <!-- Filtros -->
+  <div class="flex flex-wrap gap-2">
+    <button type="button" (click)="cambiarFiltro('pendiente_verificacion')"
+            [class.bg-blue-600]="filtroEstado() === 'pendiente_verificacion'"
+            [class.text-white]="filtroEstado() === 'pendiente_verificacion'"
+            [class.border-blue-600]="filtroEstado() === 'pendiente_verificacion'"
+            [class.bg-white]="filtroEstado() !== 'pendiente_verificacion'"
+            [class.text-slate-600]="filtroEstado() !== 'pendiente_verificacion'"
+            class="px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold transition-all">
       Pendientes
     </button>
-    <button 
-      class="filter-chip" 
-      [class.active]="filtroEstado() === 'en_verificacion'"
-      (click)="cambiarFiltro('en_verificacion')">
+    <button type="button" (click)="cambiarFiltro('en_verificacion')"
+            [class.bg-blue-600]="filtroEstado() === 'en_verificacion'"
+            [class.text-white]="filtroEstado() === 'en_verificacion'"
+            [class.border-blue-600]="filtroEstado() === 'en_verificacion'"
+            [class.bg-white]="filtroEstado() !== 'en_verificacion'"
+            [class.text-slate-600]="filtroEstado() !== 'en_verificacion'"
+            class="px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold transition-all">
       En Verificación
     </button>
-    <button
-      class="filter-chip"
-      [class.active]="filtroEstado() === 'verificado'"
-      (click)="cambiarFiltro('verificado')">
+    <button type="button" (click)="cambiarFiltro('verificado')"
+            [class.bg-blue-600]="filtroEstado() === 'verificado'"
+            [class.text-white]="filtroEstado() === 'verificado'"
+            [class.border-blue-600]="filtroEstado() === 'verificado'"
+            [class.bg-white]="filtroEstado() !== 'verificado'"
+            [class.text-slate-600]="filtroEstado() !== 'verificado'"
+            class="px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold transition-all">
       Completadas
     </button>
-    <button
-      class="filter-chip"
-      [class.active]="filtroEstado() === 'rechazado'"
-      (click)="cambiarFiltro('rechazado')">
+    <button type="button" (click)="cambiarFiltro('rechazado')"
+            [class.bg-blue-600]="filtroEstado() === 'rechazado'"
+            [class.text-white]="filtroEstado() === 'rechazado'"
+            [class.border-blue-600]="filtroEstado() === 'rechazado'"
+            [class.bg-white]="filtroEstado() !== 'rechazado'"
+            [class.text-slate-600]="filtroEstado() !== 'rechazado'"
+            class="px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold transition-all">
       Rechazadas
     </button>
   </div>
 
-  <!-- Contenido Principal -->
-  @if (cargando()) {
-    <div class="state-container">
-      <div class="spinner"></div>
-      <p>Cargando solicitudes asignadas a tu sucursal...</p>
-    </div>
-  } @else if (error()) {
-    <div class="state-container error-state">
-      <p>{{ error() }}</p>
-      <button class="btn-retry" (click)="cargarSolicitudes()">Reintentar</button>
-    </div>
-  } @else if (solicitudes().length === 0) {
-    <div class="state-container empty-state">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="icon-empty">
-        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9 2 2 4-4"/>
-      </svg>
-      <h3>Sin solicitudes en esta lista</h3>
-      <p>No hay pendientes de revisión bajo este estado actualmente.</p>
-    </div>
-  } @else {
-    <!-- Grid de Tarjetas (Tarjetas touch para tablet) -->
-    <div class="cards-grid">
-      @for (solicitud of solicitudes(); track solicitud.id) {
-        <div class="card-solicitud" (click)="irADetalle(solicitud.id)">
-          <div class="card-header">
-            <span class="badge-sucursal">
-              {{ solicitud.sucursal?.nombre || 'Sucursal General' }}
-            </span>
-            <span class="badge-estado" [attr.data-estado]="solicitud.estado">
-              {{ solicitud.estado | titlecase }}
-            </span>
-          </div>
+  <!-- Cargando -->
+  <div *ngIf="cargando()" class="text-center py-16 text-slate-400 text-sm">
+    Cargando solicitudes asignadas a tu sucursal...
+  </div>
 
-          <div class="card-body">
-            <h2 class="prospecto-nombre">
-              {{ solicitud.datos_personales?.nombre }} 
-              {{ solicitud.datos_personales?.apellido_paterno }} 
-              {{ solicitud.datos_personales?.apellido_materno }}
-            </h2>
+  <!-- Error -->
+  <div *ngIf="!cargando() && error()" class="bg-red-50 text-red-700 border border-red-200 rounded-2xl p-4 text-sm flex items-center justify-between">
+    <span>{{ error() }}</span>
+    <button type="button" (click)="cargarSolicitudes()" class="font-bold underline shrink-0 ml-3">Reintentar</button>
+  </div>
 
-            <div class="info-row">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="info-icon">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>
-                {{ solicitud.datos_personales?.direccion?.calle }} #{{ solicitud.datos_personales?.direccion?.numero_ext }}, 
-                {{ solicitud.datos_personales?.direccion?.colonia }}
-              </span>
-            </div>
+  <!-- Vacío -->
+  <div *ngIf="!cargando() && !error() && solicitudes().length === 0"
+       class="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center text-sm text-slate-400">
+    No hay pendientes de revisión bajo este estado actualmente.
+  </div>
 
-            <div class="info-row">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="info-icon">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 012-2h2a2 2 0 012 2v1m-6 0h6" />
-              </svg>
-              <span>CURP: <strong>{{ solicitud.datos_personales?.curp }}</strong></span>
-            </div>
-          </div>
-
-          <div class="card-footer">
-            <span class="coordinador-tag">
-              Capturado por: {{ solicitud.coordinador?.name || 'Coordinador' }}
-            </span>
-            <button class="btn-iniciar-visita">
-              {{ solicitud.estado === 'verificado' || solicitud.estado === 'rechazado' ? 'Ver Detalle' : 'Iniciar Visita' }}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
-          </div>
+  <!-- Grid de Tarjetas -->
+  <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="grid grid-cols-2 gap-4">
+    <div *ngFor="let solicitud of solicitudes()" (click)="irADetalle(solicitud.id)"
+         class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm
+                hover:shadow-md hover:border-blue-300 active:scale-[0.98] transition-all cursor-pointer
+                flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold uppercase text-slate-500 bg-slate-100 px-2 py-1 rounded">
+            {{ solicitud.sucursal?.nombre || 'Sucursal General' }}
+          </span>
+          <span class="text-xs font-bold px-2.5 py-1 rounded-full"
+                [class.bg-amber-100]="solicitud.estado === 'pendiente_verificacion'"
+                [class.text-amber-800]="solicitud.estado === 'pendiente_verificacion'"
+                [class.bg-blue-100]="solicitud.estado === 'en_verificacion'"
+                [class.text-blue-800]="solicitud.estado === 'en_verificacion'"
+                [class.bg-emerald-100]="solicitud.estado === 'verificado'"
+                [class.text-emerald-800]="solicitud.estado === 'verificado'"
+                [class.bg-red-100]="solicitud.estado === 'rechazado'"
+                [class.text-red-800]="solicitud.estado === 'rechazado'">
+            {{ solicitud.estado | titlecase }}
+          </span>
         </div>
-      }
+
+        <h2 class="text-base font-bold text-slate-800 mb-3">
+          {{ solicitud.datos_personales?.nombre }}
+          {{ solicitud.datos_personales?.apellido_paterno }}
+          {{ solicitud.datos_personales?.apellido_materno }}
+        </h2>
+
+        <p class="text-sm text-slate-500 mb-1.5">
+          {{ solicitud.datos_personales?.direccion?.calle }} #{{ solicitud.datos_personales?.direccion?.numero_ext }},
+          {{ solicitud.datos_personales?.direccion?.colonia }}
+        </p>
+        <p class="text-sm text-slate-500">
+          CURP: <strong class="text-slate-700">{{ solicitud.datos_personales?.curp }}</strong>
+        </p>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-xs text-slate-400">
+          Capturado por: {{ solicitud.coordinador?.name || 'Coordinador' }}
+        </span>
+        <span class="shrink-0 inline-flex items-center gap-1 bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-lg">
+          {{ solicitud.estado === 'verificado' || solicitud.estado === 'rechazado' ? 'Ver Detalle' : 'Iniciar Visita' }}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </span>
+      </div>
     </div>
-  }
+  </div>
 
   <!-- Paginación -->
-  @if (!cargando() && (pagina() > 1 || hayPaginaSiguiente())) {
-    <div class="pagination-bar">
-      <button class="filter-chip" (click)="paginaAnterior()" [disabled]="pagina() <= 1">
-        ← Anterior
-      </button>
-      <span class="pagination-label">Página {{ pagina() }}</span>
-      <button class="filter-chip" (click)="paginaSiguiente()" [disabled]="!hayPaginaSiguiente()">
-        Siguiente →
-      </button>
-    </div>
-  }
+  <div *ngIf="!cargando() && !error() && (pagina() > 1 || hayPaginaSiguiente())"
+       class="flex items-center justify-between pt-2">
+    <button type="button" (click)="paginaAnterior()" [disabled]="pagina() <= 1"
+            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-all">
+      ← Anterior
+    </button>
+    <span class="text-xs font-semibold text-slate-400">Página {{ pagina() }}</span>
+    <button type="button" (click)="paginaSiguiente()" [disabled]="!hayPaginaSiguiente()"
+            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-all">
+      Siguiente →
+    </button>
+  </div>
+
 </div>
