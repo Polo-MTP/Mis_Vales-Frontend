@@ -34,15 +34,21 @@ export interface Sucursal {
 }
 
 export interface Evidencia {
+  id?: number;
   tipo_documento: string;
   url_archivo: string;
+  subido_por?: string | null;
+  fecha_subida?: string | null;
 }
 
 export interface LogAuditoria {
+  id: number;
   entidad_tipo: string;
+  entidad_id: number;
   campo: string;
   valor_anterior: string | null;
   valor_nuevo: string | null;
+  modificado_por: string | null;
   accion: string;
   motivo?: string | null;
   fecha_hora: string;
@@ -70,7 +76,7 @@ export interface SolicitudProveedor {
   fecha_verificacion: string | null;
   decision_gerente: string | null;
   comentario_gerente: string | null;
-  limite_credito_asignado: number | null;
+  limite_credito_asignado: string | null;
   fecha_decision: string | null;
   sucursal: Sucursal;
   datos_personales: DatosPersonales;
@@ -134,4 +140,13 @@ export interface VerificarSolicitudPayload {
   datos_personales?: EditarDatosPersonalesPayload;
   direccion?: EditarDireccionPayload;
   evidencias?: Evidencia[];
+}
+
+export interface AprobarSolicitudPayload {
+  decision: 'aprobado' | 'rechazado';
+  comentario_gerente?: string;
+  limite_credito_asignado?: number;
+  email?: string;
+  password?: string;
+  dispositivo?: string;
 }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from '../../../../core/models/auth-response.model';
 import { PaginatedResponse } from '../../../../core/models/user.model';
-import { SolicitudProveedor } from '../../../../core/models/solicitud-proveedor.model';
+import { AprobarSolicitudPayload, SolicitudProveedor } from '../../../../core/models/solicitud-proveedor.model';
 
 @Injectable({ providedIn: 'root' })
 export class SolicitudService {
@@ -19,5 +19,15 @@ export class SolicitudService {
     }
 
     return this.http.get<ApiResponse<PaginatedResponse<SolicitudProveedor>>>(this.baseUrl, { params });
+  }
+
+  detalle(id: number): Observable<ApiResponse<SolicitudProveedor>> {
+    // El backend siempre carga datosPersonales.direccion, sucursal, coordinador,
+    // verificador, gerente, evidencias y logs en show() — no usa QueryBuilder aquí.
+    return this.http.get<ApiResponse<SolicitudProveedor>>(`${this.baseUrl}/${id}`);
+  }
+
+  aprobarORechazar(id: number, payload: AprobarSolicitudPayload): Observable<ApiResponse<SolicitudProveedor>> {
+    return this.http.post<ApiResponse<SolicitudProveedor>>(`${this.baseUrl}/${id}/aprobar`, payload);
   }
 }

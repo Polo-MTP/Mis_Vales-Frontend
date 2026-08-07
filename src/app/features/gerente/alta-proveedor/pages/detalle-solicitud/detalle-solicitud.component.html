@@ -1,0 +1,188 @@
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <button type="button" (click)="volver()" class="text-sm font-bold text-slate-500 hover:text-slate-700">
+      ← Volver a la lista
+    </button>
+  </div>
+
+  <div *ngIf="cargando()" class="text-center py-16 text-slate-400 text-sm">Cargando expediente...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-50 text-red-700 border border-red-200 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <ng-container *ngIf="!cargando() && !error() && solicitud() as s">
+
+    <!-- Resumen -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-2">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="text-2xl font-black text-slate-800 tracking-tight">{{ s.razon_social }}</h1>
+          <p class="text-xs text-slate-500 font-medium mt-1">
+            RFC: {{ s.rfc }} · {{ s.sucursal.nombre }}
+          </p>
+        </div>
+        <span class="shrink-0 text-xs font-bold px-3 py-1.5 rounded-full bg-slate-100 text-slate-600">
+          {{ s.estado }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Datos Personales -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-3">
+      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Datos Personales</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <p><span class="text-slate-400">Nombre:</span> {{ s.datos_personales.nombre }} {{ s.datos_personales.apellido_paterno }} {{ s.datos_personales.apellido_materno }}</p>
+        <p><span class="text-slate-400">CURP:</span> {{ s.datos_personales.curp }}</p>
+        <p><span class="text-slate-400">Fecha de nacimiento:</span> {{ s.datos_personales.fecha_nacimiento || 'N/D' }}</p>
+        <p><span class="text-slate-400">Lugar de nacimiento:</span> {{ s.datos_personales.lugar_nacimiento || 'N/D' }}</p>
+        <p class="sm:col-span-2"><span class="text-slate-400">Dirección:</span>
+          {{ s.datos_personales.direccion.calle }} #{{ s.datos_personales.direccion.numero_ext }}, {{ s.datos_personales.direccion.colonia }},
+          CP {{ s.datos_personales.direccion.codigo_postal }}, {{ s.datos_personales.direccion.ciudad }}, {{ s.datos_personales.direccion.estado }}
+        </p>
+        <p *ngIf="s.referencia_laboral"><span class="text-slate-400">Referencia laboral:</span> {{ s.referencia_laboral }}</p>
+      </div>
+    </div>
+
+    <!-- Captura y verificación -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-3">
+      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Captura y Verificación</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <p><span class="text-slate-400">Coordinador:</span> {{ s.coordinador.name || 'N/D' }}</p>
+        <p><span class="text-slate-400">Verificador:</span> {{ s.verificador.name || 'Sin asignar' }}</p>
+        <p><span class="text-slate-400">¿Cumple?</span> {{ s.cumple === null ? 'Pendiente' : (s.cumple ? 'Sí' : 'No') }}</p>
+        <p><span class="text-slate-400">Fecha de verificación:</span> {{ s.fecha_verificacion || 'N/D' }}</p>
+        <p class="sm:col-span-2" *ngIf="s.comentario_verificador">
+          <span class="text-slate-400">Comentario del verificador:</span> {{ s.comentario_verificador }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Evidencias -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-3" *ngIf="s.evidencias.length > 0">
+      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Evidencias</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <a *ngFor="let ev of s.evidencias" [href]="ev.url_archivo" target="_blank" rel="noopener"
+           class="flex items-center justify-between bg-slate-50 rounded-xl p-3 text-sm hover:bg-slate-100 transition-colors">
+          <span class="font-semibold text-slate-700">{{ ev.tipo_documento }}</span>
+          <span class="text-xs text-slate-400">{{ ev.subido_por || 'N/D' }}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Tabla Antes / Después -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-3">
+      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Cambios del Verificador (Antes / Después)</h2>
+
+      <p *ngIf="logsAntesDespues().length === 0" class="text-sm text-slate-400">
+        El verificador no realizó cambios a los datos capturados.
+      </p>
+
+      <div *ngIf="logsAntesDespues().length > 0" class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead>
+            <tr class="text-xs text-slate-400 uppercase border-b border-slate-100">
+              <th class="py-2 pr-4">Sección</th>
+              <th class="py-2 pr-4">Campo</th>
+              <th class="py-2 pr-4">Antes</th>
+              <th class="py-2 pr-4">Después</th>
+              <th class="py-2 pr-4">Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let log of logsAntesDespues()" class="border-b border-slate-50">
+              <td class="py-2 pr-4 text-slate-500">{{ log.entidad_tipo }}</td>
+              <td class="py-2 pr-4 font-semibold text-slate-700">{{ log.campo }}</td>
+              <td class="py-2 pr-4 text-red-500">{{ log.valor_anterior }}</td>
+              <td class="py-2 pr-4 text-emerald-600">{{ log.valor_nuevo }}</td>
+              <td class="py-2 pr-4 text-slate-400">{{ log.motivo || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Decisión ya tomada -->
+    <div *ngIf="s.estado === 'aprobado' || s.estado === 'rechazado'"
+         class="rounded-3xl p-6 border shadow-sm space-y-2"
+         [class.bg-emerald-50]="s.estado === 'aprobado'" [class.border-emerald-200]="s.estado === 'aprobado'"
+         [class.bg-red-50]="s.estado === 'rechazado'" [class.border-red-200]="s.estado === 'rechazado'">
+      <h2 class="text-sm font-black uppercase tracking-tight"
+          [class.text-emerald-700]="s.estado === 'aprobado'" [class.text-red-700]="s.estado === 'rechazado'">
+        Solicitud {{ s.estado }}
+      </h2>
+      <p class="text-sm" *ngIf="s.comentario_gerente">{{ s.comentario_gerente }}</p>
+      <p class="text-sm" *ngIf="s.limite_credito_asignado">Límite de crédito asignado: ${{ s.limite_credito_asignado }}</p>
+      <p class="text-xs text-slate-400">Gerente: {{ s.gerente.name || 'N/D' }} · {{ s.fecha_decision }}</p>
+    </div>
+
+    <!-- Formulario de Decisión -->
+    <div *ngIf="s.estado === 'verificado'" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4">
+      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Decisión de Gerencia</h2>
+
+      <app-alert [message]="errorDecision()" type="error"></app-alert>
+
+      <form [formGroup]="decisionForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div class="flex gap-3">
+          <label class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-3 cursor-pointer font-bold text-sm transition-all"
+                 [class.border-emerald-500]="decisionForm.value.decision === 'aprobado'"
+                 [class.bg-emerald-50]="decisionForm.value.decision === 'aprobado'"
+                 [class.text-emerald-700]="decisionForm.value.decision === 'aprobado'"
+                 [class.border-slate-200]="decisionForm.value.decision !== 'aprobado'">
+            <input type="radio" formControlName="decision" value="aprobado" class="hidden">
+            Aprobar
+          </label>
+          <label class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-3 cursor-pointer font-bold text-sm transition-all"
+                 [class.border-red-500]="decisionForm.value.decision === 'rechazado'"
+                 [class.bg-red-50]="decisionForm.value.decision === 'rechazado'"
+                 [class.text-red-700]="decisionForm.value.decision === 'rechazado'"
+                 [class.border-slate-200]="decisionForm.value.decision !== 'rechazado'">
+            <input type="radio" formControlName="decision" value="rechazado" class="hidden">
+            Rechazar
+          </label>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Comentario</label>
+          <textarea formControlName="comentario_gerente" rows="2"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('comentario_gerente')">{{ errorFor('comentario_gerente') }}</p>
+        </div>
+
+        <ng-container *ngIf="decisionForm.value.decision === 'aprobado'">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Límite de Crédito Asignado *</label>
+            <input type="number" formControlName="limite_credito_asignado" min="0"
+                   class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('limite_credito_asignado')">{{ errorFor('limite_credito_asignado') }}</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email de acceso *</label>
+              <input type="email" formControlName="email"
+                     class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('email')">{{ errorFor('email') }}</p>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Contraseña *</label>
+              <input type="password" formControlName="password" minlength="8"
+                     class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('password')">{{ errorFor('password') }}</p>
+            </div>
+          </div>
+        </ng-container>
+
+        <button type="submit" [disabled]="decisionForm.invalid || enviando()"
+                class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition-all">
+          <span *ngIf="!enviando()">Confirmar Decisión</span>
+          <span *ngIf="enviando()">Procesando...</span>
+        </button>
+      </form>
+    </div>
+
+  </ng-container>
+
+</div>
