@@ -1,36 +1,74 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { AuthService } from '../../../auth/services/auth.service';
+import { SolicitudService } from '../../alta-proveedor/services/solicitud.service';
+
+// Debe coincidir con el tamaño de página por defecto del backend (Model::$perPage).
+const PER_PAGE = 15;
+
+interface Estadistica {
+  total: number;
+  hayMas: boolean;
+}
 
 @Component({
   selector: 'app-coordinador-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  template: `
-    <div class="w-[820px] mx-auto py-8 space-y-8">
-      <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm space-y-2">
-        <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">
-          DASHBOARD COORDINADOR
-        </h1>
-        <p class="text-xs text-slate-500 font-medium">
-          Bienvenido, {{ authService.currentUser()?.name }} ({{ authService.currentUser()?.email }})
-        </p>
-      </div>
-
-      <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
-        <a routerLink="/coordinador/solicitudes/nueva"
-           class="inline-flex items-center py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition-all duration-200">
-          + Nueva Solicitud de Distribuidor
-        </a>
-      </div>
-    </div>
-  `
+  templateUrl: './coordinador-dashboard.component.html',
+  styleUrl: './coordinador-dashboard.component.css'
 })
 export class CoordinadorDashboardComponent implements OnInit {
   authService = inject(AuthService);
+  private solicitudService = inject(SolicitudService);
+
+  cargandoStats = signal(true);
+  enProceso = signal<Estadistica>({ total: 0, hayMas: false });
+  aprobadas = signal<Estadistica>({ total: 0, hayMas: false });
+  rechazadas = signal<Estadistica>({ total: 0, hayMas: false });
 
   ngOnInit(): void {
-    this.authService.fetchCurrentUser().subscribe();
+    this.authService.fetchCurrentUser().subscribe({
+      next: () => this.cargarEstadisticas(),
+      error: () => this.cargarEstadisticas()
+    });
+  }
+
+  formato(e: Estadistica): string {
+    return `${e.total}${e.hayMas ? '+' : ''}`;
+  }
+
+  private cargarEstadisticas(): void {
+    const coordinadorId = this.authService.currentUser()?.id;
+
+    if (!coordinadorId) {
+      this.cargandoStats.set(false);
+      return;
+    }
+
+    forkJoin({
+      pendientes: this.solicitudService.contarPorEstado('pendiente_verificacion', coordinadorId),
+      enVerificacion: this.solicitudService.contarPorEstado('en_verificacion', coordinadorId),
+      aprobado: this.solicitudService.contarPorEstado('aprobado', coordinadorId),
+      rechazado: this.solicitudService.contarPorEstado('rechazado', coordinadorId)
+    }).subscribe({
+      next: ({ pendientes, enVerificacion, aprobado, rechazado }) => {
+        const pend = pendientes.data ?? [];
+        const enVer = enVerificacion.data ?? [];
+        const apr = aprobado.data ?? [];
+        const rech = rechazado.data ?? [];
+
+        this.enProceso.set({
+          total: pend.length + enVer.length,
+          hayMas: pend.length === PER_PAGE || enVer.length === PER_PAGE
+        });
+        this.aprobadas.set({ total: apr.length, hayMas: apr.length === PER_PAGE });
+        this.rechazadas.set({ total: rech.length, hayMas: rech.length === PER_PAGE });
+        this.cargandoStats.set(false);
+      },
+      error: () => this.cargandoStats.set(false)
+    });
   }
 }

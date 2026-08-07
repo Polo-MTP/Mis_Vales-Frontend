@@ -1,36 +1,62 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { AuthService } from '../../../auth/services/auth.service';
+import { SolicitudService } from '../../alta-proveedor/services/solicitud.service';
+
+// Debe coincidir con el tamaño de página por defecto del backend (Model::$perPage).
+const PER_PAGE = 15;
+
+interface Estadistica {
+  total: number;
+  hayMas: boolean;
+}
 
 @Component({
   selector: 'app-gerente-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  template: `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm space-y-2">
-        <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">
-          DASHBOARD {{ authService.userRole() | uppercase }}
-        </h1>
-        <p class="text-xs text-slate-500 font-medium">
-          Bienvenido, {{ authService.currentUser()?.name }} ({{ authService.currentUser()?.email }})
-        </p>
-      </div>
-
-      <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
-        <a routerLink="/gerente/solicitudes"
-           class="inline-flex items-center py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition-all duration-200">
-          Solicitudes de Nuevo Distribuidor
-        </a>
-      </div>
-    </div>
-  `
+  templateUrl: './gerente-dashboard.component.html',
+  styleUrl: './gerente-dashboard.component.css'
 })
 export class GerenteDashboardComponent implements OnInit {
   authService = inject(AuthService);
+  private solicitudService = inject(SolicitudService);
+
+  cargandoStats = signal(true);
+  porAprobar = signal<Estadistica>({ total: 0, hayMas: false });
+  aprobadas = signal<Estadistica>({ total: 0, hayMas: false });
+  rechazadas = signal<Estadistica>({ total: 0, hayMas: false });
 
   ngOnInit(): void {
-    this.authService.fetchCurrentUser().subscribe();
+    this.authService.fetchCurrentUser().subscribe({
+      next: () => this.cargarEstadisticas(),
+      error: () => this.cargarEstadisticas()
+    });
+  }
+
+  formato(e: Estadistica): string {
+    return `${e.total}${e.hayMas ? '+' : ''}`;
+  }
+
+  private cargarEstadisticas(): void {
+    forkJoin({
+      verificado: this.solicitudService.listar('verificado'),
+      aprobado: this.solicitudService.listar('aprobado'),
+      rechazado: this.solicitudService.listar('rechazado')
+    }).subscribe({
+      next: ({ verificado, aprobado, rechazado }) => {
+        const ver = verificado.data ?? [];
+        const apr = aprobado.data ?? [];
+        const rech = rechazado.data ?? [];
+
+        this.porAprobar.set({ total: ver.length, hayMas: ver.length === PER_PAGE });
+        this.aprobadas.set({ total: apr.length, hayMas: apr.length === PER_PAGE });
+        this.rechazadas.set({ total: rech.length, hayMas: rech.length === PER_PAGE });
+        this.cargandoStats.set(false);
+      },
+      error: () => this.cargandoStats.set(false)
+    });
   }
 }
