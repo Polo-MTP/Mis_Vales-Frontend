@@ -1,10 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { SolicitudService } from '../../services/solicitud.service';
 import { CrearSolicitudProveedorPayload } from '../../../../../core/models/solicitud-proveedor.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { UsuarioService } from '../../../../../core/services/usuario.service';
+import { User } from '../../../../../core/models/user.model';
 
 @Component({
   selector: 'app-nueva-solicitud',
@@ -13,15 +15,18 @@ import { AlertComponent } from '../../../../../shared/components/alert/alert.com
   templateUrl: './nueva-solicitud.component.html',
   styleUrl: './nueva-solicitud.component.css'
 })
-export class NuevaSolicitudComponent {
+export class NuevaSolicitudComponent implements OnInit {
   private fb = inject(FormBuilder);
   private solicitudService = inject(SolicitudService);
+  private usuarioService = inject(UsuarioService);
   private router = inject(Router);
 
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
   fieldErrors = signal<Record<string, string[]>>({});
+
+  verificadores = signal<User[]>([]);
 
   tiposDocumento = ['ine_frente', 'ine_reverso', 'comprobante_domicilio'];
 
@@ -45,6 +50,13 @@ export class NuevaSolicitudComponent {
     verificador_id: [''],
     evidencias: this.fb.array([])
   });
+
+  ngOnInit(): void {
+    this.usuarioService.listar('Verificador').subscribe({
+      next: (res) => this.verificadores.set(res.data ?? []),
+      error: () => this.verificadores.set([])
+    });
+  }
 
   get evidencias(): FormArray {
     return this.form.get('evidencias') as FormArray;
