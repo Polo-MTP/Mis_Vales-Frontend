@@ -30,7 +30,7 @@ export class ListaSolicitudesComponent implements OnInit {
 
     this.solicitudService.listar(this.filtroEstado()).subscribe({
       next: (res) => {
-        this.solicitudes.set(res.data?.data ?? []);
+        this.solicitudes.set(res.data ?? []);
         this.cargando.set(false);
       },
       error: () => {

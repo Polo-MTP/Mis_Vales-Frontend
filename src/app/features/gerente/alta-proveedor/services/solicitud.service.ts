@@ -3,7 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from '../../../../core/models/auth-response.model';
-import { PaginatedResponse } from '../../../../core/models/user.model';
 import { AprobarSolicitudPayload, SolicitudProveedor } from '../../../../core/models/solicitud-proveedor.model';
 
 @Injectable({ providedIn: 'root' })
@@ -11,14 +10,17 @@ export class SolicitudService {
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/alta-proveedor/solicitudes`;
 
-  listar(estado?: string): Observable<ApiResponse<PaginatedResponse<SolicitudProveedor>>> {
+  listar(estado?: string): Observable<ApiResponse<SolicitudProveedor[]>> {
     let params = new HttpParams().set('include', 'datosPersonales.direccion,sucursal,coordinador,verificador');
 
     if (estado) {
       params = params.set('filter[estado]', estado);
     }
 
-    return this.http.get<ApiResponse<PaginatedResponse<SolicitudProveedor>>>(this.baseUrl, { params });
+    // El helper `success()` del backend envuelve la ResourceCollection dentro de
+    // {data: ...}, lo cual hace que Laravel serialice `data` como un array plano
+    // (no como {data, current_page, ...}) aunque la query esté paginada.
+    return this.http.get<ApiResponse<SolicitudProveedor[]>>(this.baseUrl, { params });
   }
 
   detalle(id: number): Observable<ApiResponse<SolicitudProveedor>> {
