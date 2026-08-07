@@ -73,4 +73,18 @@
     </div>
   </div>
 
+  <!-- Paginación -->
+  <div *ngIf="!cargando() && !error() && (pagina() > 1 || hayPaginaSiguiente())"
+       class="flex items-center justify-between pt-2">
+    <button type="button" (click)="paginaAnterior()" [disabled]="pagina() <= 1"
+            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-all">
+      ← Anterior
+    </button>
+    <span class="text-xs font-semibold text-slate-400">Página {{ pagina() }}</span>
+    <button type="button" (click)="paginaSiguiente()" [disabled]="!hayPaginaSiguiente()"
+            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-all">
+      Siguiente →
+    </button>
+  </div>
+
 </div>

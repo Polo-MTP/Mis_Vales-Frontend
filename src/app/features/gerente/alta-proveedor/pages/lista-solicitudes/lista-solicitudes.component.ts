@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { SolicitudService } from '../../services/solicitud.service';
 import { EstadoSolicitud, SolicitudProveedor } from '../../../../../core/models/solicitud-proveedor.model';
 
+// Debe coincidir con el tamaño de página por defecto de Laravel (Model::$perPage) en el backend.
+const PER_PAGE = 15;
+
 @Component({
   selector: 'app-lista-solicitudes',
   standalone: true,
@@ -20,6 +23,9 @@ export class ListaSolicitudesComponent implements OnInit {
   error = signal<string | null>(null);
   filtroEstado = signal<EstadoSolicitud>('verificado');
 
+  pagina = signal(1);
+  hayPaginaSiguiente = signal(false);
+
   ngOnInit(): void {
     this.cargarSolicitudes();
   }
@@ -28,9 +34,11 @@ export class ListaSolicitudesComponent implements OnInit {
     this.cargando.set(true);
     this.error.set(null);
 
-    this.solicitudService.listar(this.filtroEstado()).subscribe({
+    this.solicitudService.listar(this.filtroEstado(), this.pagina()).subscribe({
       next: (res) => {
-        this.solicitudes.set(res.data ?? []);
+        const items = res.data ?? [];
+        this.solicitudes.set(items);
+        this.hayPaginaSiguiente.set(items.length === PER_PAGE);
         this.cargando.set(false);
       },
       error: () => {
@@ -43,8 +51,21 @@ export class ListaSolicitudesComponent implements OnInit {
   cambiarFiltro(estado: EstadoSolicitud): void {
     if (this.filtroEstado() !== estado) {
       this.filtroEstado.set(estado);
+      this.pagina.set(1);
       this.cargarSolicitudes();
     }
+  }
+
+  paginaSiguiente(): void {
+    if (!this.hayPaginaSiguiente()) return;
+    this.pagina.set(this.pagina() + 1);
+    this.cargarSolicitudes();
+  }
+
+  paginaAnterior(): void {
+    if (this.pagina() <= 1) return;
+    this.pagina.set(this.pagina() - 1);
+    this.cargarSolicitudes();
   }
 
   irADetalle(id: number): void {

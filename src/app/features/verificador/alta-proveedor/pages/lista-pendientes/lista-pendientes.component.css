@@ -72,6 +72,25 @@
   transition: all 0.2s ease;
 }
 
+.filter-chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Barra de Paginación */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.pagination-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
 .filter-chip.active {
   background-color: #2563eb;
   color: #ffffff;

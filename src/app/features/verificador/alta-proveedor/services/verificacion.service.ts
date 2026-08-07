@@ -17,9 +17,10 @@ export class VerificacionService {
    * Obtiene la lista de solicitudes asignadas o pendientes de verificación.
    * Filtra por defecto las que están en 'en_verificacion' o 'pendiente_verificacion'.
    */
-obtenerSolicitudesPendientes(estado?: string): Observable<ApiResponse<SolicitudProveedor[]>> {
+obtenerSolicitudesPendientes(estado?: string, page = 1): Observable<ApiResponse<SolicitudProveedor[]>> {
   let params = new HttpParams()
-    .set('include', 'datosPersonales.direccion,sucursal,coordinador,verificador');
+    .set('include', 'datosPersonales.direccion,sucursal,coordinador,verificador')
+    .set('page', String(page));
 
   if (estado) {
     params = params.set('filter[estado]', estado);

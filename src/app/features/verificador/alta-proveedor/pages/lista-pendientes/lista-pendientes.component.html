@@ -117,4 +117,17 @@
       }
     </div>
   }
+
+  <!-- Paginación -->
+  @if (!cargando() && (pagina() > 1 || hayPaginaSiguiente())) {
+    <div class="pagination-bar">
+      <button class="filter-chip" (click)="paginaAnterior()" [disabled]="pagina() <= 1">
+        ← Anterior
+      </button>
+      <span class="pagination-label">Página {{ pagina() }}</span>
+      <button class="filter-chip" (click)="paginaSiguiente()" [disabled]="!hayPaginaSiguiente()">
+        Siguiente →
+      </button>
+    </div>
+  }
 </div>
