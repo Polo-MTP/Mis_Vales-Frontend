@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 import { AprobarSolicitudPayload, LogAuditoria, SolicitudProveedor } from '../../../../../core/models/solicitud-proveedor.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
@@ -14,6 +14,15 @@ import { AlertComponent } from '../../../../../shared/components/alert/alert.com
   styleUrl: './detalle-solicitud.component.css'
 })
 export class DetalleSolicitudComponent implements OnInit {
+  private static multiploDe(valor: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value === '' || control.value === null) {
+        return null;
+      }
+      return Number(control.value) % valor === 0 ? null : { multiplo: { valor } };
+    };
+  }
+
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -30,7 +39,7 @@ export class DetalleSolicitudComponent implements OnInit {
   decisionForm = this.fb.group({
     decision: ['', [Validators.required]],
     comentario_gerente: [''],
-    limite_credito_asignado: [''],
+    limite_credito_asignado: ['', [DetalleSolicitudComponent.multiploDe(1000)]],
     email: [''],
     password: ['']
   });
@@ -62,6 +71,11 @@ export class DetalleSolicitudComponent implements OnInit {
 
   errorFor(campo: string): string | null {
     return this.fieldErrors()[campo]?.[0] ?? null;
+  }
+
+  limiteCreditoInvalido(): boolean {
+    const control = this.decisionForm.get('limite_credito_asignado');
+    return !!control?.errors?.['multiplo'] && (control.touched || control.dirty);
   }
 
   onSubmit(): void {
