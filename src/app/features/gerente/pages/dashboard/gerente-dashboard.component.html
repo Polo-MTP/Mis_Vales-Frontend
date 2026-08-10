@@ -1,6 +1,6 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+<div class="layout-container">
 
-  <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm space-y-2">
+  <div class="dash-card space-y-2">
     <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">
       DASHBOARD {{ authService.userRole() | uppercase }}
     </h1>
@@ -11,28 +11,27 @@
 
   <!-- Estadísticas -->
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <a routerLink="/gerente/solicitudes" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:border-blue-300 hover:shadow-md transition-all">
+    <a routerLink="/gerente/solicitudes" class="stat-card-clickable">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Por Aprobar</p>
       <p class="text-3xl font-black text-blue-600 mt-1">{{ cargandoStats() ? '—' : formato(porAprobar()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Verificadas, esperando tu decisión</p>
     </a>
 
-    <a routerLink="/gerente/solicitudes" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:border-blue-300 hover:shadow-md transition-all">
+    <a routerLink="/gerente/solicitudes" class="stat-card-clickable">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Aprobadas</p>
       <p class="text-3xl font-black text-emerald-600 mt-1">{{ cargandoStats() ? '—' : formato(aprobadas()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Distribuidores dados de alta</p>
     </a>
 
-    <a routerLink="/gerente/solicitudes" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:border-blue-300 hover:shadow-md transition-all">
+    <a routerLink="/gerente/solicitudes" class="stat-card-clickable">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Rechazadas</p>
       <p class="text-3xl font-black text-red-500 mt-1">{{ cargandoStats() ? '—' : formato(rechazadas()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Solicitudes no aprobadas</p>
     </a>
   </div>
 
-  <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
-    <a routerLink="/gerente/solicitudes"
-       class="inline-flex items-center py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition-all duration-200">
+  <div class="dash-card">
+    <a routerLink="/gerente/solicitudes" class="btn-primary">
       Solicitudes de Nuevo Distribuidor
     </a>
   </div>

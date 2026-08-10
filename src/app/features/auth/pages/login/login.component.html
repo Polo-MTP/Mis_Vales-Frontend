@@ -1,0 +1,95 @@
+<div class="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
+  <div class="auth-card-wide">
+    
+    <!-- Columna Izquierda: Formulario -->
+    <div class="auth-form-container">
+      
+      <!-- Encabezado -->
+      <div class="text-left space-y-2">
+        <div class="auth-header-icon">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-black text-slate-800 tracking-tight">Iniciar Sesión</h2>
+        <p class="text-xs text-slate-500 font-medium">Ingresa a tu cuenta para continuar</p>
+      </div>
+
+      <app-alert [message]="errorMessage()" type="error"></app-alert>
+      <app-alert [message]="successMessage()" type="success"></app-alert>
+
+      <!-- PASO 1: Credenciales -->
+      <form *ngIf="step() === 1" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="space-y-4">
+        <div>
+          <label class="form-label">Correo Electrónico</label>
+          <input type="email" formControlName="email" placeholder="tu@correo.com" class="form-input">
+        </div>
+
+        <div>
+          <label class="form-label">Contraseña</label>
+          <input type="password" formControlName="password" placeholder="••••••••" class="form-input">
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid || isLoading()" class="btn-primary">
+          <span *ngIf="!isLoading()">Continuar</span>
+          <span *ngIf="isLoading()">Verificando credenciales...</span>
+        </button>
+      </form>
+
+      <!-- PASO 2: Verificación TOTP -->
+      <form *ngIf="step() === 2" [formGroup]="totpForm" (ngSubmit)="onTotpSubmit()" class="space-y-4">
+        <div class="mfa-info-box bg-slate-50 border-slate-200/80">
+          <span class="mfa-badge bg-blue-100 text-blue-700">Segundo Factor (2FA)</span>
+          <p class="text-xs text-slate-600">Ingresa el código de 6 dígitos de Google Authenticator.</p>
+        </div>
+
+        <div>
+          <label class="form-label text-center">Código de Autenticación</label>
+          <input type="text" formControlName="code" maxlength="6" placeholder="123456" class="form-input-code focus:ring-blue-500">
+        </div>
+
+        <button type="submit" [disabled]="totpForm.invalid || isLoading()" class="btn-primary">
+          <span *ngIf="!isLoading()">Verificar TOTP</span>
+          <span *ngIf="isLoading()">Validando...</span>
+        </button>
+      </form>
+
+      <!-- PASO 3: OTP por Correo -->
+      <form *ngIf="step() === 3" [formGroup]="otpMailForm" (ngSubmit)="onOtpMailSubmit()" class="space-y-4">
+        <div class="mfa-info-box bg-purple-50 border-purple-200/80">
+          <span class="mfa-badge bg-purple-100 text-purple-700">Tercer Factor (3FA)</span>
+          <p class="text-xs text-slate-600">Ingresa el código de 6 dígitos enviado a tu correo.</p>
+        </div>
+
+        <div>
+          <label class="form-label text-center">Código del Correo</label>
+          <input type="text" formControlName="code" maxlength="6" placeholder="123456" class="form-input-code focus:ring-purple-500">
+        </div>
+
+        <button type="submit" [disabled]="otpMailForm.invalid || isLoading()" class="btn-purple">
+          <span *ngIf="!isLoading()">Finalizar Autenticación</span>
+          <span *ngIf="isLoading()">Validando código...</span>
+        </button>
+      </form>
+
+    </div>
+
+    <!-- Columna Derecha: Imagen Lateral -->
+    <div class="auth-image-panel">
+      <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" 
+           alt="Ilustración de seguridad" 
+           class="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-overlay">
+      
+      <div class="auth-image-overlay">
+        <div class="space-y-2">
+          <span class="inline-block px-3 py-1 bg-blue-500/20 backdrop-blur-md border border-blue-400/30 rounded-full text-[11px] font-semibold text-blue-300">
+            Autenticación Segura
+          </span>
+          <h3 class="text-2xl font-bold leading-snug">Protección de acceso multinivel</h3>
+          <p class="text-xs text-slate-300 font-normal">Acceso cifrado y verificado por múltiples factores.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

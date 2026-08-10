@@ -1,3 +1,296 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles and imports */
+@import "tailwindcss";
 
-@import 'tailwindcss';
+/* ==========================================================================
+   0. VARIABLES GLOBALES (TEMA CORPORATIVO SLATE & BLUE)
+   ========================================================================== */
+:root {
+  --color-bg: #0f172a;                  /* Slate 900 (Fondo principal) */
+  --color-surface: #1e293b;             /* Slate 800 (Tarjetas/Paneles) */
+  --color-surface-translucent: rgba(30, 41, 59, 0.85);
+  --color-surface-hover: #334155;       /* Slate 700 */
+  --color-border: #334155;              /* Slate 700 */
+  --color-text: #f8fafc;                /* Slate 50 */
+  --color-text-muted: #94a3b8;          /* Slate 400 */
+  --color-brand-primary: #2563eb;       /* Blue 600 */
+  --color-brand-hover: #1d4ed8;         /* Blue 700 */
+}
+
+/* ==========================================================================
+   1. BASE & BACKGROUND
+   ========================================================================== */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+@layer components {
+  /* ==========================================================================
+     2. LAYOUTS Y CONTENEDORES
+     ========================================================================== */
+  .layout-container {
+    @apply max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6;
+  }
+
+  .layout-container-narrow {
+    @apply max-w-4xl mx-auto py-8 px-4 sm:px-6 space-y-6;
+  }
+
+  .card-panel {
+    @apply bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 border border-slate-700/60 shadow-xl shadow-black/20;
+  }
+
+  .card-panel-lg {
+    @apply bg-slate-800/80 backdrop-blur-md rounded-2xl p-8 border border-slate-700/60 shadow-xl shadow-black/20;
+  }
+
+  .dash-card {
+    @apply bg-slate-800/90 backdrop-blur-md rounded-2xl p-6 border border-slate-700/60 shadow-lg shadow-black/20 space-y-4;
+  }
+
+  .stat-card {
+    @apply bg-slate-800/90 backdrop-blur-md rounded-2xl p-6 border border-slate-700/60 shadow-md shadow-black/10 transition-all;
+  }
+
+  .stat-card-clickable {
+    @apply bg-slate-800/90 backdrop-blur-md rounded-2xl p-6 border border-slate-700/60 shadow-md shadow-black/10 transition-all hover:border-blue-500/50 hover:shadow-blue-900/20 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer block;
+  }
+
+  /* ==========================================================================
+     3. FORMULARIOS Y ELEMENTOS DE ENTRADA
+     ========================================================================== */
+  .form-label {
+    @apply block text-xs font-semibold text-slate-300 mb-1.5 tracking-wide;
+  }
+
+  .form-input, .input-field {
+    @apply w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500;
+  }
+
+  .form-select {
+    @apply w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500;
+  }
+
+  .textarea-field {
+    @apply w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors;
+  }
+
+  .form-input-code {
+    @apply w-full py-3 text-center text-2xl tracking-[0.5em] font-mono font-bold rounded-xl bg-slate-950 border border-slate-700 text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500;
+  }
+
+  /* ==========================================================================
+     4. BOTONES Y ACCIONES
+     ========================================================================== */
+  .btn-primary {
+    @apply w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-600/30 hover:shadow-blue-500/50 transition-all duration-200 inline-flex items-center justify-center active:scale-[0.99];
+  }
+
+  .btn-purple {
+    @apply w-full py-3.5 px-6 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-600/30 hover:shadow-indigo-500/50 transition-all duration-200 inline-flex items-center justify-center active:scale-[0.99];
+  }
+
+  .btn-outline {
+    @apply px-4 py-2 rounded-xl border border-slate-700 bg-slate-800/50 text-sm font-bold text-slate-300 hover:bg-slate-700 hover:text-white hover:border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all inline-flex items-center justify-center;
+  }
+
+  .btn-pagination {
+    @apply px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700 hover:text-white disabled:opacity-30 transition-all;
+  }
+
+  .btn-filter {
+    @apply px-4 py-2 rounded-xl border border-slate-700 text-sm font-bold bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-slate-200 transition-all;
+  }
+
+  .btn-filter-active {
+    @apply px-4 py-2 rounded-xl border border-blue-500/60 bg-blue-600/20 text-blue-400 text-sm font-bold transition-all shadow-sm shadow-blue-500/10;
+  }
+
+  .btn-link-primary {
+    @apply text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors;
+  }
+
+  .btn-link-danger {
+    @apply text-xs font-bold text-rose-400 hover:text-rose-300 transition-colors;
+  }
+
+  /* ==========================================================================
+     5. TABLAS Y LISTAS
+     ========================================================================== */
+  .table-container {
+    @apply overflow-x-auto border border-slate-700/80 rounded-2xl bg-slate-800/60;
+  }
+
+  .table-head-cell {
+    @apply p-3.5 text-left text-slate-400 font-bold uppercase tracking-wider text-xs bg-slate-900/90 border-b border-slate-700/80;
+  }
+
+  .table-row {
+    @apply hover:bg-slate-700/30 transition-colors divide-y divide-slate-700/50 text-slate-300;
+  }
+
+  .list-card-item {
+    @apply bg-slate-800/80 rounded-2xl p-5 border border-slate-700/80 shadow-md hover:shadow-lg hover:border-blue-500/40 transition-all cursor-pointer flex items-center justify-between gap-4;
+  }
+
+  /* ==========================================================================
+     6. AUTH & LOGIN
+     ========================================================================== */
+  .auth-card-wide {
+    @apply w-full max-w-4xl bg-slate-800/90 rounded-3xl shadow-2xl shadow-black/60 border border-slate-700/80 overflow-hidden grid grid-cols-1 md:grid-cols-2 backdrop-blur-xl;
+  }
+
+  .auth-form-container {
+    @apply p-8 sm:p-10 flex flex-col justify-center space-y-6;
+  }
+
+  .auth-header-icon {
+    @apply inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 mb-1;
+  }
+
+  .auth-image-panel {
+    @apply hidden md:block relative bg-slate-950 overflow-hidden border-l border-slate-700/60;
+  }
+
+  .auth-image-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent p-10 flex flex-col justify-end text-white;
+  }
+
+  /* ==========================================================================
+     7. BADGES, PANELES Y ESTADOS
+     ========================================================================== */
+  .mfa-info-box {
+    @apply p-4 border border-slate-700 bg-slate-900/50 rounded-2xl text-center space-y-2;
+  }
+
+  .mfa-badge {
+    @apply inline-flex px-2.5 py-1 font-bold text-[11px] rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400;
+  }
+
+  .status-badge {
+    @apply shrink-0 text-xs font-bold px-3 py-1.5 rounded-full bg-slate-700 text-slate-300 border border-slate-600/50;
+  }
+
+  .state-loading {
+    @apply text-center py-16 text-slate-400 text-sm font-medium;
+  }
+
+  .state-empty {
+    @apply bg-slate-800/40 border border-dashed border-slate-700 rounded-2xl p-12 text-center text-sm text-slate-400;
+  }
+
+  /* ==========================================================================
+     8. FOOTER
+     ========================================================================== */
+  .app-footer {
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: 1.5rem 0;
+    margin-top: auto;
+  }
+
+  .footer-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  /* ==========================================================================
+     9. HEADER
+     ========================================================================== */
+  .app-header {
+    background-color: var(--color-surface-translucent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Brand Logo */
+  .brand-wrapper { display: flex; align-items: center; gap: 0.75rem; }
+  .brand-link { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+  .brand-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(to top right, #2563eb, #3b82f6); /* Azul Corporativo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+    transition: transform 0.2s;
+  }
+  .brand-link:hover .brand-logo { transform: scale(1.05); }
+
+  .brand-text { display: flex; flex-direction: column; }
+  .brand-title { font-weight: 900; font-size: 1.125rem; color: var(--color-text); letter-spacing: -0.025em; }
+  .brand-subtitle { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: #60a5fa; margin-top: -0.25rem; }
+
+  /* User Section */
+  .user-actions { display: flex; align-items: center; gap: 1rem; }
+  .user-info { display: none; flex-direction: column; text-align: right; }
+  @media (min-width: 640px) { .user-info { display: flex; } }
+  .user-name { font-size: 0.75rem; font-weight: 600; color: var(--color-text); }
+  .user-role-wrapper { display: flex; justify-content: flex-end; margin-top: 0.125rem; }
+
+  /* Badges de Roles */
+  .role-badge { display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; border-radius: 0.375rem; font-size: 11px; font-weight: 700; }
+  .badge-admin { background-color: rgba(99, 102, 241, 0.15); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.3); }
+  .badge-user { background-color: rgba(59, 130, 246, 0.15); color: #bfdbfe; border: 1px solid rgba(59, 130, 246, 0.3); }
+  .badge-default { background-color: var(--color-surface-hover); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+
+  /* Buttons */
+  .btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { color: #f87171; background-color: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); }
+  .logout-icon { width: 1rem; height: 1rem; }
+  .logout-text { display: none; }
+  @media (min-width: 640px) { .logout-text { display: inline; } }
+
+  .btn-primary-header {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--color-brand-primary);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+    transition: background-color 0.2s;
+  }
+  .btn-primary-header:hover { background-color: var(--color-brand-hover); }
+}

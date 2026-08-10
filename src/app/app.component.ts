@@ -8,7 +8,7 @@ import { FooterComponent } from './layout/footer/footer.component';
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   template: `
-    <div class="min-h-screen flex flex-col bg-slate-50 font-sans antialiased text-slate-900">
+    <div class="min-h-screen flex flex-col font-sans antialiased">
       <app-header></app-header>
       <main class="flex-1">
         <router-outlet></router-outlet>
@@ -18,5 +18,5 @@ import { FooterComponent } from './layout/footer/footer.component';
   `
 })
 export class AppComponent {
-  title = 'mis-vales-frontend';
+  title = 'Mis Vales';
 }

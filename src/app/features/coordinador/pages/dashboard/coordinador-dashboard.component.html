@@ -1,8 +1,9 @@
-<div class="w-[820px] mx-auto py-8 space-y-6">
+<div class="layout-container">
 
-  <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm space-y-2">
+  <!-- Encabezado -->
+  <div class="dash-card space-y-2">
     <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">
-      DASHBOARD COORDINADOR
+      Dashboard Coordinador
     </h1>
     <p class="text-xs text-slate-500 font-medium">
       Bienvenido, {{ authService.currentUser()?.name }} ({{ authService.currentUser()?.email }})
@@ -10,29 +11,29 @@
   </div>
 
   <!-- Estadísticas -->
-  <div class="grid grid-cols-3 gap-4">
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="stat-card">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">En Proceso</p>
       <p class="text-3xl font-black text-blue-600 mt-1">{{ cargandoStats() ? '—' : formato(enProceso()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Pendientes o en verificación</p>
     </div>
 
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+    <div class="stat-card">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Aprobadas</p>
       <p class="text-3xl font-black text-emerald-600 mt-1">{{ cargandoStats() ? '—' : formato(aprobadas()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Distribuidores dados de alta</p>
     </div>
 
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+    <div class="stat-card">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Rechazadas</p>
       <p class="text-3xl font-black text-red-500 mt-1">{{ cargandoStats() ? '—' : formato(rechazadas()) }}</p>
       <p class="text-xs text-slate-400 mt-1">No cumplieron la verificación</p>
     </div>
   </div>
 
-  <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
-    <a routerLink="/coordinador/solicitudes/nueva"
-       class="inline-flex items-center py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition-all duration-200">
+  <!-- Acciones Rápidas -->
+  <div class="dash-card">
+    <a routerLink="/coordinador/solicitudes/nueva" class="btn-primary">
       + Nueva Solicitud de Distribuidor
     </a>
   </div>

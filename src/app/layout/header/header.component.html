@@ -1,0 +1,42 @@
+<header class="app-header">
+  <div class="header-container">
+    
+    <!-- Logo Brand -->
+    <div class="brand-wrapper">
+      <a [routerLink]="homeRoute" class="brand-link">
+        <div class="brand-logo">V</div>
+        <div class="brand-text">
+          <span class="brand-title">MisVales</span>
+          <span class="brand-subtitle">Login Seguro API</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- User Actions & Info -->
+    <div *ngIf="authService.isAuthenticated()" class="user-actions">
+      <div class="user-info">
+        <span class="user-name">{{ authService.currentUser()?.name }}</span>
+        <div class="user-role-wrapper">
+          <span [ngClass]="getRoleBadgeClass()" class="role-badge">
+            {{ authService.userRole() }}
+          </span>
+        </div>
+      </div>
+
+      <button (click)="logout()" class="btn-logout">
+        <svg class="logout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        <span class="logout-text">Cerrar Sesión</span>
+      </button>
+    </div>
+
+    <!-- Guest Links -->
+    <div *ngIf="!authService.isAuthenticated()" class="guest-actions">
+      <a routerLink="/auth/login" class="btn-primary">
+        Iniciar Sesión
+      </a>
+    </div>
+
+  </div>
+</header>
