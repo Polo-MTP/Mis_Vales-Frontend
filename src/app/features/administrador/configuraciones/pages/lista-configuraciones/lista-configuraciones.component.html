@@ -1,0 +1,71 @@
+<div class="dash-card">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-base font-black text-slate-100">Reglas de Negocio</h2>
+      <p class="text-xs text-slate-400 font-medium">Valores clave-valor usados por el motor de cálculo (comisiones, intereses, tolerancias, puntos).</p>
+    </div>
+    <span class="mfa-badge">Solo Administrador / Gerente General edita</span>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando configuraciones...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error()" class="table-container">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr>
+          <th class="table-head-cell">Clave</th>
+          <th class="table-head-cell">Valor Actual</th>
+          <th class="table-head-cell">Tipo</th>
+          <th class="table-head-cell">Vigente Desde</th>
+          <th class="table-head-cell">Modificado Por</th>
+          <th class="table-head-cell"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let c of configuraciones()">
+          <tr class="table-row">
+            <td class="p-3.5 font-mono font-semibold text-slate-100">{{ c.clave }}</td>
+            <td class="p-3.5">
+              <span *ngIf="editando() !== c.clave" class="font-bold text-blue-400">{{ c.valor }}</span>
+              <form *ngIf="editando() === c.clave" [formGroup]="editForm" (ngSubmit)="guardar(c)" class="flex items-center gap-2">
+                <input type="text" formControlName="valor" class="form-input py-1.5 px-2 text-xs w-28">
+                <button type="submit" [disabled]="editForm.invalid || guardando()" class="btn-link-primary">Guardar</button>
+                <button type="button" (click)="cancelarEdicion()" class="btn-link-danger">Cancelar</button>
+              </form>
+              <p *ngIf="editando() === c.clave && errorEdicion()" class="text-red-400 mt-1">{{ errorEdicion() }}</p>
+            </td>
+            <td class="p-3.5 text-slate-400">{{ c.tipo_dato }}</td>
+            <td class="p-3.5 font-mono text-[11px] text-slate-400">{{ c.vigente_desde }}</td>
+            <td class="p-3.5">
+              <div class="font-bold text-slate-200">{{ c.modificado_por.name || 'N/D' }}</div>
+            </td>
+            <td class="p-3.5 whitespace-nowrap">
+              <button *ngIf="editando() !== c.clave" type="button" (click)="iniciarEdicion(c)" class="btn-link-primary mr-3">Editar</button>
+              <button type="button" (click)="toggleHistorial(c.clave)" class="btn-link-primary">
+                {{ historialAbierto() === c.clave ? 'Ocultar historial' : 'Ver historial' }}
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="historialAbierto() === c.clave">
+            <td colspan="6" class="p-3.5 bg-slate-900/40">
+              <p *ngIf="cargandoHistorial()" class="text-xs text-slate-400">Cargando historial...</p>
+              <p *ngIf="!cargandoHistorial() && historial().length === 0" class="text-xs text-slate-500">Sin cambios anteriores registrados.</p>
+              <div *ngIf="!cargandoHistorial() && historial().length > 0" class="space-y-1.5">
+                <div *ngFor="let h of historial()" class="flex items-center justify-between text-xs">
+                  <span class="text-slate-300">{{ h.valor }}</span>
+                  <span class="text-slate-500">
+                    {{ h.vigente_desde }} → {{ h.vigente_hasta || 'vigente' }} · {{ h.modificado_por.name || 'N/D' }}
+                  </span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

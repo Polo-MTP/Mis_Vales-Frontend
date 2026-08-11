@@ -1,0 +1,64 @@
+<div class="dash-card">
+  <div>
+    <h2 class="text-base font-black text-slate-100">Fechas de Corte y Pago</h2>
+    <p class="text-xs text-slate-400 font-medium">Día de corte, límite de pago y días de pago anticipado — global y por sucursal.</p>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando configuraciones de fechas...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error()" class="space-y-3">
+    <div *ngFor="let f of fechas()" class="bg-slate-900/40 rounded-2xl p-4">
+      <div class="flex items-center justify-between mb-3">
+        <span class="font-bold text-slate-100">
+          {{ f.es_default_global ? 'Default Global (todas las sucursales sin regla propia)' : (f.sucursal?.nombre || 'Sucursal ' + f.sucursal_id) }}
+        </span>
+        <button *ngIf="editando() !== f.id" type="button" (click)="iniciarEdicion(f)" class="btn-link-primary">Editar</button>
+      </div>
+
+      <div *ngIf="editando() !== f.id" class="grid grid-cols-3 gap-4 text-sm">
+        <div>
+          <p class="text-xs text-slate-500">Día de Corte</p>
+          <p class="font-bold text-slate-100">{{ f.dia_corte }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500">Día Límite de Pago</p>
+          <p class="font-bold text-slate-100">{{ f.dia_limite_pago }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500">Días de Pago Anticipado</p>
+          <p class="font-bold text-slate-100">{{ f.dias_pago_anticipado }}</p>
+        </div>
+      </div>
+
+      <form *ngIf="editando() === f.id" [formGroup]="editForm" (ngSubmit)="guardar(f)" class="space-y-3">
+        <div *ngIf="errorEdicion()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-xl p-2 text-xs">
+          {{ errorEdicion() }}
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="form-label">Día de Corte</label>
+            <input type="number" formControlName="dia_corte" min="1" max="31" class="form-input">
+          </div>
+          <div>
+            <label class="form-label">Día Límite de Pago</label>
+            <input type="number" formControlName="dia_limite_pago" min="1" max="31" class="form-input">
+          </div>
+          <div>
+            <label class="form-label">Días de Pago Anticipado</label>
+            <input type="number" formControlName="dias_pago_anticipado" min="0" max="30" class="form-input">
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button type="submit" [disabled]="editForm.invalid || guardando()" class="btn-primary w-auto">Guardar</button>
+          <button type="button" (click)="cancelarEdicion()" class="btn-outline">Cancelar</button>
+        </div>
+      </form>
+
+      <p class="text-xs text-slate-500 mt-2">Vigente desde {{ f.vigente_desde }} · Modificado por {{ f.modificado_por.name || 'N/D' }}</p>
+    </div>
+  </div>
+</div>
