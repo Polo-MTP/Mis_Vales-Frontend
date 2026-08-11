@@ -33,4 +33,15 @@ export class DistribuidoraService {
       motivo
     });
   }
+
+  asignarCredito(
+    id: number,
+    limiteCredito: number,
+    categoriaId: number
+  ): Observable<{ message: string; data: DistribuidoraResumen }> {
+    return this.http.put<{ message: string; data: DistribuidoraResumen }>(`${this.baseUrl}/${id}/credito`, {
+      limite_credito: limiteCredito,
+      categoria_id: categoriaId
+    });
+  }
 }
