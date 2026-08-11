@@ -1,10 +1,10 @@
 <div class="dash-card">
-  <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+  <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
     <div>
-      <h3 class="text-base font-black text-slate-800">Historial Forense de Accesos (Auditoría)</h3>
-      <p class="text-xs text-slate-500 font-medium">Registro detallado de los intentos e inicio de sesión en el sistema</p>
+      <h3 class="text-base font-black text-slate-100">Historial Forense de Accesos (Auditoría)</h3>
+      <p class="text-xs text-slate-400 font-medium">Registro detallado de los intentos e inicio de sesión en el sistema</p>
     </div>
-    <span class="mfa-badge bg-emerald-50 text-emerald-700 border border-emerald-200">
+    <span class="mfa-badge bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
       Solo Administrador
     </span>
   </div>
@@ -24,16 +24,16 @@
           <th class="table-head-cell">Estado / Resultado</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
+      <tbody class="font-medium">
         <tr *ngFor="let item of paginationData()?.data" class="table-row">
-          <td class="p-3.5 font-mono text-[11px] text-slate-500">{{ item.created_at | date:'short' }}</td>
+          <td class="p-3.5 font-mono text-[11px] text-slate-400">{{ item.created_at | date:'short' }}</td>
           <td class="p-3.5">
-            <div class="font-bold text-slate-800">{{ item.user?.name || item.email_attempted }}</div>
-            <div class="text-[11px] text-slate-400">{{ item.email_attempted }}</div>
+            <div class="font-bold text-slate-100">{{ item.user?.name || item.email_attempted }}</div>
+            <div class="text-[11px] text-slate-500">{{ item.email_attempted }}</div>
           </td>
-          <td class="p-3.5 font-mono text-slate-600">{{ item.ip_address }}</td>
+          <td class="p-3.5 font-mono text-slate-300">{{ item.ip_address }}</td>
           <td class="p-3.5">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">Paso {{ item.factor_step }}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-700 text-slate-200">Paso {{ item.factor_step }}</span>
           </td>
           <td class="p-3.5">
             <span [ngClass]="getStatusClass(item.status)" class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold">
@@ -50,13 +50,13 @@
   </div>
 
   <!-- Paginación -->
-  <div *ngIf="paginationData()" class="flex items-center justify-between pt-2 text-xs text-slate-500">
+  <div *ngIf="paginationData()" class="flex items-center justify-between pt-2 text-xs text-slate-400">
     <span>Mostrando {{ paginationData()?.from || 0 }} a {{ paginationData()?.to || 0 }} de {{ paginationData()?.total || 0 }} intentos</span>
     <div class="flex items-center space-x-2">
       <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1 || isLoading()" class="btn-pagination">
         Anterior
       </button>
-      <span class="font-bold text-slate-700">Página {{ currentPage() }}</span>
+      <span class="font-bold text-slate-300">Página {{ currentPage() }}</span>
       <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() >= (paginationData()?.last_page || 1) || isLoading()" class="btn-pagination">
         Siguiente
       </button>

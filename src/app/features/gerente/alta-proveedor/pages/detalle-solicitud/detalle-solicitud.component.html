@@ -2,14 +2,14 @@
 
   <!-- Header / Volver -->
   <div class="flex items-center justify-between">
-    <button type="button" (click)="volver()" class="text-sm font-bold text-slate-500 hover:text-slate-700">
+    <button type="button" (click)="volver()" class="text-sm font-bold text-slate-400 hover:text-slate-200">
       ← Volver a la lista
     </button>
   </div>
 
-  <div *ngIf="cargando()" class="text-center py-16 text-slate-400 text-sm">Cargando expediente...</div>
+  <div *ngIf="cargando()" class="state-loading">Cargando expediente...</div>
 
-  <div *ngIf="!cargando() && error()" class="bg-red-50 text-red-700 border border-red-200 rounded-2xl p-4 text-sm">
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
     {{ error() }}
   </div>
 
@@ -19,8 +19,8 @@
     <div class="dash-card">
       <div class="flex items-start justify-between">
         <div>
-          <h1 class="text-2xl font-black text-slate-800 tracking-tight">{{ s.razon_social }}</h1>
-          <p class="text-xs text-slate-500 font-medium mt-1">
+          <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ s.razon_social }}</h1>
+          <p class="text-xs text-slate-400 font-medium mt-1">
             RFC: {{ s.rfc }} · {{ s.sucursal.nombre }}
           </p>
         </div>
@@ -30,7 +30,7 @@
 
     <!-- Datos Personales -->
     <div class="dash-card">
-      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Datos Personales</h2>
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos Personales</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
         <p><span class="text-slate-400">Nombre:</span> {{ s.datos_personales.nombre }} {{ s.datos_personales.apellido_paterno }} {{ s.datos_personales.apellido_materno }}</p>
         <p><span class="text-slate-400">CURP:</span> {{ s.datos_personales.curp }}</p>
@@ -46,7 +46,7 @@
 
     <!-- Captura y verificación -->
     <div class="dash-card">
-      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Captura y Verificación</h2>
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Captura y Verificación</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
         <p><span class="text-slate-400">Coordinador:</span> {{ s.coordinador.name || 'N/D' }}</p>
         <p><span class="text-slate-400">Verificador:</span> {{ s.verificador.name || 'Sin asignar' }}</p>
@@ -60,11 +60,11 @@
 
     <!-- Evidencias -->
     <div class="dash-card" *ngIf="s.evidencias.length > 0">
-      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Evidencias</h2>
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Evidencias</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <a *ngFor="let ev of s.evidencias" [href]="ev.url_archivo" target="_blank" rel="noopener"
-           class="flex items-center justify-between bg-slate-50 rounded-xl p-3 text-sm hover:bg-slate-100 transition-colors">
-          <span class="font-semibold text-slate-700">{{ ev.tipo_documento }}</span>
+           class="flex items-center justify-between bg-slate-900/40 rounded-xl p-3 text-sm hover:bg-slate-900/70 transition-colors">
+          <span class="font-semibold text-slate-200">{{ ev.tipo_documento }}</span>
           <span class="text-xs text-slate-400">{{ ev.subido_por || 'N/D' }}</span>
         </a>
       </div>
@@ -72,7 +72,7 @@
 
     <!-- Tabla Antes / Después -->
     <div class="dash-card">
-      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Cambios del Verificador (Antes / Después)</h2>
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Cambios del Verificador (Antes / Después)</h2>
 
       <p *ngIf="logsAntesDespues().length === 0" class="text-sm text-slate-400">
         El verificador no realizó cambios a los datos capturados.
@@ -89,12 +89,12 @@
               <th class="table-head-cell">Motivo</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody>
             <tr *ngFor="let log of logsAntesDespues()" class="table-row">
-              <td class="p-3.5 text-slate-500">{{ log.entidad_tipo }}</td>
-              <td class="p-3.5 font-semibold text-slate-700">{{ log.campo }}</td>
-              <td class="p-3.5 text-red-500">{{ log.valor_anterior }}</td>
-              <td class="p-3.5 text-emerald-600">{{ log.valor_nuevo }}</td>
+              <td class="p-3.5">{{ log.entidad_tipo }}</td>
+              <td class="p-3.5 font-semibold text-slate-100">{{ log.campo }}</td>
+              <td class="p-3.5 text-red-400">{{ log.valor_anterior }}</td>
+              <td class="p-3.5 text-emerald-400">{{ log.valor_nuevo }}</td>
               <td class="p-3.5 text-slate-400">{{ log.motivo || '—' }}</td>
             </tr>
           </tbody>
@@ -104,21 +104,21 @@
 
     <!-- Decisión ya tomada -->
     <div *ngIf="s.estado === 'aprobado' || s.estado === 'rechazado'"
-         class="rounded-3xl p-6 border shadow-sm space-y-2"
-         [class.bg-emerald-50]="s.estado === 'aprobado'" [class.border-emerald-200]="s.estado === 'aprobado'"
-         [class.bg-red-50]="s.estado === 'rechazado'" [class.border-red-200]="s.estado === 'rechazado'">
+         class="rounded-2xl p-6 border space-y-2"
+         [class.bg-emerald-500/10]="s.estado === 'aprobado'" [class.border-emerald-500/30]="s.estado === 'aprobado'"
+         [class.bg-red-500/10]="s.estado === 'rechazado'" [class.border-red-500/30]="s.estado === 'rechazado'">
       <h2 class="text-sm font-black uppercase tracking-tight"
-          [class.text-emerald-700]="s.estado === 'aprobado'" [class.text-red-700]="s.estado === 'rechazado'">
+          [class.text-emerald-400]="s.estado === 'aprobado'" [class.text-red-400]="s.estado === 'rechazado'">
         Solicitud {{ s.estado }}
       </h2>
-      <p class="text-sm" *ngIf="s.comentario_gerente">{{ s.comentario_gerente }}</p>
-      <p class="text-sm" *ngIf="s.limite_credito_asignado">Límite de crédito asignado: ${{ s.limite_credito_asignado }}</p>
+      <p class="text-sm text-slate-300" *ngIf="s.comentario_gerente">{{ s.comentario_gerente }}</p>
+      <p class="text-sm text-slate-300" *ngIf="s.limite_credito_asignado">Límite de crédito asignado: ${{ s.limite_credito_asignado }}</p>
       <p class="text-xs text-slate-400">Gerente: {{ s.gerente.name || 'N/D' }} · {{ s.fecha_decision }}</p>
     </div>
 
     <!-- Formulario de Decisión -->
     <div *ngIf="s.estado === 'verificado'" class="dash-card">
-      <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Decisión de Gerencia</h2>
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Decisión de Gerencia</h2>
 
       <app-alert [message]="errorDecision()" type="error"></app-alert>
 
@@ -126,17 +126,19 @@
         <div class="flex gap-3">
           <label class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-3 cursor-pointer font-bold text-sm transition-all"
                  [class.border-emerald-500]="decisionForm.value.decision === 'aprobado'"
-                 [class.bg-emerald-50]="decisionForm.value.decision === 'aprobado'"
-                 [class.text-emerald-700]="decisionForm.value.decision === 'aprobado'"
-                 [class.border-slate-200]="decisionForm.value.decision !== 'aprobado'">
+                 [class.bg-emerald-500/10]="decisionForm.value.decision === 'aprobado'"
+                 [class.text-emerald-400]="decisionForm.value.decision === 'aprobado'"
+                 [class.border-slate-700]="decisionForm.value.decision !== 'aprobado'"
+                 [class.text-slate-300]="decisionForm.value.decision !== 'aprobado'">
             <input type="radio" formControlName="decision" value="aprobado" class="hidden">
             Aprobar
           </label>
           <label class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-3 cursor-pointer font-bold text-sm transition-all"
                  [class.border-red-500]="decisionForm.value.decision === 'rechazado'"
-                 [class.bg-red-50]="decisionForm.value.decision === 'rechazado'"
-                 [class.text-red-700]="decisionForm.value.decision === 'rechazado'"
-                 [class.border-slate-200]="decisionForm.value.decision !== 'rechazado'">
+                 [class.bg-red-500/10]="decisionForm.value.decision === 'rechazado'"
+                 [class.text-red-400]="decisionForm.value.decision === 'rechazado'"
+                 [class.border-slate-700]="decisionForm.value.decision !== 'rechazado'"
+                 [class.text-slate-300]="decisionForm.value.decision !== 'rechazado'">
             <input type="radio" formControlName="decision" value="rechazado" class="hidden">
             Rechazar
           </label>

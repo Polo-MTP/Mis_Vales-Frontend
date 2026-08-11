@@ -42,11 +42,11 @@ export class AuditTableComponent implements OnInit {
 
   getStatusClass(status: string): string {
     if (status.startsWith('success')) {
-      return 'bg-emerald-100 text-emerald-700 border border-emerald-200';
+      return 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
     }
     if (status.includes('locked')) {
-      return 'bg-red-100 text-red-700 border border-red-200';
+      return 'bg-red-500/15 text-red-300 border border-red-500/30';
     }
-    return 'bg-amber-100 text-amber-700 border border-amber-200';
+    return 'bg-amber-500/15 text-amber-300 border border-amber-500/30';
   }
 }

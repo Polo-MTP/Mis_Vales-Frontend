@@ -2,8 +2,8 @@
 
   <!-- Header -->
   <div class="dash-card space-y-1">
-    <h1 class="text-2xl font-black text-slate-800 tracking-tight">Solicitudes de Nuevo Distribuidor</h1>
-    <p class="text-xs text-slate-500 font-medium">Revisa el expediente y decide aprobar o rechazar.</p>
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Solicitudes de Nuevo Distribuidor</h1>
+    <p class="text-xs text-slate-400 font-medium">Revisa el expediente y decide aprobar o rechazar.</p>
   </div>
 
   <!-- Filtros -->
@@ -25,12 +25,11 @@
   <!-- Estado Carga / Error / Vacío -->
   <div *ngIf="cargando()" class="text-center py-16 text-slate-400 text-sm">Cargando solicitudes...</div>
 
-  <div *ngIf="!cargando() && error()" class="bg-red-50 text-red-700 border border-red-200 rounded-2xl p-4 text-sm">
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
     {{ error() }}
   </div>
 
-  <div *ngIf="!cargando() && !error() && solicitudes().length === 0"
-       class="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center text-sm text-slate-400">
+  <div *ngIf="!cargando() && !error() && solicitudes().length === 0" class="state-empty">
     No hay solicitudes en este estado.
   </div>
 
@@ -38,10 +37,10 @@
   <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="space-y-3">
     <div *ngFor="let s of solicitudes()" (click)="irADetalle(s.id)" class="list-card-item">
       <div>
-        <p class="font-bold text-slate-800">
+        <p class="font-bold text-slate-100">
           {{ s.datos_personales.nombre }} {{ s.datos_personales.apellido_paterno }} {{ s.datos_personales.apellido_materno }}
         </p>
-        <p class="text-xs text-slate-500 mt-0.5">
+        <p class="text-xs text-slate-400 mt-0.5">
           {{ s.sucursal.nombre }} · CURP: {{ s.datos_personales.curp }}
         </p>
         <p class="text-xs text-slate-400 mt-0.5">
