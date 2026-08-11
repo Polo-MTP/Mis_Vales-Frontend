@@ -5,6 +5,7 @@ import { DetalleSolicitudComponent } from './alta-proveedor/pages/detalle-solici
 import { ListaDistribuidorasComponent } from './distribuidoras/pages/lista-distribuidoras/lista-distribuidoras.component';
 import { DetalleDistribuidoraComponent } from './distribuidoras/pages/detalle-distribuidora/detalle-distribuidora.component';
 import { ListaProductosComponent } from './productos/pages/lista-productos/lista-productos.component';
+import { ValesPendientesComponent } from './vales/pages/vales-pendientes/vales-pendientes.component';
 import { authGuard } from '../auth/guards/auth.guard';
 
 export const GERENTE_ROUTES: Routes = [
@@ -13,5 +14,6 @@ export const GERENTE_ROUTES: Routes = [
   { path: 'solicitudes/:id', component: DetalleSolicitudComponent, canActivate: [authGuard] },
   { path: 'distribuidoras', component: ListaDistribuidorasComponent, canActivate: [authGuard] },
   { path: 'distribuidoras/:id', component: DetalleDistribuidoraComponent, canActivate: [authGuard] },
-  { path: 'productos', component: ListaProductosComponent, canActivate: [authGuard] }
+  { path: 'productos', component: ListaProductosComponent, canActivate: [authGuard] },
+  { path: 'vales', component: ValesPendientesComponent, canActivate: [authGuard] }
 ];

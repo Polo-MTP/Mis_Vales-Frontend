@@ -1,0 +1,50 @@
+<div class="layout-container-narrow">
+
+  <div class="dash-card space-y-1">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Solicitar Vale</h1>
+    <p class="text-xs text-slate-400 font-medium">Elige un cliente y el producto (monto/plazo). Quedará pendiente de autorización.</p>
+  </div>
+
+  <app-alert [message]="errorMessage()" type="error"></app-alert>
+
+  <div *ngIf="cargandoDatos()" class="state-loading">Cargando clientes y catálogo...</div>
+
+  <form *ngIf="!cargandoDatos()" [formGroup]="form" (ngSubmit)="onSubmit()" class="dash-card space-y-4">
+    <div>
+      <label class="form-label">Cliente *</label>
+      <select formControlName="cliente_id" class="form-select">
+        <option value="" disabled>Selecciona un cliente</option>
+        <option *ngFor="let c of clientes()" [value]="c.id">
+          {{ c.datos_personales.nombre }} {{ c.datos_personales.apellido_paterno }} · CURP {{ c.datos_personales.curp }}
+        </option>
+      </select>
+      <p *ngIf="clientes().length === 0" class="text-xs text-slate-500 mt-1">
+        No tienes clientes activos registrados todavía.
+      </p>
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('cliente_id')">{{ errorFor('cliente_id') }}</p>
+    </div>
+
+    <div>
+      <label class="form-label">Producto *</label>
+      <select formControlName="producto_id" class="form-select">
+        <option value="" disabled>Selecciona un producto</option>
+        <option *ngFor="let p of productos()" [value]="p.id">
+          ${{ p.monto }}<ng-container *ngIf="p.quincenas"> · {{ p.quincenas }} quincenas</ng-container><ng-container *ngIf="p.variante"> · {{ p.variante }}</ng-container>
+          <ng-container *ngIf="p.descripcion"> — {{ p.descripcion }}</ng-container>
+        </option>
+      </select>
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('producto_id')">{{ errorFor('producto_id') }}</p>
+    </div>
+
+    <div *ngIf="productoSeleccionado() as p" class="bg-slate-900/40 rounded-2xl p-4 text-sm text-slate-300">
+      Vas a solicitar un vale de <strong class="text-slate-100">${{ p.monto }}</strong>
+      <span *ngIf="p.quincenas"> a pagar en <strong class="text-slate-100">{{ p.quincenas }}</strong> quincenas</span>.
+    </div>
+
+    <button type="submit" [disabled]="form.invalid || enviando()" class="btn-primary">
+      <span *ngIf="!enviando()">Solicitar Vale</span>
+      <span *ngIf="enviando()">Enviando...</span>
+    </button>
+  </form>
+
+</div>
