@@ -1,0 +1,130 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Catálogo de Productos</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Montos de vale disponibles, con su plazo (quincenas) y variante.</p>
+  </div>
+
+  <!-- Crear producto -->
+  <div class="dash-card">
+    <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Nuevo Producto</h2>
+
+    <div *ngIf="errorCrear()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-sm">
+      {{ errorCrear() }}
+    </div>
+
+    <form [formGroup]="crearForm" (ngSubmit)="onSubmitCrear()" class="grid grid-cols-2 sm:grid-cols-5 gap-4 items-end">
+      <div>
+        <label class="form-label">Monto *</label>
+        <input type="number" formControlName="monto" min="100" step="100" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Quincenas</label>
+        <input type="number" formControlName="quincenas" min="1" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Variante</label>
+        <input type="text" formControlName="variante" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Descripción</label>
+        <input type="text" formControlName="descripcion" class="form-input">
+      </div>
+      <button type="submit" [disabled]="crearForm.invalid || creando()" class="btn-primary w-auto">
+        <span *ngIf="!creando()">Crear</span>
+        <span *ngIf="creando()">Creando...</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- Lista -->
+  <div class="dash-card">
+    <div class="flex items-center justify-between">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Productos</h2>
+      <button type="button" (click)="toggleMostrarInactivos()" class="btn-outline">
+        {{ mostrarInactivos() ? 'Ocultar inactivos' : 'Mostrar inactivos' }}
+      </button>
+    </div>
+
+    <div *ngIf="cargando()" class="state-loading">Cargando productos...</div>
+
+    <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ error() }}
+    </div>
+
+    <div *ngIf="!cargando() && !error() && productos().length === 0" class="state-empty">
+      No hay productos que mostrar.
+    </div>
+
+    <div *ngIf="!cargando() && !error() && productos().length > 0" class="table-container">
+      <table class="w-full text-left text-xs">
+        <thead>
+          <tr>
+            <th class="table-head-cell">Monto</th>
+            <th class="table-head-cell">Quincenas</th>
+            <th class="table-head-cell">Variante</th>
+            <th class="table-head-cell">Descripción</th>
+            <th class="table-head-cell">Estado</th>
+            <th class="table-head-cell"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let p of productos()">
+            <tr class="table-row" *ngIf="editando() !== p.id">
+              <td class="p-3.5 font-bold text-slate-100">${{ p.monto }}</td>
+              <td class="p-3.5">{{ p.quincenas || '—' }}</td>
+              <td class="p-3.5">{{ p.variante || '—' }}</td>
+              <td class="p-3.5">{{ p.descripcion || '—' }}</td>
+              <td class="p-3.5">
+                <span class="status-badge"
+                      [class.bg-emerald-500/15]="p.activo" [class.text-emerald-300]="p.activo" [class.border-emerald-500/30]="p.activo"
+                      [class.bg-slate-700]="!p.activo" [class.text-slate-400]="!p.activo">
+                  {{ p.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="p-3.5 whitespace-nowrap">
+                <button type="button" (click)="iniciarEdicion(p)" class="btn-link-primary mr-3">Editar</button>
+                <button type="button" (click)="toggleActivo(p)" [class]="p.activo ? 'btn-link-danger' : 'btn-link-primary'">
+                  {{ p.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="editando() === p.id">
+              <td colspan="6" class="p-3.5 bg-slate-900/40">
+                <form [formGroup]="editForm" (ngSubmit)="guardarEdicion(p)" class="space-y-3">
+                  <div *ngIf="errorEditar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-xl p-2 text-xs">
+                    {{ errorEditar() }}
+                  </div>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                      <label class="form-label">Monto</label>
+                      <input type="number" formControlName="monto" class="form-input py-1.5 px-2 text-xs">
+                    </div>
+                    <div>
+                      <label class="form-label">Quincenas</label>
+                      <input type="number" formControlName="quincenas" class="form-input py-1.5 px-2 text-xs">
+                    </div>
+                    <div>
+                      <label class="form-label">Variante</label>
+                      <input type="text" formControlName="variante" class="form-input py-1.5 px-2 text-xs">
+                    </div>
+                    <div>
+                      <label class="form-label">Descripción</label>
+                      <input type="text" formControlName="descripcion" class="form-input py-1.5 px-2 text-xs">
+                    </div>
+                  </div>
+                  <div class="flex gap-2">
+                    <button type="submit" [disabled]="editForm.invalid || guardando()" class="btn-link-primary">Guardar</button>
+                    <button type="button" (click)="cancelarEdicion()" class="btn-link-danger">Cancelar</button>
+                  </div>
+                </form>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
