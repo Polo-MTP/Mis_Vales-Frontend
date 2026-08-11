@@ -1,0 +1,85 @@
+<div class="layout-container-narrow">
+
+  <button type="button" (click)="volver()" class="text-sm font-bold text-slate-400 hover:text-slate-200">
+    ← Volver al catálogo
+  </button>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando distribuidora...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <ng-container *ngIf="!cargando() && !error() && distribuidora() as d">
+
+    <div class="dash-card">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ d.razon_social }}</h1>
+          <p class="text-xs text-slate-400 font-medium mt-1">
+            {{ d.numero_distribuidora }} · RFC: {{ d.rfc }} · {{ d.sucursal.nombre || 'Sin sucursal' }}
+          </p>
+        </div>
+        <span class="status-badge"
+              [class.bg-emerald-500/15]="d.estado === 'ACTIVO'" [class.text-emerald-300]="d.estado === 'ACTIVO'" [class.border-emerald-500/30]="d.estado === 'ACTIVO'"
+              [class.bg-amber-500/15]="d.estado === 'MOROSO'" [class.text-amber-300]="d.estado === 'MOROSO'" [class.border-amber-500/30]="d.estado === 'MOROSO'"
+              [class.bg-red-500/15]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'" [class.text-red-300]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'" [class.border-red-500/30]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'">
+          {{ d.estado }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Crédito -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="stat-card">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Límite de Crédito</p>
+        <p class="text-2xl font-black text-blue-500 mt-1">${{ d.limite_credito || 0 }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Crédito Disponible</p>
+        <p class="text-2xl font-black text-emerald-500 mt-1">${{ d.credito_disponible || 0 }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Categoría</p>
+        <p class="text-2xl font-black text-indigo-400 mt-1">{{ d.categoria?.nombre || 'Sin categoría' }}</p>
+      </div>
+    </div>
+
+    <!-- Titular -->
+    <div class="dash-card">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Titular</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-300">
+        <p><span class="text-slate-500">Nombre:</span> {{ d.datos_personales.nombre }} {{ d.datos_personales.apellido_paterno }} {{ d.datos_personales.apellido_materno }}</p>
+        <p><span class="text-slate-500">CURP:</span> {{ d.datos_personales.curp }}</p>
+        <p><span class="text-slate-500">Coordinador:</span> {{ d.coordinador.name || 'N/D' }}</p>
+        <p><span class="text-slate-500">Verificador:</span> {{ d.verificador.name || 'N/D' }}</p>
+        <p class="sm:col-span-2" *ngIf="d.comentarios_verificador">
+          <span class="text-slate-500">Comentario del verificador:</span> {{ d.comentarios_verificador }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Cambiar estado -->
+    <div class="dash-card">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Cambiar Estado</h2>
+
+      <div *ngIf="errorEstado()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-sm">
+        {{ errorEstado() }}
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <button *ngFor="let estado of estadosDisponibles" type="button"
+                (click)="cambiarEstado(estado)"
+                [disabled]="cambiandoEstado() || d.estado === estado"
+                class="btn-outline">
+          Marcar como {{ estado }}
+        </button>
+      </div>
+      <p class="text-xs text-slate-500">
+        El backend valida si tu rol puede hacer este cambio específico; si no, verás el error arriba.
+      </p>
+    </div>
+
+  </ng-container>
+
+</div>

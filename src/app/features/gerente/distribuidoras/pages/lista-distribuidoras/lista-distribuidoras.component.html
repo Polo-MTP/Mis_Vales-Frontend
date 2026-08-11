@@ -1,0 +1,60 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Distribuidoras</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Catálogo de distribuidoras activas y su estado de cuenta.</p>
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex flex-wrap gap-2">
+    <button type="button" (click)="cambiarFiltro('todos')" [class]="filtroEstado() === 'todos' ? 'btn-filter-active' : 'btn-filter'">
+      Todas
+    </button>
+    <button type="button" (click)="cambiarFiltro('ACTIVO')" [class]="filtroEstado() === 'ACTIVO' ? 'btn-filter-active' : 'btn-filter'">
+      Activas
+    </button>
+    <button type="button" (click)="cambiarFiltro('MOROSO')" [class]="filtroEstado() === 'MOROSO' ? 'btn-filter-active' : 'btn-filter'">
+      Morosas
+    </button>
+    <button type="button" (click)="cambiarFiltro('RECHAZADO')" [class]="filtroEstado() === 'RECHAZADO' ? 'btn-filter-active' : 'btn-filter'">
+      Rechazadas
+    </button>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando distribuidoras...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && distribuidoras().length === 0" class="state-empty">
+    No hay distribuidoras en este estado.
+  </div>
+
+  <div *ngIf="!cargando() && !error() && distribuidoras().length > 0" class="space-y-3">
+    <div *ngFor="let d of distribuidoras()" (click)="irADetalle(d.id)" class="list-card-item">
+      <div>
+        <p class="font-bold text-slate-100">{{ d.razon_social }}</p>
+        <p class="text-xs text-slate-400 mt-0.5">
+          {{ d.numero_distribuidora }} · RFC: {{ d.rfc }} · {{ d.sucursal.nombre || 'Sin sucursal' }}
+        </p>
+        <p class="text-xs text-slate-500 mt-0.5">
+          Titular: {{ d.datos_personales.nombre }} {{ d.datos_personales.apellido_paterno }}
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="text-right">
+          <span class="block text-xs text-slate-400">Disponible</span>
+          <span class="block font-bold text-emerald-400">${{ d.credito_disponible }}</span>
+        </span>
+        <span class="status-badge"
+              [class.bg-emerald-500/15]="d.estado === 'ACTIVO'" [class.text-emerald-300]="d.estado === 'ACTIVO'" [class.border-emerald-500/30]="d.estado === 'ACTIVO'"
+              [class.bg-amber-500/15]="d.estado === 'MOROSO'" [class.text-amber-300]="d.estado === 'MOROSO'" [class.border-amber-500/30]="d.estado === 'MOROSO'"
+              [class.bg-red-500/15]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'" [class.text-red-300]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'" [class.border-red-500/30]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'">
+          {{ d.estado }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>
