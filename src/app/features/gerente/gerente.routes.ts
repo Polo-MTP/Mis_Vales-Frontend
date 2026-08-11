@@ -9,6 +9,7 @@ import { ValesPendientesComponent } from './vales/pages/vales-pendientes/vales-p
 import { ListaRelacionesComponent } from './relaciones/pages/lista-relaciones/lista-relaciones.component';
 import { DetalleRelacionComponent } from './relaciones/pages/detalle-relacion/detalle-relacion.component';
 import { ListaMorososComponent } from './reportes/pages/lista-morosos/lista-morosos.component';
+import { ListaConciliacionesComponent } from './conciliaciones/pages/lista-conciliaciones/lista-conciliaciones.component';
 import { authGuard } from '../auth/guards/auth.guard';
 
 export const GERENTE_ROUTES: Routes = [
@@ -21,5 +22,6 @@ export const GERENTE_ROUTES: Routes = [
   { path: 'vales', component: ValesPendientesComponent, canActivate: [authGuard] },
   { path: 'relaciones', component: ListaRelacionesComponent, canActivate: [authGuard] },
   { path: 'relaciones/:id', component: DetalleRelacionComponent, canActivate: [authGuard] },
-  { path: 'reportes/morosos', component: ListaMorososComponent, canActivate: [authGuard] }
+  { path: 'reportes/morosos', component: ListaMorososComponent, canActivate: [authGuard] },
+  { path: 'conciliaciones', component: ListaConciliacionesComponent, canActivate: [authGuard] }
 ];

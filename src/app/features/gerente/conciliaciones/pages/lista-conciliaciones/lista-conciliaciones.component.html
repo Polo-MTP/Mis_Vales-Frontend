@@ -1,0 +1,80 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Conciliación Bancaria</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Importa el Excel del banco y concilia los abonos contra las relaciones.</p>
+  </div>
+
+  <div class="dash-card space-y-3">
+    <p class="text-sm font-bold text-slate-200">Importar archivo del banco</p>
+    <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+      <input type="file" accept=".xlsx,.xls,.csv" (change)="onArchivoSeleccionado($event)" class="form-input" />
+      <button type="button" (click)="importar()" [disabled]="!archivoSeleccionado() || importando()" class="btn-primary w-auto shrink-0">
+        <span *ngIf="!importando()">Importar</span>
+        <span *ngIf="importando()">Importando...</span>
+      </button>
+    </div>
+
+    <div *ngIf="errorImportar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ errorImportar() }}
+    </div>
+
+    <div *ngIf="resumenImportar() as resumen" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm space-y-1">
+      <p>{{ resumen.procesadas }} fila(s) procesada(s) · {{ resumen.conciliadas }} conciliada(s) · {{ resumen.sin_coincidencia }} sin coincidencia.</p>
+      <p *ngFor="let e of resumen.errores" class="text-amber-300 text-xs">{{ e }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="errorManual()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorManual() }}
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex flex-wrap gap-2">
+    <button type="button" (click)="cambiarFiltro('todos')" [class]="filtroEstado() === 'todos' ? 'btn-filter-active' : 'btn-filter'">Todos</button>
+    <button type="button" (click)="cambiarFiltro('conciliado')" [class]="filtroEstado() === 'conciliado' ? 'btn-filter-active' : 'btn-filter'">Conciliados</button>
+    <button type="button" (click)="cambiarFiltro('sin_coincidencia')" [class]="filtroEstado() === 'sin_coincidencia' ? 'btn-filter-active' : 'btn-filter'">Sin Coincidencia</button>
+    <button type="button" (click)="cambiarFiltro('conciliado_manual')" [class]="filtroEstado() === 'conciliado_manual' ? 'btn-filter-active' : 'btn-filter'">Conciliados Manual</button>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando abonos...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && abonos().length === 0" class="state-empty">
+    No hay abonos en este estado.
+  </div>
+
+  <div *ngIf="!cargando() && !error() && abonos().length > 0" class="space-y-3">
+    <div *ngFor="let a of abonos()" class="list-card-item cursor-default">
+      <div>
+        <p class="font-bold text-slate-100">Ref. {{ a.referencia_leida }} · ${{ a.monto }}</p>
+        <p class="text-xs text-slate-400 mt-0.5">
+          {{ a.tipo_pago }} · {{ a.fecha_pago | date:'shortDate' }}<span *ngIf="a.folio_pago"> · Folio {{ a.folio_pago }}</span>
+          <span *ngIf="a.relacion_id"> · Relación #{{ a.relacion_id }}</span>
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="status-badge"
+              [class.bg-emerald-500/15]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'" [class.text-emerald-300]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'" [class.border-emerald-500/30]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'"
+              [class.bg-amber-500/15]="a.estado === 'sin_coincidencia'" [class.text-amber-300]="a.estado === 'sin_coincidencia'" [class.border-amber-500/30]="a.estado === 'sin_coincidencia'">
+          {{ a.estado }}
+        </span>
+        <button *ngIf="a.estado === 'sin_coincidencia'" type="button" (click)="conciliarManual(a)" [disabled]="conciliandoManual() === a.id" class="btn-outline w-auto shrink-0">
+          <span *ngIf="conciliandoManual() !== a.id">Conciliar Manual</span>
+          <span *ngIf="conciliandoManual() === a.id">Conciliando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando() && !error() && paginacion() && paginacion()!.last_page > 1"
+       class="flex items-center justify-between pt-2">
+    <button type="button" (click)="cambiarPagina(-1)" [disabled]="pagina() <= 1" class="btn-pagination">← Anterior</button>
+    <span class="text-xs font-semibold text-slate-500">Página {{ paginacion()?.current_page }} de {{ paginacion()?.last_page }}</span>
+    <button type="button" (click)="cambiarPagina(1)" [disabled]="pagina() >= (paginacion()?.last_page || 1)" class="btn-pagination">Siguiente →</button>
+  </div>
+
+</div>
