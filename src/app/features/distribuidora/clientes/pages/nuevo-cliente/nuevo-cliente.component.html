@@ -1,0 +1,110 @@
+<div class="layout-container-narrow">
+
+  <div class="dash-card space-y-1">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Nuevo Cliente</h1>
+    <p class="text-xs text-slate-400 font-medium">Registra un cliente para tu distribuidora.</p>
+  </div>
+
+  <app-alert [message]="errorMessage()" type="error"></app-alert>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+    <div class="dash-card">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos Personales</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="form-label">Nombre(s) *</label>
+          <input type="text" formControlName="nombre" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('nombre')">{{ errorFor('nombre') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Apellido Paterno *</label>
+          <input type="text" formControlName="apellido_paterno" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('apellido_paterno')">{{ errorFor('apellido_paterno') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Apellido Materno</label>
+          <input type="text" formControlName="apellido_materno" class="form-input">
+        </div>
+
+        <div>
+          <label class="form-label">CURP *</label>
+          <input type="text" formControlName="curp" maxlength="18" class="form-input uppercase">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('curp')">{{ errorFor('curp') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Fecha de Nacimiento</label>
+          <input type="date" formControlName="fecha_nacimiento" class="form-input">
+        </div>
+
+        <div>
+          <label class="form-label">Lugar de Nacimiento</label>
+          <input type="text" formControlName="lugar_nacimiento" class="form-input">
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Dirección</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2">
+          <label class="form-label">Calle *</label>
+          <input type="text" formControlName="calle" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('calle')">{{ errorFor('calle') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Colonia *</label>
+          <input type="text" formControlName="colonia" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('colonia')">{{ errorFor('colonia') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Código Postal *</label>
+          <input type="text" formControlName="codigo_postal" maxlength="10" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('codigo_postal')">{{ errorFor('codigo_postal') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Número Exterior *</label>
+          <input type="text" formControlName="numero_ext" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('numero_ext')">{{ errorFor('numero_ext') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Número Interior</label>
+          <input type="text" formControlName="numero_int" class="form-input">
+        </div>
+
+        <div>
+          <label class="form-label">Estado *</label>
+          <input type="text" formControlName="estado" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('estado')">{{ errorFor('estado') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Ciudad *</label>
+          <input type="text" formControlName="ciudad" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('ciudad')">{{ errorFor('ciudad') }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-3">
+      <button type="button" (click)="cancelar()" class="py-3.5 px-6 text-slate-400 hover:text-slate-200 font-bold text-sm rounded-xl transition-all">
+        Cancelar
+      </button>
+      <button type="submit" [disabled]="form.invalid || isLoading()" class="btn-primary w-auto">
+        <span *ngIf="!isLoading()">Registrar Cliente</span>
+        <span *ngIf="isLoading()">Guardando...</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>

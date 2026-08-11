@@ -1,0 +1,83 @@
+<div class="layout-container">
+
+  <!-- Header -->
+  <div class="dash-card flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-black text-slate-100 tracking-tight">Mis Clientes</h1>
+      <p class="text-xs text-slate-400 font-medium mt-1">Clientes registrados bajo tu distribuidora.</p>
+    </div>
+    <a routerLink="/distribuidora/clientes/nuevo" class="btn-primary w-auto shrink-0">
+      + Nuevo Cliente
+    </a>
+  </div>
+
+  <!-- Búsqueda y filtros -->
+  <div class="flex flex-col sm:flex-row gap-3">
+    <input type="text" [formControl]="buscarControl" placeholder="Buscar por nombre, apellido o CURP..."
+           class="form-input sm:max-w-xs">
+
+    <div class="flex gap-2">
+      <button type="button" (click)="cambiarFiltro('todos')" [class]="filtroEstado() === 'todos' ? 'btn-filter-active' : 'btn-filter'">
+        Todos
+      </button>
+      <button type="button" (click)="cambiarFiltro('activos')" [class]="filtroEstado() === 'activos' ? 'btn-filter-active' : 'btn-filter'">
+        Activos
+      </button>
+      <button type="button" (click)="cambiarFiltro('inactivos')" [class]="filtroEstado() === 'inactivos' ? 'btn-filter-active' : 'btn-filter'">
+        Inactivos
+      </button>
+    </div>
+  </div>
+
+  <!-- Cargando -->
+  <div *ngIf="cargando()" class="state-loading">Cargando clientes...</div>
+
+  <!-- Error -->
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <!-- Vacío -->
+  <div *ngIf="!cargando() && !error() && clientes().length === 0" class="state-empty">
+    No tienes clientes registrados{{ buscarControl.value ? ' que coincidan con la búsqueda' : '' }}.
+  </div>
+
+  <!-- Lista -->
+  <div *ngIf="!cargando() && !error() && clientes().length > 0" class="space-y-3">
+    <div *ngFor="let c of clientes()" (click)="irADetalle(c.id)" class="list-card-item">
+      <div>
+        <p class="font-bold text-slate-100">
+          {{ c.datos_personales.nombre }} {{ c.datos_personales.apellido_paterno }} {{ c.datos_personales.apellido_materno }}
+        </p>
+        <p class="text-xs text-slate-400 mt-0.5">
+          CURP: {{ c.datos_personales.curp }} · {{ c.datos_personales.direccion.colonia }}, {{ c.datos_personales.direccion.ciudad }}
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="status-badge"
+              [class.bg-emerald-500/15]="c.estado" [class.text-emerald-300]="c.estado" [class.border-emerald-500/30]="c.estado"
+              [class.bg-slate-700]="!c.estado" [class.text-slate-400]="!c.estado">
+          {{ c.estado ? 'Activo' : 'Inactivo' }}
+        </span>
+        <button type="button" (click)="toggleEstado(c, $event)" class="btn-link-primary whitespace-nowrap">
+          {{ c.estado ? 'Desactivar' : 'Activar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div *ngIf="!cargando() && !error() && paginacion() && paginacion()!.last_page > 1"
+       class="flex items-center justify-between pt-2">
+    <button type="button" (click)="cambiarPagina(-1)" [disabled]="pagina() <= 1" class="btn-pagination">
+      ← Anterior
+    </button>
+    <span class="text-xs font-semibold text-slate-500">
+      Página {{ paginacion()?.current_page }} de {{ paginacion()?.last_page }} · {{ paginacion()?.total }} clientes
+    </span>
+    <button type="button" (click)="cambiarPagina(1)" [disabled]="pagina() >= (paginacion()?.last_page || 1)" class="btn-pagination">
+      Siguiente →
+    </button>
+  </div>
+
+</div>
