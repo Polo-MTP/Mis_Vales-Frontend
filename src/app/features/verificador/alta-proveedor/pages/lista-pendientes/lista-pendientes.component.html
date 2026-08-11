@@ -1,14 +1,13 @@
 <div class="w-[820px] mx-auto py-8 space-y-6">
 
   <!-- Header -->
-  <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-center justify-between">
+  <div class="dash-card flex items-center justify-between">
     <div>
-      <h1 class="text-2xl font-black text-slate-800 tracking-tight">Panel de Inspección en Campo</h1>
-      <p class="text-xs text-slate-500 font-medium mt-1">Selecciona una solicitud para realizar la visita y dictamen.</p>
+      <h1 class="text-2xl font-black text-slate-100 tracking-tight">Panel de Inspección en Campo</h1>
+      <p class="text-xs text-slate-400 font-medium mt-1">Selecciona una solicitud para realizar la visita y dictamen.</p>
     </div>
-    <button type="button" (click)="cargarSolicitudes()" [disabled]="cargando()"
-            class="shrink-0 inline-flex items-center gap-2 py-3 px-5 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-all">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+    <button type="button" (click)="cargarSolicitudes()" [disabled]="cargando()" class="btn-outline shrink-0">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 mr-2">
         <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
       </svg>
       Actualizar
@@ -18,104 +17,85 @@
   <!-- Filtros -->
   <div class="flex flex-wrap gap-2">
     <button type="button" (click)="cambiarFiltro('pendiente_verificacion')"
-            [class.bg-blue-600]="filtroEstado() === 'pendiente_verificacion'"
-            [class.text-white]="filtroEstado() === 'pendiente_verificacion'"
-            [class.border-blue-600]="filtroEstado() === 'pendiente_verificacion'"
-            [class.bg-white]="filtroEstado() !== 'pendiente_verificacion'"
-            [class.text-slate-600]="filtroEstado() !== 'pendiente_verificacion'"
-            class="px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold transition-all">
+            [class]="filtroEstado() === 'pendiente_verificacion' ? 'btn-filter-active' : 'btn-filter'">
       Pendientes
     </button>
     <button type="button" (click)="cambiarFiltro('en_verificacion')"
-            [class.bg-blue-600]="filtroEstado() === 'en_verificacion'"
-            [class.text-white]="filtroEstado() === 'en_verificacion'"
-            [class.border-blue-600]="filtroEstado() === 'en_verificacion'"
-            [class.bg-white]="filtroEstado() !== 'en_verificacion'"
-            [class.text-slate-600]="filtroEstado() !== 'en_verificacion'"
-            class="px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold transition-all">
+            [class]="filtroEstado() === 'en_verificacion' ? 'btn-filter-active' : 'btn-filter'">
       En Verificación
     </button>
     <button type="button" (click)="cambiarFiltro('verificado')"
-            [class.bg-blue-600]="filtroEstado() === 'verificado'"
-            [class.text-white]="filtroEstado() === 'verificado'"
-            [class.border-blue-600]="filtroEstado() === 'verificado'"
-            [class.bg-white]="filtroEstado() !== 'verificado'"
-            [class.text-slate-600]="filtroEstado() !== 'verificado'"
-            class="px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold transition-all">
+            [class]="filtroEstado() === 'verificado' ? 'btn-filter-active' : 'btn-filter'">
       Completadas
     </button>
     <button type="button" (click)="cambiarFiltro('rechazado')"
-            [class.bg-blue-600]="filtroEstado() === 'rechazado'"
-            [class.text-white]="filtroEstado() === 'rechazado'"
-            [class.border-blue-600]="filtroEstado() === 'rechazado'"
-            [class.bg-white]="filtroEstado() !== 'rechazado'"
-            [class.text-slate-600]="filtroEstado() !== 'rechazado'"
-            class="px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold transition-all">
+            [class]="filtroEstado() === 'rechazado' ? 'btn-filter-active' : 'btn-filter'">
       Rechazadas
     </button>
   </div>
 
   <!-- Cargando -->
-  <div *ngIf="cargando()" class="text-center py-16 text-slate-400 text-sm">
+  <div *ngIf="cargando()" class="state-loading">
     Cargando solicitudes asignadas a tu sucursal...
   </div>
 
   <!-- Error -->
-  <div *ngIf="!cargando() && error()" class="bg-red-50 text-red-700 border border-red-200 rounded-2xl p-4 text-sm flex items-center justify-between">
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm flex items-center justify-between">
     <span>{{ error() }}</span>
     <button type="button" (click)="cargarSolicitudes()" class="font-bold underline shrink-0 ml-3">Reintentar</button>
   </div>
 
   <!-- Vacío -->
-  <div *ngIf="!cargando() && !error() && solicitudes().length === 0"
-       class="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center text-sm text-slate-400">
+  <div *ngIf="!cargando() && !error() && solicitudes().length === 0" class="state-empty">
     No hay pendientes de revisión bajo este estado actualmente.
   </div>
 
   <!-- Grid de Tarjetas -->
   <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="grid grid-cols-2 gap-4">
     <div *ngFor="let solicitud of solicitudes()" (click)="irADetalle(solicitud.id)"
-         class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm
-                hover:shadow-md hover:border-blue-300 active:scale-[0.98] transition-all cursor-pointer
-                flex flex-col justify-between">
+         class="list-card-item flex-col items-stretch active:scale-[0.98]">
       <div>
         <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-bold uppercase text-slate-500 bg-slate-100 px-2 py-1 rounded">
+          <span class="text-xs font-bold uppercase text-slate-400 bg-slate-900/60 px-2 py-1 rounded">
             {{ solicitud.sucursal?.nombre || 'Sucursal General' }}
           </span>
-          <span class="text-xs font-bold px-2.5 py-1 rounded-full"
-                [class.bg-amber-100]="solicitud.estado === 'pendiente_verificacion'"
-                [class.text-amber-800]="solicitud.estado === 'pendiente_verificacion'"
-                [class.bg-blue-100]="solicitud.estado === 'en_verificacion'"
-                [class.text-blue-800]="solicitud.estado === 'en_verificacion'"
-                [class.bg-emerald-100]="solicitud.estado === 'verificado'"
-                [class.text-emerald-800]="solicitud.estado === 'verificado'"
-                [class.bg-red-100]="solicitud.estado === 'rechazado'"
-                [class.text-red-800]="solicitud.estado === 'rechazado'">
+          <span class="status-badge"
+                [class.bg-amber-500/15]="solicitud.estado === 'pendiente_verificacion'"
+                [class.text-amber-300]="solicitud.estado === 'pendiente_verificacion'"
+                [class.border-amber-500/30]="solicitud.estado === 'pendiente_verificacion'"
+                [class.bg-blue-500/15]="solicitud.estado === 'en_verificacion'"
+                [class.text-blue-300]="solicitud.estado === 'en_verificacion'"
+                [class.border-blue-500/30]="solicitud.estado === 'en_verificacion'"
+                [class.bg-emerald-500/15]="solicitud.estado === 'verificado'"
+                [class.text-emerald-300]="solicitud.estado === 'verificado'"
+                [class.border-emerald-500/30]="solicitud.estado === 'verificado'"
+                [class.bg-red-500/15]="solicitud.estado === 'rechazado'"
+                [class.text-red-300]="solicitud.estado === 'rechazado'"
+                [class.border-red-500/30]="solicitud.estado === 'rechazado'">
             {{ solicitud.estado | titlecase }}
           </span>
         </div>
 
-        <h2 class="text-base font-bold text-slate-800 mb-3">
+        <h2 class="text-base font-bold text-slate-100 mb-3">
           {{ solicitud.datos_personales?.nombre }}
           {{ solicitud.datos_personales?.apellido_paterno }}
           {{ solicitud.datos_personales?.apellido_materno }}
         </h2>
 
-        <p class="text-sm text-slate-500 mb-1.5">
+        <p class="text-sm text-slate-400 mb-1.5">
           {{ solicitud.datos_personales?.direccion?.calle }} #{{ solicitud.datos_personales?.direccion?.numero_ext }},
           {{ solicitud.datos_personales?.direccion?.colonia }}
         </p>
-        <p class="text-sm text-slate-500">
-          CURP: <strong class="text-slate-700">{{ solicitud.datos_personales?.curp }}</strong>
+        <p class="text-sm text-slate-400">
+          CURP: <strong class="text-slate-200">{{ solicitud.datos_personales?.curp }}</strong>
         </p>
       </div>
 
-      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+      <div class="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between">
         <span class="text-xs text-slate-400">
           Capturado por: {{ solicitud.coordinador?.name || 'Coordinador' }}
         </span>
-        <span class="shrink-0 inline-flex items-center gap-1 bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-lg">
+        <span class="shrink-0 inline-flex items-center gap-1 bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-lg">
           {{ solicitud.estado === 'verificado' || solicitud.estado === 'rechazado' ? 'Ver Detalle' : 'Iniciar Visita' }}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
             <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -128,13 +108,11 @@
   <!-- Paginación -->
   <div *ngIf="!cargando() && !error() && (pagina() > 1 || hayPaginaSiguiente())"
        class="flex items-center justify-between pt-2">
-    <button type="button" (click)="paginaAnterior()" [disabled]="pagina() <= 1"
-            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-all">
+    <button type="button" (click)="paginaAnterior()" [disabled]="pagina() <= 1" class="btn-pagination">
       ← Anterior
     </button>
     <span class="text-xs font-semibold text-slate-400">Página {{ pagina() }}</span>
-    <button type="button" (click)="paginaSiguiente()" [disabled]="!hayPaginaSiguiente()"
-            class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-all">
+    <button type="button" (click)="paginaSiguiente()" [disabled]="!hayPaginaSiguiente()" class="btn-pagination">
       Siguiente →
     </button>
   </div>
