@@ -3,11 +3,15 @@ import { CoordinadorDashboardComponent } from './pages/dashboard/coordinador-das
 import { NuevaSolicitudComponent } from './alta-proveedor/pages/nueva-solicitud/nueva-solicitud.component';
 import { ListaMorososComponent } from './reportes/pages/lista-morosos/lista-morosos.component';
 import { ListaConciliacionesComponent } from './conciliaciones/pages/lista-conciliaciones/lista-conciliaciones.component';
+import { AutorizacionesPendientesComponent } from './conciliaciones/pages/autorizaciones-pendientes/autorizaciones-pendientes.component';
+import { EdicionesPendientesComponent } from './clientes/pages/ediciones-pendientes/ediciones-pendientes.component';
 import { authGuard } from '../auth/guards/auth.guard';
 
 export const COORDINADOR_ROUTES: Routes = [
   { path: '', component: CoordinadorDashboardComponent, canActivate: [authGuard] },
   { path: 'solicitudes/nueva', component: NuevaSolicitudComponent, canActivate: [authGuard] },
   { path: 'reportes/morosos', component: ListaMorososComponent, canActivate: [authGuard] },
-  { path: 'conciliaciones', component: ListaConciliacionesComponent, canActivate: [authGuard] }
+  { path: 'conciliaciones', component: ListaConciliacionesComponent, canActivate: [authGuard] },
+  { path: 'conciliaciones/autorizaciones', component: AutorizacionesPendientesComponent, canActivate: [authGuard] },
+  { path: 'clientes/ediciones', component: EdicionesPendientesComponent, canActivate: [authGuard] }
 ];

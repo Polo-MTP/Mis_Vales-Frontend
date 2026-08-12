@@ -5,6 +5,7 @@ import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from '../../../../core/models/auth-response.model';
 import { PaginatedResponse } from '../../../../core/models/user.model';
 import { AbonoConciliacion, EstadoAbonoConciliacion, ResumenImportacionConciliacion } from '../../../../core/models/conciliacion.model';
+import { SolicitudConciliacion } from '../../../../core/models/solicitud-conciliacion.model';
 
 @Injectable({ providedIn: 'root' })
 export class ConciliacionService {
@@ -28,10 +29,15 @@ export class ConciliacionService {
     return this.http.post<ApiResponse<ResumenImportacionConciliacion>>(`${this.baseUrl}/importar`, formData);
   }
 
-  conciliarManual(abonoId: number, relacionId: number, motivo: string): Observable<ApiResponse<AbonoConciliacion>> {
-    return this.http.post<ApiResponse<AbonoConciliacion>>(`${this.baseUrl}/${abonoId}/conciliar-manual`, {
-      relacion_id: relacionId,
-      motivo
+  autorizacionesPendientes(page = 1): Observable<ApiResponse<PaginatedResponse<SolicitudConciliacion>>> {
+    const params = new HttpParams().set('page', String(page)).set('estado', 'pendiente');
+    return this.http.get<ApiResponse<PaginatedResponse<SolicitudConciliacion>>>(`${this.baseUrl}/autorizaciones`, { params });
+  }
+
+  decidirAutorizacion(solicitudId: number, decision: 'aprobada' | 'rechazada', comentario?: string): Observable<ApiResponse<SolicitudConciliacion>> {
+    return this.http.put<ApiResponse<SolicitudConciliacion>>(`${this.baseUrl}/autorizaciones/${solicitudId}/decidir`, {
+      decision,
+      comentario
     });
   }
 }

@@ -11,6 +11,7 @@ export interface Vale {
   quincenas: number | null;
   tipo: TipoVale;
   estado: EstadoVale;
+  activo: boolean;
   fecha_solicitud: string | null;
   fecha_autorizacion: string | null;
   numero_transferencia: string | null;

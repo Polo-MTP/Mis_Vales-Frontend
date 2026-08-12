@@ -9,15 +9,16 @@
   </div>
 
   <div class="dash-card flex gap-3">
-    <a routerLink="/administrador/configuraciones" class="btn-primary">
-      Configuraciones del Sistema
+    <a routerLink="/administrador/logs" class="btn-primary">
+      Log de Auditoría
     </a>
-    <a routerLink="/administrador/reportes/morosos" class="btn-outline">
-      Reporte de Morosos
-    </a>
-    <a routerLink="/administrador/conciliaciones" class="btn-outline">
-      Conciliación Bancaria
-    </a>
+  </div>
+
+  <div class="dash-card">
+    <p class="text-xs text-slate-400">
+      Tu rol es de solo lectura sobre auditoría del sistema. La operación del negocio
+      (configuraciones, conciliaciones, reportes, distribuidoras) la manejan Gerencia y Coordinación.
+    </p>
   </div>
 
   <app-audit-table></app-audit-table>

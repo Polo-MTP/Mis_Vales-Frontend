@@ -1,0 +1,27 @@
+<div class="layout-container">
+
+  <div class="dash-card space-y-2">
+    <h1 class="text-2xl font-black text-slate-100 uppercase tracking-tight">
+      DASHBOARD CAJERA
+    </h1>
+    <p class="text-xs text-slate-400 font-medium">
+      Bienvenido, {{ authService.currentUser()?.name }} ({{ authService.currentUser()?.email }})
+    </p>
+  </div>
+
+  <div class="dash-card flex flex-col sm:flex-row gap-3">
+    <a routerLink="/cajera/conciliaciones" class="btn-primary">
+      Conciliación Bancaria
+    </a>
+    <a routerLink="/cajera/conciliaciones/mis-solicitudes" class="btn-outline">
+      Mis Solicitudes
+    </a>
+    <a routerLink="/cajera/clientes/solicitar-edicion" class="btn-outline">
+      Corregir Datos de Cliente
+    </a>
+    <a routerLink="/cajera/puntos/canjear" class="btn-outline">
+      Canjear Puntos
+    </a>
+  </div>
+
+</div>

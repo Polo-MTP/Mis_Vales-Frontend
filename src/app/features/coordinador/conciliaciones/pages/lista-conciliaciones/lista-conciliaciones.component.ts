@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ConciliacionService } from '../../services/conciliacion.service';
 import { AbonoConciliacion, EstadoAbonoConciliacion } from '../../../../../core/models/conciliacion.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
@@ -7,7 +8,7 @@ import { PaginatedResponse } from '../../../../../core/models/user.model';
 @Component({
   selector: 'app-lista-conciliaciones',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './lista-conciliaciones.component.html',
   styleUrl: './lista-conciliaciones.component.css'
 })
@@ -20,9 +21,6 @@ export class ListaConciliacionesComponent implements OnInit {
   error = signal<string | null>(null);
   pagina = signal(1);
   filtroEstado = signal<EstadoAbonoConciliacion | 'todos'>('todos');
-
-  conciliandoManual = signal<number | null>(null);
-  errorManual = signal<string | null>(null);
 
   ngOnInit(): void {
     this.cargar();
@@ -61,33 +59,5 @@ export class ListaConciliacionesComponent implements OnInit {
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();
-  }
-
-  conciliarManual(abono: AbonoConciliacion): void {
-    const relacionIdTexto = prompt('ID de la relación a la que corresponde este abono:');
-    if (!relacionIdTexto) return;
-
-    const relacionId = Number(relacionIdTexto);
-    if (!relacionId || relacionId <= 0) {
-      this.errorManual.set('El ID de la relación debe ser un número válido.');
-      return;
-    }
-
-    const motivo = prompt('Motivo de la conciliación manual:');
-    if (!motivo) return;
-
-    this.conciliandoManual.set(abono.id);
-    this.errorManual.set(null);
-
-    this.conciliacionService.conciliarManual(abono.id, relacionId, motivo).subscribe({
-      next: () => {
-        this.conciliandoManual.set(null);
-        this.cargar();
-      },
-      error: (err) => {
-        this.conciliandoManual.set(null);
-        this.errorManual.set(err.error?.message || 'Ocurrió un error al conciliar manualmente.');
-      }
-    });
   }
 }

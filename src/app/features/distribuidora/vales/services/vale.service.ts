@@ -22,4 +22,12 @@ export class ValeService {
   solicitar(payload: SolicitarValePayload): Observable<ApiResponse<Vale>> {
     return this.http.post<ApiResponse<Vale>>(this.baseUrl, payload);
   }
+
+  desactivar(valeId: number): Observable<ApiResponse<Vale>> {
+    return this.http.put<ApiResponse<Vale>>(`${this.baseUrl}/${valeId}/desactivar`, {});
+  }
+
+  activar(valeId: number): Observable<ApiResponse<Vale>> {
+    return this.http.put<ApiResponse<Vale>>(`${this.baseUrl}/${valeId}/activar`, {});
+  }
 }

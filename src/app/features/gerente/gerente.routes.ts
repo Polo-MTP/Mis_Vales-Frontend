@@ -10,6 +10,9 @@ import { ListaRelacionesComponent } from './relaciones/pages/lista-relaciones/li
 import { DetalleRelacionComponent } from './relaciones/pages/detalle-relacion/detalle-relacion.component';
 import { ListaMorososComponent } from './reportes/pages/lista-morosos/lista-morosos.component';
 import { ListaConciliacionesComponent } from './conciliaciones/pages/lista-conciliaciones/lista-conciliaciones.component';
+import { AutorizacionesPendientesComponent } from './conciliaciones/pages/autorizaciones-pendientes/autorizaciones-pendientes.component';
+import { ConfiguracionesComponent } from './configuraciones/pages/configuraciones/configuraciones.component';
+import { EdicionesPendientesComponent } from './clientes/pages/ediciones-pendientes/ediciones-pendientes.component';
 import { authGuard } from '../auth/guards/auth.guard';
 
 export const GERENTE_ROUTES: Routes = [
@@ -23,5 +26,8 @@ export const GERENTE_ROUTES: Routes = [
   { path: 'relaciones', component: ListaRelacionesComponent, canActivate: [authGuard] },
   { path: 'relaciones/:id', component: DetalleRelacionComponent, canActivate: [authGuard] },
   { path: 'reportes/morosos', component: ListaMorososComponent, canActivate: [authGuard] },
-  { path: 'conciliaciones', component: ListaConciliacionesComponent, canActivate: [authGuard] }
+  { path: 'conciliaciones', component: ListaConciliacionesComponent, canActivate: [authGuard] },
+  { path: 'conciliaciones/autorizaciones', component: AutorizacionesPendientesComponent, canActivate: [authGuard] },
+  { path: 'configuraciones', component: ConfiguracionesComponent, canActivate: [authGuard] },
+  { path: 'clientes/ediciones', component: EdicionesPendientesComponent, canActivate: [authGuard] }
 ];

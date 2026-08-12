@@ -1,0 +1,38 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Canjear Puntos</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Descuenta puntos acumulados de una distribuidora al momento del canje en caja.</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dash-card space-y-4">
+    <div>
+      <label class="form-label">ID de la Distribuidora *</label>
+      <input type="number" formControlName="distribuidora_id" class="form-input" placeholder="Ej. 1">
+    </div>
+
+    <div>
+      <label class="form-label">Cantidad de Puntos *</label>
+      <input type="number" formControlName="cantidad" min="1" class="form-input">
+    </div>
+
+    <div>
+      <label class="form-label">Motivo *</label>
+      <input type="text" formControlName="motivo" class="form-input" placeholder="Ej. Canje por descuento en caja">
+    </div>
+
+    <div *ngIf="error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ error() }}
+    </div>
+
+    <div *ngIf="ultimoMovimiento() as mov" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm">
+      Canjeados {{ -mov.cantidad }} puntos de la distribuidora #{{ mov.distribuidora_id }}.
+    </div>
+
+    <button type="submit" [disabled]="form.invalid || enviando()" class="btn-primary">
+      <span *ngIf="!enviando()">Canjear</span>
+      <span *ngIf="enviando()">Canjeando...</span>
+    </button>
+  </form>
+
+</div>

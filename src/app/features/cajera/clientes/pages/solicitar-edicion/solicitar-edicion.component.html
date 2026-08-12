@@ -1,0 +1,128 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Corregir Datos de Cliente</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">
+      Captura el ID del cliente (viene en su pre-vale/vale) y solo los campos que necesitan corregirse. Queda pendiente de autorización.
+    </p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dash-card space-y-4">
+    <div>
+      <label class="form-label">ID del Cliente *</label>
+      <input type="number" formControlName="cliente_id" class="form-input" placeholder="Ej. 12">
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="form-label">Nombre(s)</label>
+        <input type="text" formControlName="nombre" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Apellido Paterno</label>
+        <input type="text" formControlName="apellido_paterno" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Apellido Materno</label>
+        <input type="text" formControlName="apellido_materno" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">CURP</label>
+        <input type="text" formControlName="curp" maxlength="18" class="form-input uppercase">
+      </div>
+      <div class="col-span-2">
+        <label class="form-label">Calle</label>
+        <input type="text" formControlName="calle" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Colonia</label>
+        <input type="text" formControlName="colonia" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Código Postal</label>
+        <input type="text" formControlName="codigo_postal" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Número Exterior</label>
+        <input type="text" formControlName="numero_ext" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Número Interior</label>
+        <input type="text" formControlName="numero_int" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Estado</label>
+        <input type="text" formControlName="estado" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Ciudad</label>
+        <input type="text" formControlName="ciudad" class="form-input">
+      </div>
+    </div>
+
+    <div>
+      <label class="form-label">Motivo de la corrección *</label>
+      <textarea formControlName="motivo" class="form-input" rows="2"></textarea>
+    </div>
+
+    <div *ngIf="errorEnviar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ errorEnviar() }}
+    </div>
+    <div *ngIf="successEnviar()" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm">
+      {{ successEnviar() }}
+    </div>
+
+    <button type="submit" [disabled]="form.invalid || enviando()" class="btn-primary">
+      <span *ngIf="!enviando()">Solicitar Autorización</span>
+      <span *ngIf="enviando()">Enviando...</span>
+    </button>
+  </form>
+
+  <div class="dash-card">
+    <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Mis Solicitudes</h2>
+  </div>
+
+  <div *ngIf="errorAplicar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorAplicar() }}
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando solicitudes...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && solicitudes().length === 0" class="state-empty">
+    No has enviado ninguna solicitud de edición todavía.
+  </div>
+
+  <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="space-y-3">
+    <div *ngFor="let s of solicitudes()" class="list-card-item cursor-default">
+      <div>
+        <p class="font-bold text-slate-100">{{ s.cliente_nombre || ('Cliente #' + s.cliente_id) }}</p>
+        <p class="text-xs text-slate-400 mt-0.5">{{ s.created_at | date:'short' }}<span *ngIf="s.autorizador"> · Decidido por {{ s.autorizador }}</span></p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="status-badge"
+              [class.bg-amber-500/15]="s.estado === 'pendiente'" [class.text-amber-300]="s.estado === 'pendiente'" [class.border-amber-500/30]="s.estado === 'pendiente'"
+              [class.bg-blue-500/15]="s.estado === 'aprobada'" [class.text-blue-300]="s.estado === 'aprobada'" [class.border-blue-500/30]="s.estado === 'aprobada'"
+              [class.bg-red-500/15]="s.estado === 'rechazada'" [class.text-red-300]="s.estado === 'rechazada'" [class.border-red-500/30]="s.estado === 'rechazada'"
+              [class.bg-emerald-500/15]="s.estado === 'aplicada'" [class.text-emerald-300]="s.estado === 'aplicada'" [class.border-emerald-500/30]="s.estado === 'aplicada'">
+          {{ s.estado }}
+        </span>
+        <button *ngIf="s.estado === 'aprobada'" type="button" (click)="aplicar(s)" [disabled]="aplicando() === s.id" class="btn-primary w-auto shrink-0">
+          <span *ngIf="aplicando() !== s.id">Aplicar</span>
+          <span *ngIf="aplicando() === s.id">Aplicando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando() && !error() && paginacion() && paginacion()!.last_page > 1"
+       class="flex items-center justify-between pt-2">
+    <button type="button" (click)="cambiarPagina(-1)" [disabled]="pagina() <= 1" class="btn-pagination">← Anterior</button>
+    <span class="text-xs font-semibold text-slate-500">Página {{ paginacion()?.current_page }} de {{ paginacion()?.last_page }}</span>
+    <button type="button" (click)="cambiarPagina(1)" [disabled]="pagina() >= (paginacion()?.last_page || 1)" class="btn-pagination">Siguiente →</button>
+  </div>
+
+</div>

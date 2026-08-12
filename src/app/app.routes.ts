@@ -34,6 +34,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () => import('./features/distribuidora/distribuidora.routes').then(m => m.DISTRIBUIDORA_ROUTES)
   },
+  {
+    path: 'cajera',
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/cajera/cajera.routes').then(m => m.CAJERA_ROUTES)
+  },
 
   // Redirect raíz al login
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },

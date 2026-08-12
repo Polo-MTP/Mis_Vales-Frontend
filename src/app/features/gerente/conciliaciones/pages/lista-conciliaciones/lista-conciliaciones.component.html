@@ -1,8 +1,13 @@
 <div class="layout-container">
 
-  <div class="dash-card">
-    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Conciliación Bancaria</h1>
-    <p class="text-xs text-slate-400 font-medium mt-1">Importa el Excel del banco y concilia los abonos contra las relaciones.</p>
+  <div class="dash-card flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-black text-slate-100 tracking-tight">Conciliación Bancaria</h1>
+      <p class="text-xs text-slate-400 font-medium mt-1">Importa el Excel del banco y revisa el estado de los abonos.</p>
+    </div>
+    <a routerLink="/gerente/conciliaciones/autorizaciones" class="btn-outline w-auto shrink-0">
+      Autorizaciones Pendientes
+    </a>
   </div>
 
   <div class="dash-card space-y-3">
@@ -23,10 +28,6 @@
       <p>{{ resumen.procesadas }} fila(s) procesada(s) · {{ resumen.conciliadas }} conciliada(s) · {{ resumen.sin_coincidencia }} sin coincidencia.</p>
       <p *ngFor="let e of resumen.errores" class="text-amber-300 text-xs">{{ e }}</p>
     </div>
-  </div>
-
-  <div *ngIf="errorManual()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
-    {{ errorManual() }}
   </div>
 
   <!-- Filtros -->
@@ -62,10 +63,6 @@
               [class.bg-amber-500/15]="a.estado === 'sin_coincidencia'" [class.text-amber-300]="a.estado === 'sin_coincidencia'" [class.border-amber-500/30]="a.estado === 'sin_coincidencia'">
           {{ a.estado }}
         </span>
-        <button *ngIf="a.estado === 'sin_coincidencia'" type="button" (click)="conciliarManual(a)" [disabled]="conciliandoManual() === a.id" class="btn-outline w-auto shrink-0">
-          <span *ngIf="conciliandoManual() !== a.id">Conciliar Manual</span>
-          <span *ngIf="conciliandoManual() === a.id">Conciliando...</span>
-        </button>
       </div>
     </div>
   </div>

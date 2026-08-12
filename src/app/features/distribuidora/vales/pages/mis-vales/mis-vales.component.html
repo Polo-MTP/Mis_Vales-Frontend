@@ -8,6 +8,10 @@
     <a routerLink="/distribuidora/vales/solicitar" class="btn-primary w-auto shrink-0">+ Solicitar Vale</a>
   </div>
 
+  <div *ngIf="errorEstado()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorEstado() }}
+  </div>
+
   <div *ngIf="cargando()" class="state-loading">Cargando vales...</div>
 
   <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
@@ -26,13 +30,20 @@
           {{ v.producto?.descripcion || (v.quincenas + ' quincenas') }} · Solicitado {{ v.fecha_solicitud | date:'short' }}
         </p>
       </div>
-      <span class="status-badge"
-            [class.bg-amber-500/15]="v.estado === 'solicitado'" [class.text-amber-300]="v.estado === 'solicitado'" [class.border-amber-500/30]="v.estado === 'solicitado'"
-            [class.bg-blue-500/15]="v.estado === 'autorizado'" [class.text-blue-300]="v.estado === 'autorizado'" [class.border-blue-500/30]="v.estado === 'autorizado'"
-            [class.bg-emerald-500/15]="v.estado === 'pagado'" [class.text-emerald-300]="v.estado === 'pagado'" [class.border-emerald-500/30]="v.estado === 'pagado'"
-            [class.bg-red-500/15]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.text-red-300]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.border-red-500/30]="v.estado === 'vencido' || v.estado === 'incidencia'">
-        {{ v.estado }}
-      </span>
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="status-badge"
+              [class.bg-amber-500/15]="v.estado === 'solicitado'" [class.text-amber-300]="v.estado === 'solicitado'" [class.border-amber-500/30]="v.estado === 'solicitado'"
+              [class.bg-blue-500/15]="v.estado === 'autorizado'" [class.text-blue-300]="v.estado === 'autorizado'" [class.border-blue-500/30]="v.estado === 'autorizado'"
+              [class.bg-emerald-500/15]="v.estado === 'pagado'" [class.text-emerald-300]="v.estado === 'pagado'" [class.border-emerald-500/30]="v.estado === 'pagado'"
+              [class.bg-red-500/15]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.text-red-300]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.border-red-500/30]="v.estado === 'vencido' || v.estado === 'incidencia'">
+          {{ v.estado }}
+        </span>
+        <span *ngIf="!v.activo" class="status-badge bg-slate-500/15 text-slate-400 border-slate-500/30">inactivo</span>
+        <button type="button" (click)="toggleActivo(v)" [disabled]="actualizandoEstado() === v.id" class="btn-outline w-auto shrink-0">
+          <span *ngIf="actualizandoEstado() !== v.id">{{ v.activo ? 'Desactivar' : 'Activar' }}</span>
+          <span *ngIf="actualizandoEstado() === v.id">Guardando...</span>
+        </button>
+      </div>
     </div>
   </div>
 

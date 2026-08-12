@@ -21,6 +21,9 @@ export class MisValesComponent implements OnInit {
   error = signal<string | null>(null);
   pagina = signal(1);
 
+  actualizandoEstado = signal<number | null>(null);
+  errorEstado = signal<string | null>(null);
+
   ngOnInit(): void {
     this.cargar();
   }
@@ -49,5 +52,23 @@ export class MisValesComponent implements OnInit {
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();
+  }
+
+  toggleActivo(vale: Vale): void {
+    this.actualizandoEstado.set(vale.id);
+    this.errorEstado.set(null);
+
+    const accion = vale.activo ? this.valeService.desactivar(vale.id) : this.valeService.activar(vale.id);
+
+    accion.subscribe({
+      next: () => {
+        this.actualizandoEstado.set(null);
+        this.cargar();
+      },
+      error: (err) => {
+        this.actualizandoEstado.set(null);
+        this.errorEstado.set(err.error?.message || 'Ocurrió un error al actualizar el vale.');
+      }
+    });
   }
 }

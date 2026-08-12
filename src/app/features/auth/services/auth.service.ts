@@ -61,6 +61,9 @@ export class AuthService {
       case 'Distribuidora':
         this.router.navigate(['/distribuidora']);
         break;
+      case 'Cajera':
+        this.router.navigate(['/cajera']);
+        break;
       default:
         if (this.isAuthenticated()) {
           this.fetchCurrentUser().subscribe({
@@ -71,6 +74,7 @@ export class AuthService {
               else if (updatedRole === 'Coordinador') this.router.navigate(['/coordinador']);
               else if (updatedRole === 'Verificador') this.router.navigate(['/verificador']);
               else if (updatedRole === 'Distribuidora') this.router.navigate(['/distribuidora']);
+              else if (updatedRole === 'Cajera') this.router.navigate(['/cajera']);
               else this.router.navigate(['/gerente']);
             },
             error: () => {
