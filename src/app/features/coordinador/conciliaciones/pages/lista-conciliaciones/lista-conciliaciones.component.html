@@ -33,14 +33,14 @@
       <div>
         <p class="font-bold text-slate-100">Ref. {{ a.referencia_leida }} · ${{ a.monto }}</p>
         <p class="text-xs text-slate-400 mt-0.5">
-          {{ a.tipo_pago }} · {{ a.fecha_pago | date:'shortDate' }}<span *ngIf="a.folio_pago"> · Folio {{ a.folio_pago }}</span>
+          {{ tipoPagoLabel(a.tipo_pago) }} · {{ a.fecha_pago | date:'shortDate' }}<span *ngIf="a.folio_pago"> · Folio {{ a.folio_pago }}</span>
           <span *ngIf="a.relacion_id"> · Relación #{{ a.relacion_id }}</span>
         </p>
       </div>
       <span class="status-badge"
             [class.bg-emerald-500/15]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'" [class.text-emerald-300]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'" [class.border-emerald-500/30]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'"
             [class.bg-amber-500/15]="a.estado === 'sin_coincidencia'" [class.text-amber-300]="a.estado === 'sin_coincidencia'" [class.border-amber-500/30]="a.estado === 'sin_coincidencia'">
-        {{ a.estado }}
+        {{ estadoAbonoLabel(a.estado) }}
       </span>
     </div>
   </div>

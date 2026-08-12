@@ -28,7 +28,10 @@
       <tbody>
         <ng-container *ngFor="let c of configuraciones()">
           <tr class="table-row">
-            <td class="p-3.5 font-mono font-semibold text-slate-100">{{ c.clave }}</td>
+            <td class="p-3.5">
+              <div class="font-semibold text-slate-100">{{ configuracionClaveLabel(c.clave) }}</div>
+              <div class="font-mono text-[10px] text-slate-500">{{ c.clave }}</div>
+            </td>
             <td class="p-3.5">
               <span *ngIf="editando() !== c.clave" class="font-bold text-blue-400">{{ c.valor }}</span>
               <form *ngIf="editando() === c.clave" [formGroup]="editForm" (ngSubmit)="guardar(c)" class="flex items-center gap-2">

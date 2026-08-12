@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ValeService } from '../../services/vale.service';
 import { Vale } from '../../../../../core/models/vale.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
+import { estadoValeLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-mis-vales',
@@ -23,6 +24,8 @@ export class MisValesComponent implements OnInit {
 
   actualizandoEstado = signal<number | null>(null);
   errorEstado = signal<string | null>(null);
+
+  readonly estadoValeLabel = estadoValeLabel;
 
   ngOnInit(): void {
     this.cargar();

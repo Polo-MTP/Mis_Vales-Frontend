@@ -6,6 +6,7 @@ import { ClienteService } from '../../services/cliente.service';
 import { SolicitudEdicionCliente } from '../../../../../core/models/solicitud-edicion-cliente.model';
 import { Cliente } from '../../../../../core/models/cliente.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
+import { estadoSolicitudLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-solicitar-edicion',
@@ -52,6 +53,8 @@ export class SolicitarEdicionComponent implements OnInit {
   pagina = signal(1);
   aplicando = signal<number | null>(null);
   errorAplicar = signal<string | null>(null);
+
+  readonly estadoSolicitudLabel = estadoSolicitudLabel;
 
   ngOnInit(): void {
     this.cargarSolicitudes();

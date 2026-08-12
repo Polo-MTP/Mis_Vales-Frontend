@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ConciliacionService } from '../../services/conciliacion.service';
 import { AbonoConciliacion, EstadoAbonoConciliacion, ResumenImportacionConciliacion } from '../../../../../core/models/conciliacion.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
+import { tipoPagoLabel, estadoAbonoLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-lista-conciliaciones',
@@ -21,6 +22,9 @@ export class ListaConciliacionesComponent implements OnInit {
   error = signal<string | null>(null);
   pagina = signal(1);
   filtroEstado = signal<EstadoAbonoConciliacion | 'todos'>('todos');
+
+  readonly tipoPagoLabel = tipoPagoLabel;
+  readonly estadoAbonoLabel = estadoAbonoLabel;
 
   archivoSeleccionado = signal<File | null>(null);
   importando = signal(false);

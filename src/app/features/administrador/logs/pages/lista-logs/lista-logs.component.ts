@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuditLogService } from '../../services/audit-log.service';
 import { AuditLog } from '../../../../../core/models/audit-log.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
+import { auditAccionLabel, auditRecursoLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-lista-logs',
@@ -20,6 +21,9 @@ export class ListaLogsComponent implements OnInit {
   error = signal<string | null>(null);
   pagina = signal(1);
   filtroAccion = signal('');
+
+  readonly auditAccionLabel = auditAccionLabel;
+  readonly auditRecursoLabel = auditRecursoLabel;
 
   ngOnInit(): void {
     this.cargar();

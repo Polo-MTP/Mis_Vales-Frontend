@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConfiguracionService } from '../../services/configuracion.service';
 import { Configuracion } from '../../../../../core/models/configuracion.model';
+import { configuracionClaveLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-lista-configuraciones',
@@ -26,6 +27,8 @@ export class ListaConfiguracionesComponent implements OnInit {
   historialAbierto = signal<string | null>(null);
   historial = signal<Configuracion[]>([]);
   cargandoHistorial = signal(false);
+
+  readonly configuracionClaveLabel = configuracionClaveLabel;
 
   editForm = this.fb.group({
     valor: ['', [Validators.required, Validators.maxLength(255)]]

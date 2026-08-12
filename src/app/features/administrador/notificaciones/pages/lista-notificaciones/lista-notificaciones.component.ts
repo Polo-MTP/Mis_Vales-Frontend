@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NotificacionService } from '../../services/notificacion.service';
 import { Notificacion } from '../../../../../core/models/notificacion.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
+import { auditAccionLabel, auditRecursoLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-lista-notificaciones',
@@ -19,6 +20,9 @@ export class ListaNotificacionesComponent implements OnInit {
   cargando = signal(true);
   error = signal<string | null>(null);
   pagina = signal(1);
+
+  readonly auditAccionLabel = auditAccionLabel;
+  readonly auditRecursoLabel = auditRecursoLabel;
 
   ngOnInit(): void {
     this.cargar();

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../auth/services/auth.service';
 import { LoginAttempt, PaginatedResponse } from '../../../../core/models/user.model';
+import { loginStatusLabel } from '../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-audit-table',
@@ -38,6 +39,10 @@ export class AuditTableComponent implements OnInit {
     if (newPage >= 1 && newPage <= (this.paginationData()?.last_page || 1)) {
       this.loadLogs(newPage);
     }
+  }
+
+  getStatusLabel(status: string): string {
+    return loginStatusLabel(status);
   }
 
   getStatusClass(status: string): string {

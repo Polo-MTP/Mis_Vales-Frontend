@@ -37,7 +37,7 @@
           </td>
           <td class="p-3.5">
             <span [ngClass]="getStatusClass(item.status)" class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold">
-              {{ item.status }}
+              {{ getStatusLabel(item.status) }}
             </span>
           </td>
         </tr>

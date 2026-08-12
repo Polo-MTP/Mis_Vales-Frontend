@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ConciliacionService } from '../../services/conciliacion.service';
 import { SolicitudConciliacion } from '../../../../../core/models/solicitud-conciliacion.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
+import { estadoSolicitudLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-mis-solicitudes',
@@ -20,6 +21,8 @@ export class MisSolicitudesComponent implements OnInit {
   cargando = signal(true);
   error = signal<string | null>(null);
   pagina = signal(1);
+
+  readonly estadoSolicitudLabel = estadoSolicitudLabel;
 
   ejecutando = signal<number | null>(null);
   errorEjecutar = signal<string | null>(null);
