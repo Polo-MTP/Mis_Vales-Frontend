@@ -7,16 +7,9 @@ import { PaginatedResponse } from '../../../../core/models/user.model';
 import { PuntoMovimiento } from '../../../../core/models/punto-movimiento.model';
 
 @Injectable({ providedIn: 'root' })
-export class PuntoCanjeService {
+export class PuntoMovimientoService {
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/distribuidoras`;
-
-  canjear(distribuidoraId: number, cantidad: number, motivo: string): Observable<ApiResponse<PuntoMovimiento>> {
-    return this.http.post<ApiResponse<PuntoMovimiento>>(`${this.baseUrl}/${distribuidoraId}/puntos/canjear`, {
-      cantidad,
-      motivo
-    });
-  }
 
   historial(distribuidoraId: number, page = 1): Observable<ApiResponse<PaginatedResponse<PuntoMovimiento>>> {
     const params = new HttpParams().set('page', String(page));

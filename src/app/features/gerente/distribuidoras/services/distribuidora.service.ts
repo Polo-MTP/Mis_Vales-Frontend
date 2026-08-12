@@ -1,8 +1,11 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { DistribuidoraResumen, EstadoDistribuidora } from '../../../../core/models/distribuidora.model';
+import { ApiResponse } from '../../../../core/models/auth-response.model';
+import { PaginatedResponse } from '../../../../core/models/user.model';
+import { PuntoMovimiento } from '../../../../core/models/punto-movimiento.model';
 
 /**
  * A diferencia del resto de la API, estos endpoints (GET /distribuidoras) NO usan
@@ -43,5 +46,10 @@ export class DistribuidoraService {
       limite_credito: limiteCredito,
       categoria_id: categoriaId
     });
+  }
+
+  historialPuntos(id: number, page = 1): Observable<ApiResponse<PaginatedResponse<PuntoMovimiento>>> {
+    const params = new HttpParams().set('page', String(page));
+    return this.http.get<ApiResponse<PaginatedResponse<PuntoMovimiento>>>(`${this.baseUrl}/${id}/puntos`, { params });
   }
 }

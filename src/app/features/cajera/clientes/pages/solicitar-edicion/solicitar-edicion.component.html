@@ -3,14 +3,48 @@
   <div class="dash-card">
     <h1 class="text-2xl font-black text-slate-100 tracking-tight">Corregir Datos de Cliente</h1>
     <p class="text-xs text-slate-400 font-medium mt-1">
-      Captura el ID del cliente (viene en su pre-vale/vale) y solo los campos que necesitan corregirse. Queda pendiente de autorización.
+      Busca al cliente por nombre o CURP y captura solo los campos que necesitan corregirse. Queda pendiente de autorización.
     </p>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dash-card space-y-4">
-    <div>
-      <label class="form-label">ID del Cliente *</label>
-      <input type="number" formControlName="cliente_id" class="form-input" placeholder="Ej. 12">
+  <div *ngIf="!clienteSeleccionado()" class="dash-card space-y-3">
+    <label class="form-label">Buscar Cliente</label>
+    <input
+      type="text"
+      class="form-input"
+      placeholder="Nombre, apellido o CURP..."
+      [value]="terminoBusqueda()"
+      (input)="buscarCliente($any($event.target).value)"
+    />
+
+    <div *ngIf="buscando()" class="state-loading">Buscando...</div>
+
+    <div *ngIf="errorBusqueda()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ errorBusqueda() }}
+    </div>
+
+    <div *ngIf="!buscando() && resultados().length > 0" class="space-y-2">
+      <div *ngFor="let c of resultados()" (click)="seleccionarCliente(c)" class="list-card-item">
+        <div>
+          <p class="font-bold text-slate-100">{{ c.datos_personales.nombre }} {{ c.datos_personales.apellido_paterno }} {{ c.datos_personales.apellido_materno }}</p>
+          <p class="text-xs text-slate-400 mt-0.5">CURP: {{ c.datos_personales.curp }} · ID {{ c.id }}</p>
+        </div>
+      </div>
+    </div>
+
+    <p *ngIf="!buscando() && terminoBusqueda() && resultados().length === 0" class="text-xs text-slate-400">
+      Sin resultados.
+    </p>
+  </div>
+
+  <form *ngIf="clienteSeleccionado() as cliente" [formGroup]="form" (ngSubmit)="onSubmit()" class="dash-card space-y-4">
+    <div class="flex items-center justify-between bg-slate-900/40 rounded-2xl p-4">
+      <div>
+        <p class="text-xs text-slate-400">Cliente seleccionado</p>
+        <p class="font-bold text-slate-100">{{ cliente.datos_personales.nombre }} {{ cliente.datos_personales.apellido_paterno }} {{ cliente.datos_personales.apellido_materno }}</p>
+        <p class="text-xs text-slate-400">CURP: {{ cliente.datos_personales.curp }} · ID {{ cliente.id }}</p>
+      </div>
+      <button type="button" (click)="quitarSeleccion()" class="btn-outline w-auto shrink-0">Cambiar</button>
     </div>
 
     <div class="grid grid-cols-2 gap-4">

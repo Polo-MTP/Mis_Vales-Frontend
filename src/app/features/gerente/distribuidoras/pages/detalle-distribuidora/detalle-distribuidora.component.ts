@@ -5,6 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DistribuidoraService } from '../../services/distribuidora.service';
 import { CategoriaDistribuidoraService } from '../../services/categoria-distribuidora.service';
 import { CategoriaDistribuidora, DistribuidoraResumen, EstadoDistribuidora } from '../../../../../core/models/distribuidora.model';
+import { PuntoMovimiento } from '../../../../../core/models/punto-movimiento.model';
 
 @Component({
   selector: 'app-detalle-distribuidora',
@@ -33,6 +34,10 @@ export class DetalleDistribuidoraComponent implements OnInit {
   successCredito = signal<string | null>(null);
 
   estadosDisponibles: EstadoDistribuidora[] = ['ACTIVO', 'MOROSO', 'RECHAZADO'];
+
+  historialPuntos = signal<PuntoMovimiento[]>([]);
+  cargandoHistorialPuntos = signal(false);
+  mostrarHistorialPuntos = signal(false);
 
   creditoForm = this.fb.group({
     limite_credito: ['', [Validators.required, Validators.min(0)]],
@@ -123,6 +128,23 @@ export class DetalleDistribuidoraComponent implements OnInit {
         );
       }
     });
+  }
+
+  toggleHistorialPuntos(): void {
+    const mostrar = !this.mostrarHistorialPuntos();
+    this.mostrarHistorialPuntos.set(mostrar);
+
+    const d = this.distribuidora();
+    if (mostrar && d && this.historialPuntos().length === 0) {
+      this.cargandoHistorialPuntos.set(true);
+      this.distribuidoraService.historialPuntos(d.id).subscribe({
+        next: (res) => {
+          this.historialPuntos.set(res.data?.data ?? []);
+          this.cargandoHistorialPuntos.set(false);
+        },
+        error: () => this.cargandoHistorialPuntos.set(false)
+      });
+    }
   }
 
   volver(): void {

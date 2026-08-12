@@ -7,8 +7,13 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dash-card space-y-4">
     <div>
-      <label class="form-label">ID de la Distribuidora *</label>
-      <input type="number" formControlName="distribuidora_id" class="form-input" placeholder="Ej. 1">
+      <label class="form-label">Distribuidora *</label>
+      <select formControlName="distribuidora_id" class="form-select" (change)="onCambiarDistribuidora()">
+        <option value="" disabled>{{ cargandoDistribuidoras() ? 'Cargando...' : 'Selecciona una distribuidora' }}</option>
+        <option *ngFor="let d of distribuidoras()" [value]="d.id">
+          {{ d.numero_distribuidora }} · {{ d.razon_social }} ({{ d.puntos_acumulados }} pts)
+        </option>
+      </select>
     </div>
 
     <div>
@@ -34,5 +39,27 @@
       <span *ngIf="enviando()">Canjeando...</span>
     </button>
   </form>
+
+  <div *ngIf="form.value.distribuidora_id" class="dash-card">
+    <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Historial de Puntos</h2>
+
+    <div *ngIf="cargandoHistorial()" class="state-loading">Cargando historial...</div>
+
+    <div *ngIf="!cargandoHistorial() && historial().length === 0" class="state-empty">
+      Sin movimientos de puntos todavía.
+    </div>
+
+    <div *ngIf="!cargandoHistorial() && historial().length > 0" class="space-y-3">
+      <div *ngFor="let m of historial()" class="list-card-item cursor-default">
+        <div>
+          <p class="font-bold text-slate-100">{{ m.motivo || m.tipo }}</p>
+          <p class="text-xs text-slate-400 mt-0.5">{{ m.created_at | date:'short' }}<span *ngIf="m.registrado_por_nombre"> · {{ m.registrado_por_nombre }}</span></p>
+        </div>
+        <span class="text-lg font-black shrink-0" [class.text-emerald-400]="m.cantidad > 0" [class.text-red-400]="m.cantidad < 0">
+          {{ m.cantidad > 0 ? '+' : '' }}{{ m.cantidad }}
+        </span>
+      </div>
+    </div>
+  </div>
 
 </div>
