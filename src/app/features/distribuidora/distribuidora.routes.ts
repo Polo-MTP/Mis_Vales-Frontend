@@ -6,14 +6,13 @@ import { DetalleClienteComponent } from './clientes/pages/detalle-cliente/detall
 import { MisValesComponent } from './vales/pages/mis-vales/mis-vales.component';
 import { SolicitarValeComponent } from './vales/pages/solicitar-vale/solicitar-vale.component';
 import { HistorialPuntosComponent } from './puntos/pages/historial-puntos/historial-puntos.component';
-import { authGuard } from '../auth/guards/auth.guard';
 
 export const DISTRIBUIDORA_ROUTES: Routes = [
-  { path: '', component: DistribuidoraDashboardComponent, canActivate: [authGuard] },
-  { path: 'clientes', component: ListaClientesComponent, canActivate: [authGuard] },
-  { path: 'clientes/nuevo', component: NuevoClienteComponent, canActivate: [authGuard] },
-  { path: 'clientes/:id', component: DetalleClienteComponent, canActivate: [authGuard] },
-  { path: 'vales', component: MisValesComponent, canActivate: [authGuard] },
-  { path: 'vales/solicitar', component: SolicitarValeComponent, canActivate: [authGuard] },
-  { path: 'puntos/historial', component: HistorialPuntosComponent, canActivate: [authGuard] }
+  { path: '', component: DistribuidoraDashboardComponent },
+  { path: 'clientes', component: ListaClientesComponent },
+  { path: 'clientes/nuevo', component: NuevoClienteComponent },
+  { path: 'clientes/:id', component: DetalleClienteComponent },
+  { path: 'vales', component: MisValesComponent },
+  { path: 'vales/solicitar', component: SolicitarValeComponent },
+  { path: 'puntos/historial', component: HistorialPuntosComponent }
 ];

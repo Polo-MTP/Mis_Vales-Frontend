@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './features/auth/guards/auth.guard';
+import { roleGuard } from './features/auth/guards/role.guard';
 
 export const routes: Routes = [
   // Autenticación
@@ -11,32 +11,32 @@ export const routes: Routes = [
   // Rutas protegidas por rol
   {
     path: 'administrador',
-    canActivate: [authGuard],
+    canActivate: [roleGuard(['Administrador'])],
     loadChildren: () => import('./features/administrador/administrador.routes').then(m => m.ADMINISTRADOR_ROUTES)
   },
   {
     path: 'gerente',
-    canActivate: [authGuard],
+    canActivate: [roleGuard(['Gerente General', 'Gerente de Sucursal'])],
     loadChildren: () => import('./features/gerente/gerente.routes').then(m => m.GERENTE_ROUTES)
   },
   {
     path: 'coordinador',
-    canActivate: [authGuard],
+    canActivate: [roleGuard(['Coordinador'])],
     loadChildren: () => import('./features/coordinador/coordinador.routes').then(m => m.COORDINADOR_ROUTES)
   },
   {
     path: 'verificador',
-    canActivate: [authGuard],
+    canActivate: [roleGuard(['Verificador'])],
     loadChildren: () => import('./features/verificador/verificador.routes').then(m => m.VERIFICADOR_ROUTES)
   },
   {
     path: 'distribuidora',
-    canActivate: [authGuard],
+    canActivate: [roleGuard(['Distribuidora'])],
     loadChildren: () => import('./features/distribuidora/distribuidora.routes').then(m => m.DISTRIBUIDORA_ROUTES)
   },
   {
     path: 'cajera',
-    canActivate: [authGuard],
+    canActivate: [roleGuard(['Cajera'])],
     loadChildren: () => import('./features/cajera/cajera.routes').then(m => m.CAJERA_ROUTES)
   },
 

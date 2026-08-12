@@ -14,22 +14,21 @@ import { AutorizacionesPendientesComponent } from './conciliaciones/pages/autori
 import { ConfiguracionesComponent } from './configuraciones/pages/configuraciones/configuraciones.component';
 import { EdicionesPendientesComponent } from './clientes/pages/ediciones-pendientes/ediciones-pendientes.component';
 import { ListaNotificacionesComponent } from './notificaciones/pages/lista-notificaciones/lista-notificaciones.component';
-import { authGuard } from '../auth/guards/auth.guard';
 
 export const GERENTE_ROUTES: Routes = [
-  { path: '', component: GerenteDashboardComponent, canActivate: [authGuard] },
-  { path: 'solicitudes', component: ListaSolicitudesComponent, canActivate: [authGuard] },
-  { path: 'solicitudes/:id', component: DetalleSolicitudComponent, canActivate: [authGuard] },
-  { path: 'distribuidoras', component: ListaDistribuidorasComponent, canActivate: [authGuard] },
-  { path: 'distribuidoras/:id', component: DetalleDistribuidoraComponent, canActivate: [authGuard] },
-  { path: 'productos', component: ListaProductosComponent, canActivate: [authGuard] },
-  { path: 'vales', component: ValesPendientesComponent, canActivate: [authGuard] },
-  { path: 'relaciones', component: ListaRelacionesComponent, canActivate: [authGuard] },
-  { path: 'relaciones/:id', component: DetalleRelacionComponent, canActivate: [authGuard] },
-  { path: 'reportes/morosos', component: ListaMorososComponent, canActivate: [authGuard] },
-  { path: 'conciliaciones', component: ListaConciliacionesComponent, canActivate: [authGuard] },
-  { path: 'conciliaciones/autorizaciones', component: AutorizacionesPendientesComponent, canActivate: [authGuard] },
-  { path: 'configuraciones', component: ConfiguracionesComponent, canActivate: [authGuard] },
-  { path: 'clientes/ediciones', component: EdicionesPendientesComponent, canActivate: [authGuard] },
-  { path: 'notificaciones', component: ListaNotificacionesComponent, canActivate: [authGuard] }
+  { path: '', component: GerenteDashboardComponent },
+  { path: 'solicitudes', component: ListaSolicitudesComponent },
+  { path: 'solicitudes/:id', component: DetalleSolicitudComponent },
+  { path: 'distribuidoras', component: ListaDistribuidorasComponent },
+  { path: 'distribuidoras/:id', component: DetalleDistribuidoraComponent },
+  { path: 'productos', component: ListaProductosComponent },
+  { path: 'vales', component: ValesPendientesComponent },
+  { path: 'relaciones', component: ListaRelacionesComponent },
+  { path: 'relaciones/:id', component: DetalleRelacionComponent },
+  { path: 'reportes/morosos', component: ListaMorososComponent },
+  { path: 'conciliaciones', component: ListaConciliacionesComponent },
+  { path: 'conciliaciones/autorizaciones', component: AutorizacionesPendientesComponent },
+  { path: 'configuraciones', component: ConfiguracionesComponent },
+  { path: 'clientes/ediciones', component: EdicionesPendientesComponent },
+  { path: 'notificaciones', component: ListaNotificacionesComponent }
 ];
