@@ -1,4 +1,4 @@
-<div class="w-[820px] mx-auto py-8 space-y-6">
+<div class="layout-view-tablet">
 
   <!-- Header -->
   <div class="dash-card space-y-1">
@@ -15,7 +15,7 @@
     <div class="dash-card">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos del Negocio</h2>
 
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="form-label">Razón Social *</label>
           <input type="text" formControlName="razon_social" class="form-input">
@@ -34,7 +34,7 @@
     <div class="dash-card">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos Personales</h2>
 
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="form-label">Nombre(s) *</label>
           <input type="text" formControlName="nombre" class="form-input">
@@ -74,8 +74,8 @@
     <div class="dash-card">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Dirección</h2>
 
-      <div class="grid grid-cols-2 gap-4">
-        <div class="col-span-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2">
           <label class="form-label">Calle *</label>
           <input type="text" formControlName="calle" class="form-input">
           <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('calle')">{{ errorFor('calle') }}</p>
@@ -148,14 +148,14 @@
     <div class="dash-card">
       <div class="flex items-center justify-between">
         <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Evidencias (Opcional)</h2>
-        <button type="button" (click)="agregarEvidencia()" class="text-xs font-bold text-blue-600 hover:text-blue-700">
+        <button type="button" (click)="agregarEvidencia()" class="btn-link-primary">
           + Agregar evidencia
         </button>
       </div>
 
       <div formArrayName="evidencias" class="space-y-3">
         <div *ngFor="let ev of evidencias.controls; let i = index" [formGroupName]="i"
-             class="grid grid-cols-[1fr_1fr_auto] gap-3 items-start bg-slate-900/40 rounded-2xl p-4">
+             class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-start bg-slate-900/40 rounded-2xl p-4">
           <div>
             <label class="form-label">Tipo de Documento</label>
             <select formControlName="tipo_documento" class="form-select">
@@ -166,7 +166,7 @@
             <label class="form-label">URL del Archivo</label>
             <input type="text" formControlName="url_archivo" placeholder="https://..." class="form-input">
           </div>
-          <button type="button" (click)="quitarEvidencia(i)" class="mt-8 text-xs font-bold text-red-400 hover:text-red-300">
+          <button type="button" (click)="quitarEvidencia(i)" class="sm:mt-8 btn-link-danger self-center sm:self-auto">
             Quitar
           </button>
         </div>
@@ -180,7 +180,7 @@
       <button type="button" (click)="cancelar()" class="py-3.5 px-6 text-slate-400 hover:text-slate-200 font-bold text-sm rounded-xl transition-all">
         Cancelar
       </button>
-      <button type="submit" [disabled]="form.invalid || isLoading()" class="btn-primary">
+      <button type="submit" [disabled]="form.invalid || isLoading()" class="btn-primary w-auto">
         <span *ngIf="!isLoading()">Capturar Solicitud</span>
         <span *ngIf="isLoading()">Guardando...</span>
       </button>
