@@ -15,9 +15,9 @@
     <div class="dash-card">
       <div class="flex items-start justify-between">
         <div>
-          <h1 class="text-2xl font-black text-slate-100 tracking-tight">Distribuidora #{{ r.distribuidora_id }}</h1>
+          <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ r.distribuidora?.razon_social || ('Distribuidora #' + r.distribuidora_id) }}</h1>
           <p class="text-xs text-slate-400 font-medium mt-1">
-            {{ r.sucursal || 'Sin sucursal' }} · Ref. {{ r.referencia_pago }} · Categoría {{ r.categoria_snapshot || 'N/D' }}
+            <span *ngIf="r.distribuidora?.numero_distribuidora">{{ r.distribuidora?.numero_distribuidora }} · </span>{{ r.sucursal || 'Sin sucursal' }} · Ref. {{ r.referencia_pago }} · Categoría {{ r.categoria_snapshot || 'N/D' }}
           </p>
         </div>
         <span class="status-badge"

@@ -120,8 +120,12 @@ export class AuthService {
     );
   }
 
-  getMfaSetup(email: string): Observable<ApiResponse<MfaSetupData>> {
-    return this.http.get<ApiResponse<MfaSetupData>>(`${environment.apiUrl}/mfa/setup`, { params: { email } });
+  getMfaSetup(setupUrl: string): Observable<ApiResponse<MfaSetupData>> {
+    // El link viene firmado por el backend (email + expires + signature). Se reenvía tal cual
+    // la query string recibida — reconstruirla con HttpParams podría re-codificar caracteres
+    // distinto a como se firmó y así invalidar la firma.
+    const query = new URL(setupUrl).search;
+    return this.http.get<ApiResponse<MfaSetupData>>(`${environment.apiUrl}/mfa/setup${query}`);
   }
 
   confirmMfaSetup(mfa_method_id: string, code: string): Observable<ApiResponse<any>> {

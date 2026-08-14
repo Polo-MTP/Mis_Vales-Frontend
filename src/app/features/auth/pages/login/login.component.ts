@@ -52,7 +52,7 @@ export class LoginComponent {
       next: (res) => {
         this.isLoading.set(false);
         if (res.data?.requires_setup && res.data?.setup_url) {
-          this.router.navigate(['/auth/mfa-setup'], { queryParams: { email: val.email } });
+          this.router.navigate(['/auth/mfa-setup'], { queryParams: { setupUrl: res.data.setup_url } });
           return;
         }
 

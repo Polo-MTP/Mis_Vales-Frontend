@@ -33,14 +33,14 @@ export class MfaSetupComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const email = this.route.snapshot.queryParams['email'];
-    if (!email) {
-      this.errorMessage.set('Correo no proporcionado en la solicitud.');
+    const setupUrl = this.route.snapshot.queryParams['setupUrl'];
+    if (!setupUrl) {
+      this.errorMessage.set('El enlace de configuración es inválido o incompleto. Vuelve a iniciar sesión.');
       this.isLoadingData.set(false);
       return;
     }
 
-    this.authService.getMfaSetup(email).subscribe({
+    this.authService.getMfaSetup(setupUrl).subscribe({
       next: (res) => {
         this.isLoadingData.set(false);
         if (res.success && res.data) {
