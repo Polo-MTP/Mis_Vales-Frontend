@@ -56,24 +56,72 @@
   </div>
 
   <div *ngIf="!cargando() && !error() && abonos().length > 0" class="space-y-3">
-    <div *ngFor="let a of abonos()" class="list-card-item cursor-default">
-      <div>
-        <p class="font-bold text-slate-100">Ref. {{ a.referencia_leida }} · ${{ a.monto }}</p>
-        <p class="text-xs text-slate-400 mt-0.5">
-          {{ tipoPagoLabel(a.tipo_pago) }} · {{ a.fecha_pago | date:'shortDate' }}<span *ngIf="a.folio_pago"> · Folio {{ a.folio_pago }}</span>
-          <span *ngIf="a.relacion_id"> · Relación #{{ a.relacion_id }}</span>
-        </p>
+    <div *ngFor="let a of abonos()">
+      <div class="list-card-item cursor-default">
+        <div>
+          <p class="font-bold text-slate-100">Ref. {{ a.referencia_leida }} · ${{ a.monto }}</p>
+          <p class="text-xs text-slate-400 mt-0.5">
+            {{ tipoPagoLabel(a.tipo_pago) }} · {{ a.fecha_pago | date:'shortDate' }}<span *ngIf="a.folio_pago"> · Folio {{ a.folio_pago }}</span>
+            <span *ngIf="a.relacion_id"> · Relación #{{ a.relacion_id }}</span>
+          </p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <span class="status-badge"
+                [class.bg-emerald-500/15]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'" [class.text-emerald-300]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'" [class.border-emerald-500/30]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'"
+                [class.bg-amber-500/15]="a.estado === 'sin_coincidencia'" [class.text-amber-300]="a.estado === 'sin_coincidencia'" [class.border-amber-500/30]="a.estado === 'sin_coincidencia'">
+            {{ estadoAbonoLabel(a.estado) }}
+          </span>
+          <button *ngIf="a.estado === 'sin_coincidencia' && abonoAbierto()?.id !== a.id" type="button" (click)="abrirSolicitud(a)" class="btn-outline w-auto shrink-0">
+            Solicitar Autorización
+          </button>
+          <button *ngIf="abonoAbierto()?.id === a.id" type="button" (click)="cancelarSolicitud()" class="btn-outline w-auto shrink-0">
+            Cerrar
+          </button>
+        </div>
       </div>
-      <div class="flex items-center gap-3 shrink-0">
-        <span class="status-badge"
-              [class.bg-emerald-500/15]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'" [class.text-emerald-300]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'" [class.border-emerald-500/30]="a.estado === 'conciliado' || a.estado === 'conciliado_manual'"
-              [class.bg-amber-500/15]="a.estado === 'sin_coincidencia'" [class.text-amber-300]="a.estado === 'sin_coincidencia'" [class.border-amber-500/30]="a.estado === 'sin_coincidencia'">
-          {{ estadoAbonoLabel(a.estado) }}
-        </span>
-        <button *ngIf="a.estado === 'sin_coincidencia'" type="button" (click)="solicitarAutorizacion(a)" [disabled]="solicitando() === a.id" class="btn-outline w-auto shrink-0">
-          <span *ngIf="solicitando() !== a.id">Solicitar Autorización</span>
-          <span *ngIf="solicitando() === a.id">Enviando...</span>
-        </button>
+
+      <!-- Panel de búsqueda de relación, en vez del prompt() de antes -->
+      <div *ngIf="abonoAbierto()?.id === a.id" class="dash-card mt-2 space-y-3">
+        <div>
+          <label class="form-label">Buscar Relación por referencia de pago</label>
+          <input
+            type="text"
+            class="form-input"
+            placeholder="Ej. 000000004020260715..."
+            (input)="buscarRelacion($any($event.target).value)"
+          />
+        </div>
+
+        <div *ngIf="buscandoRelacion()" class="state-loading">Buscando...</div>
+
+        <div *ngIf="!buscandoRelacion() && resultadosRelacion().length > 0" class="space-y-2">
+          <div *ngFor="let r of resultadosRelacion()" (click)="elegirRelacion(r)" class="list-card-item">
+            <div>
+              <p class="font-bold text-slate-100">{{ r.distribuidora?.razon_social || ('Distribuidora #' + r.distribuidora_id) }}</p>
+              <p class="text-xs text-slate-400 mt-0.5">Ref. {{ r.referencia_pago }} · Corte {{ r.fecha_corte | date:'shortDate' }} · A pagar ${{ r.totales.a_pagar }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="relacionElegida() as relacion" class="bg-slate-900/40 rounded-2xl p-4 flex items-center justify-between">
+          <div>
+            <p class="text-xs text-slate-400">Relación elegida</p>
+            <p class="font-bold text-slate-100">{{ relacion.distribuidora?.razon_social || ('Distribuidora #' + relacion.distribuidora_id) }}</p>
+            <p class="text-xs text-slate-400">Ref. {{ relacion.referencia_pago }} · A pagar ${{ relacion.totales.a_pagar }}</p>
+          </div>
+          <button type="button" (click)="relacionElegida.set(null)" class="btn-outline w-auto shrink-0">Cambiar</button>
+        </div>
+
+        <form *ngIf="relacionElegida()" [formGroup]="motivoForm" (ngSubmit)="confirmarSolicitud()" class="space-y-3">
+          <div>
+            <label class="form-label">Motivo (por qué corresponde a esta relación)</label>
+            <textarea formControlName="motivo" class="form-input" rows="2"></textarea>
+          </div>
+          <button type="submit" [disabled]="motivoForm.invalid || solicitando() === a.id" class="btn-primary w-auto">
+            <span *ngIf="solicitando() !== a.id">Enviar Solicitud</span>
+            <span *ngIf="solicitando() === a.id">Enviando...</span>
+          </button>
+        </form>
       </div>
     </div>
   </div>
