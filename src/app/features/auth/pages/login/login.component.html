@@ -13,6 +13,9 @@
         </div>
         <h2 class="text-2xl font-black text-slate-100 tracking-tight">Iniciar Sesión</h2>
         <p class="text-xs text-slate-400 font-medium">Ingresa a tu cuenta para continuar</p>
+        <p *ngIf="serverNumber()" class="text-[10px] text-slate-600 font-mono">
+          Servidor #{{ serverNumber() }}
+        </p>
       </div>
 
       <app-alert [message]="errorMessage()" type="error"></app-alert>
