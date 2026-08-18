@@ -34,6 +34,10 @@
           <span *ngIf="!isLoading()">Continuar</span>
           <span *ngIf="isLoading()">Verificando credenciales...</span>
         </button>
+
+        <p class="text-xs text-slate-400 text-center">
+          <a routerLink="/auth/forgot-password" class="text-blue-400 hover:text-blue-300 font-semibold">¿Olvidaste tu contraseña?</a>
+        </p>
       </form>
 
       <!-- PASO 2: Verificación TOTP -->

@@ -132,6 +132,26 @@ export class AuthService {
     return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/mfa/setup/confirm`, { mfa_method_id, code, recaptcha });
   }
 
+  forgotPassword(email: string, recaptcha?: string): Observable<ApiResponse<null>> {
+    return this.http.post<ApiResponse<null>>(`${environment.apiUrl}/forgot-password`, { email, recaptcha });
+  }
+
+  resetPassword(
+    token: string,
+    email: string,
+    password: string,
+    password_confirmation: string,
+    recaptcha?: string
+  ): Observable<ApiResponse<null>> {
+    return this.http.post<ApiResponse<null>>(`${environment.apiUrl}/reset-password`, {
+      token,
+      email,
+      password,
+      password_confirmation,
+      recaptcha
+    });
+  }
+
   logout(): void {
     if (this.token()) {
       this.http.post(`${environment.apiUrl}/logout`, {}).subscribe({
