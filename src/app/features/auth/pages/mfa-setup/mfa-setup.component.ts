@@ -17,7 +17,6 @@ import { RecaptchaService } from '../../../../core/services/recaptcha.service';
 })
 export class MfaSetupComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private sanitizer = inject(DomSanitizer);
@@ -30,7 +29,16 @@ export class MfaSetupComponent implements OnInit {
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
 
+  // 'confirm' = vincular el dispositivo (código de la app); 'email_otp' = tercer factor,
+  // solo para roles con factor_count 3 (Administrador, Gerente General, Gerente de Sucursal).
+  step = signal<'confirm' | 'email_otp'>('confirm');
+  private userId: number | null = null;
+
   confirmForm = this.fb.group({
+    code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
+  });
+
+  otpMailForm = this.fb.group({
     code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
   });
 
@@ -73,17 +81,58 @@ export class MfaSetupComponent implements OnInit {
       return;
     }
 
-    this.authService.confirmMfaSetup(setup.mfa_method_id, this.confirmForm.value.code!, recaptchaToken).subscribe({
+    // /mfa/verify (no /mfa/setup/confirm) — además de vincular el dispositivo, continúa la
+    // misma cadena de login que usa un TOTP normal: pide el tercer factor si el rol lo
+    // requiere, o entrega el token de una vez si no. /mfa/setup/confirm solo marca el
+    // dispositivo como verificado y no sabe nada de lo que sigue después.
+    this.authService.verifyMfa(setup.mfa_method_id, this.confirmForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
-        if (res.success) {
-          this.successMessage.set('Dispositivo vinculado con éxito. Redirigiendo a inicio de sesión...');
-          setTimeout(() => this.router.navigate(['/auth/login']), 1500);
+
+        if (res.data?.requires_email_otp && res.data?.user_id) {
+          this.userId = res.data.user_id;
+          this.step.set('email_otp');
+          return;
+        }
+
+        if (res.success && res.data?.token) {
+          this.successMessage.set('Dispositivo vinculado con éxito. Entrando...');
+          this.authService.redirectUserByRole();
         }
       },
       error: (err) => {
         this.isSubmitting.set(false);
         this.errorMessage.set(err.error?.message || 'Código de confirmación incorrecto.');
+      }
+    });
+  }
+
+  async onOtpMailSubmit(): Promise<void> {
+    if (this.otpMailForm.invalid || !this.userId) return;
+
+    this.isSubmitting.set(true);
+    this.errorMessage.set(null);
+
+    let recaptchaToken: string;
+    try {
+      recaptchaToken = await this.recaptchaService.execute('mfa_email_verify');
+    } catch {
+      this.isSubmitting.set(false);
+      this.errorMessage.set('No se pudo verificar el reCAPTCHA. Intenta de nuevo.');
+      return;
+    }
+
+    this.authService.verifyEmailOtp(this.userId, this.otpMailForm.value.code!, recaptchaToken).subscribe({
+      next: (res) => {
+        this.isSubmitting.set(false);
+        if (res.success && res.data?.token) {
+          this.successMessage.set('Dispositivo vinculado con éxito. Entrando...');
+          this.authService.redirectUserByRole();
+        }
+      },
+      error: (err) => {
+        this.isSubmitting.set(false);
+        this.errorMessage.set(err.error?.message || 'Código OTP incorrecto.');
       }
     });
   }

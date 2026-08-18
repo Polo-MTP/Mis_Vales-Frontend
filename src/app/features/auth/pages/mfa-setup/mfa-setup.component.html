@@ -18,7 +18,7 @@
       Cargando parámetros de seguridad y código QR...
     </div>
 
-    <div *ngIf="!isLoadingData() && setupData()" class="space-y-6">
+    <div *ngIf="!isLoadingData() && setupData() && step() === 'confirm'" class="space-y-6">
       <div class="p-4 bg-slate-900/50 border border-slate-700 rounded-2xl space-y-4">
         <p class="text-xs text-slate-400 text-center">
           Abre Google Authenticator en tu teléfono y escanea este código QR:
@@ -48,6 +48,24 @@
         </button>
       </form>
     </div>
+
+    <!-- Tercer factor: solo aparece si el rol lo requiere, justo después de vincular -->
+    <form *ngIf="step() === 'email_otp'" [formGroup]="otpMailForm" (ngSubmit)="onOtpMailSubmit()" class="space-y-4">
+      <div class="mfa-info-box">
+        <span class="mfa-badge bg-purple-500/10 border-purple-500/20 text-purple-300">Tercer Factor (3FA)</span>
+        <p class="text-xs text-slate-400">Dispositivo vinculado. Ingresa el código de 6 dígitos enviado a tu correo.</p>
+      </div>
+
+      <div>
+        <label class="form-label text-center">Código del Correo</label>
+        <input type="text" formControlName="code" maxlength="6" placeholder="123456" class="form-input-code focus:ring-purple-500">
+      </div>
+
+      <button type="submit" [disabled]="otpMailForm.invalid || isSubmitting()" class="btn-purple">
+        <span *ngIf="!isSubmitting()">Finalizar Autenticación</span>
+        <span *ngIf="isSubmitting()">Validando código...</span>
+      </button>
+    </form>
 
   </div>
 </div>
