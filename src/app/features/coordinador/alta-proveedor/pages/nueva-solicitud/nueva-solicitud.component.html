@@ -7,9 +7,9 @@
   </div>
 
   <app-alert [message]="errorMessage()" type="error"></app-alert>
-  <app-alert [message]="successMessage()" type="success"></app-alert>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <!-- Paso 1: datos de la solicitud -->
+  <form *ngIf="!solicitudCreada()" [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
 
     <!-- Datos del Negocio -->
     <div class="dash-card">
@@ -60,7 +60,9 @@
 
         <div>
           <label class="form-label">Fecha de Nacimiento</label>
-          <input type="date" formControlName="fecha_nacimiento" class="form-input">
+          <input type="date" formControlName="fecha_nacimiento" [max]="fechaMaximaNacimiento"
+                 readonly onkeydown="return false" class="form-input">
+          <p class="text-xs text-slate-500 mt-1">Debe ser mayor de edad (18 años o más).</p>
         </div>
 
         <div>
@@ -73,11 +75,28 @@
     <!-- Dirección -->
     <div class="dash-card">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Dirección</h2>
+      <p class="text-xs text-slate-400 -mt-2">Escribe primero el código postal para filtrar mejor las sugerencias de la calle.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="form-label">Código Postal *</label>
+          <input type="text" formControlName="codigo_postal" maxlength="10" class="form-input"
+                 appPlacesAutocomplete appPlacesAutocompleteTipo="postal_code"
+                 (lugarSeleccionado)="onCodigoPostalSeleccionado($event)">
+          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('codigo_postal')">{{ errorFor('codigo_postal') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Estado *</label>
+          <input type="text" formControlName="estado" class="form-input">
+          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('estado')">{{ errorFor('estado') }}</p>
+        </div>
+
         <div class="sm:col-span-2">
           <label class="form-label">Calle *</label>
-          <input type="text" formControlName="calle" class="form-input">
+          <input type="text" formControlName="calle" class="form-input"
+                 appPlacesAutocomplete appPlacesAutocompleteTipo="address" [appPlacesAutocompleteSesgo]="sesgoDireccion()"
+                 (lugarSeleccionado)="onCalleSeleccionada($event)">
           <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('calle')">{{ errorFor('calle') }}</p>
         </div>
 
@@ -88,9 +107,9 @@
         </div>
 
         <div>
-          <label class="form-label">Código Postal *</label>
-          <input type="text" formControlName="codigo_postal" maxlength="10" class="form-input">
-          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('codigo_postal')">{{ errorFor('codigo_postal') }}</p>
+          <label class="form-label">Ciudad *</label>
+          <input type="text" formControlName="ciudad" class="form-input">
+          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('ciudad')">{{ errorFor('ciudad') }}</p>
         </div>
 
         <div>
@@ -102,18 +121,6 @@
         <div>
           <label class="form-label">Número Interior</label>
           <input type="text" formControlName="numero_int" class="form-input">
-        </div>
-
-        <div>
-          <label class="form-label">Estado *</label>
-          <input type="text" formControlName="estado" class="form-input">
-          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('estado')">{{ errorFor('estado') }}</p>
-        </div>
-
-        <div>
-          <label class="form-label">Ciudad *</label>
-          <input type="text" formControlName="ciudad" class="form-input">
-          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('ciudad')">{{ errorFor('ciudad') }}</p>
         </div>
       </div>
     </div>
@@ -144,37 +151,6 @@
       </div>
     </div>
 
-    <!-- Evidencias -->
-    <div class="dash-card">
-      <div class="flex items-center justify-between">
-        <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Evidencias (Opcional)</h2>
-        <button type="button" (click)="agregarEvidencia()" class="btn-link-primary">
-          + Agregar evidencia
-        </button>
-      </div>
-
-      <div formArrayName="evidencias" class="space-y-3">
-        <div *ngFor="let ev of evidencias.controls; let i = index" [formGroupName]="i"
-             class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-start bg-slate-900/40 rounded-2xl p-4">
-          <div>
-            <label class="form-label">Tipo de Documento</label>
-            <select formControlName="tipo_documento" class="form-select">
-              <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">URL del Archivo</label>
-            <input type="text" formControlName="url_archivo" placeholder="https://..." class="form-input">
-          </div>
-          <button type="button" (click)="quitarEvidencia(i)" class="sm:mt-8 btn-link-danger self-center sm:self-auto">
-            Quitar
-          </button>
-        </div>
-
-        <p *ngIf="evidencias.length === 0" class="text-xs text-slate-400">No se han agregado evidencias.</p>
-      </div>
-    </div>
-
     <!-- Acciones -->
     <div class="flex items-center justify-end gap-3">
       <button type="button" (click)="cancelar()" class="py-3.5 px-6 text-slate-400 hover:text-slate-200 font-bold text-sm rounded-xl transition-all">
@@ -187,5 +163,50 @@
     </div>
 
   </form>
+
+  <!-- Paso 2: subir evidencias (ya con la solicitud creada) -->
+  <div *ngIf="solicitudCreada() as s" class="space-y-6">
+
+    <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-4 text-sm text-emerald-300">
+      Solicitud capturada exitosamente ({{ s.razon_social }}). Ahora puedes subir fotos de evidencia (opcional).
+    </div>
+
+    <app-alert [message]="errorEvidencia()" type="error"></app-alert>
+
+    <div class="dash-card">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Evidencias (Opcional)</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+        <div>
+          <label class="form-label">Tipo de Documento</label>
+          <select [(ngModel)]="tipoDocumentoSeleccionado" [ngModelOptions]="{standalone: true}" class="form-select">
+            <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Foto o PDF (máx. 5MB)</label>
+          <input type="file" accept=".jpg,.jpeg,.png,.pdf" (change)="onArchivoSeleccionado($event)"
+                 [disabled]="subiendoEvidencia()" class="form-input">
+        </div>
+      </div>
+
+      <p *ngIf="subiendoEvidencia()" class="text-xs text-slate-400 mt-2">Subiendo...</p>
+
+      <div *ngIf="evidenciasSubidas().length > 0" class="space-y-2 mt-4">
+        <div *ngFor="let ev of evidenciasSubidas()" class="flex items-center justify-between bg-slate-900/40 rounded-xl p-3 text-sm">
+          <span class="font-semibold text-slate-300">{{ ev.tipo_documento }}</span>
+          <a [href]="ev.url_archivo" target="_blank" rel="noopener" class="text-emerald-400 hover:underline">Ver archivo</a>
+        </div>
+      </div>
+      <p *ngIf="evidenciasSubidas().length === 0" class="text-xs text-slate-400 mt-2">No se han subido evidencias.</p>
+    </div>
+
+    <div class="flex items-center justify-end">
+      <button type="button" (click)="finalizar()" class="btn-primary w-auto">
+        Finalizar
+      </button>
+    </div>
+
+  </div>
 
 </div>

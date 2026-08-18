@@ -45,6 +45,13 @@ function bootstrapGoogleMaps(apiKey: string): void {
 @Injectable({ providedIn: 'root' })
 export class GoogleMapsLoaderService {
   private loadPromise: Promise<void> | null = null;
+  private placesPromise: Promise<void> | null = null;
+
+  private asegurarBootstrap(): void {
+    if (typeof google === 'undefined' || !google.maps?.importLibrary) {
+      bootstrapGoogleMaps(environment.googleMapsApiKey);
+    }
+  }
 
   /** Arranca el loader oficial (si no se ha hecho) y resuelve cuando la librería 'maps' está lista. */
   load(): Promise<void> {
@@ -52,12 +59,27 @@ export class GoogleMapsLoaderService {
       return this.loadPromise;
     }
 
-    if (typeof google === 'undefined' || !google.maps?.importLibrary) {
-      bootstrapGoogleMaps(environment.googleMapsApiKey);
-    }
+    this.asegurarBootstrap();
 
     const promise: Promise<void> = google.maps.importLibrary('maps').then(() => undefined);
     this.loadPromise = promise;
+
+    return promise;
+  }
+
+  /** Igual que load(), pero además carga la librería 'places' (autocompletado de direcciones). */
+  loadPlaces(): Promise<void> {
+    if (this.placesPromise) {
+      return this.placesPromise;
+    }
+
+    this.asegurarBootstrap();
+
+    const promise: Promise<void> = Promise.all([
+      google.maps.importLibrary('maps'),
+      google.maps.importLibrary('places')
+    ]).then(() => undefined);
+    this.placesPromise = promise;
 
     return promise;
   }

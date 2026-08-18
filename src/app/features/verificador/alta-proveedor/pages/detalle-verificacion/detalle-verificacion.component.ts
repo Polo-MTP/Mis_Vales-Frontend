@@ -6,11 +6,14 @@ import { VerificacionService } from '../../services/verificacion.service';
 import { SolicitudProveedor, VerificarSolicitudPayload } from '../../../../../core/models/solicitud-proveedor.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 import { MapaUbicacionComponent } from '../../../../../shared/components/mapa-ubicacion/mapa-ubicacion.component';
+import { EvidenciaService } from '../../../../../core/services/evidencia.service';
+import { GooglePlacesAutocompleteDirective } from '../../../../../shared/directives/google-places-autocomplete.directive';
+import { parsearDireccionGoogle } from '../../../../../shared/utils/google-address.util';
 
 @Component({
   selector: 'app-detalle-verificacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, MapaUbicacionComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, MapaUbicacionComponent, GooglePlacesAutocompleteDirective],
   templateUrl: './detalle-verificacion.component.html',
   styleUrl: './detalle-verificacion.component.css'
 })
@@ -19,6 +22,7 @@ export class DetalleVerificacionComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private verificacionService = inject(VerificacionService);
+  private evidenciaService = inject(EvidenciaService);
 
   solicitud = signal<SolicitudProveedor | null>(null);
   cargando = signal(true);
@@ -27,6 +31,8 @@ export class DetalleVerificacionComponent implements OnInit {
   enviando = signal(false);
   errorDictamen = signal<string | null>(null);
   fieldErrors = signal<Record<string, string[]>>({});
+  sesgoDireccion = signal<{ lat: number; lng: number } | null>(null);
+  subiendoEvidenciaIndex = signal<number | null>(null);
 
   tiposDocumento = ['foto_fachada', 'foto_interior', 'foto_ine_titular', 'otro'];
 
@@ -112,6 +118,64 @@ export class DetalleVerificacionComponent implements OnInit {
 
   quitarEvidencia(index: number): void {
     this.evidencias.removeAt(index);
+  }
+
+  /** El usuario eligió un CP de las sugerencias: lo usamos para sesgar el autocompletado de Calle. */
+  onCodigoPostalSeleccionado(place: any): void {
+    const direccion = parsearDireccionGoogle(place);
+
+    this.datosForm.patchValue({
+      codigo_postal: direccion.codigo_postal || this.datosForm.value.codigo_postal,
+      estado: direccion.estado || this.datosForm.value.estado,
+      ciudad: direccion.ciudad || this.datosForm.value.ciudad
+    });
+
+    if (direccion.lat && direccion.lng) {
+      this.sesgoDireccion.set({ lat: direccion.lat, lng: direccion.lng });
+    }
+  }
+
+  /** El usuario eligió una calle de las sugerencias: llenamos el resto de la dirección. */
+  onCalleSeleccionada(place: any): void {
+    const direccion = parsearDireccionGoogle(place);
+
+    this.datosForm.patchValue({
+      calle: direccion.calle || this.datosForm.value.calle,
+      numero_ext: direccion.numero_ext || this.datosForm.value.numero_ext,
+      colonia: direccion.colonia || this.datosForm.value.colonia,
+      codigo_postal: direccion.codigo_postal || this.datosForm.value.codigo_postal,
+      estado: direccion.estado || this.datosForm.value.estado,
+      ciudad: direccion.ciudad || this.datosForm.value.ciudad
+    });
+  }
+
+  /** Sube el archivo real de la evidencia y guarda la URL resultante en esa fila del formulario. */
+  onArchivoEvidencia(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    const archivo = input.files?.[0];
+    const s = this.solicitud();
+
+    if (!archivo || !s) {
+      return;
+    }
+
+    this.subiendoEvidenciaIndex.set(index);
+
+    const tipoDocumento = this.evidencias.at(index).get('tipo_documento')?.value ?? 'otro';
+
+    this.evidenciaService.subir(s.id, archivo, tipoDocumento).subscribe({
+      next: (res) => {
+        this.subiendoEvidenciaIndex.set(null);
+        if (res.data) {
+          this.evidencias.at(index).get('url_archivo')?.setValue(res.data.url_archivo);
+        }
+      },
+      error: (err) => {
+        this.subiendoEvidenciaIndex.set(null);
+        this.errorDictamen.set(err.error?.message || 'No se pudo subir el archivo. Verifica que sea jpg, png o pdf y pese menos de 5MB.');
+        input.value = '';
+      }
+    });
   }
 
   errorFor(campo: string): string | null {

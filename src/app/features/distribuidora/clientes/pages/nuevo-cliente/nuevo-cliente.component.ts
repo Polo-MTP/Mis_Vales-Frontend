@@ -5,11 +5,13 @@ import { Router, RouterModule } from '@angular/router';
 import { ClienteService } from '../../services/cliente.service';
 import { CrearClientePayload } from '../../../../../core/models/cliente.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { GooglePlacesAutocompleteDirective } from '../../../../../shared/directives/google-places-autocomplete.directive';
+import { parsearDireccionGoogle } from '../../../../../shared/utils/google-address.util';
 
 @Component({
   selector: 'app-nuevo-cliente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective],
   templateUrl: './nuevo-cliente.component.html',
   styleUrl: './nuevo-cliente.component.css'
 })
@@ -21,6 +23,10 @@ export class NuevoClienteComponent {
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   fieldErrors = signal<Record<string, string[]>>({});
+  sesgoDireccion = signal<{ lat: number; lng: number } | null>(null);
+
+  /** No se puede escribir la fecha a mano (readonly), solo elegirla en el calendario, y no permite menores de edad. */
+  readonly fechaMaximaNacimiento = this.calcularFechaMaxima18Anios();
 
   form = this.fb.group({
     nombre: ['', [Validators.required, Validators.maxLength(255)]],
@@ -29,17 +35,52 @@ export class NuevoClienteComponent {
     curp: ['', [Validators.required, Validators.minLength(18), Validators.maxLength(18)]],
     fecha_nacimiento: [''],
     lugar_nacimiento: ['', [Validators.maxLength(255)]],
+    codigo_postal: ['', [Validators.required, Validators.maxLength(10)]],
     calle: ['', [Validators.required, Validators.maxLength(255)]],
     colonia: ['', [Validators.required, Validators.maxLength(255)]],
     numero_ext: ['', [Validators.required, Validators.maxLength(50)]],
     numero_int: ['', [Validators.maxLength(50)]],
-    codigo_postal: ['', [Validators.required, Validators.maxLength(10)]],
     estado: ['', [Validators.required, Validators.maxLength(255)]],
     ciudad: ['', [Validators.required, Validators.maxLength(255)]]
   });
 
+  private calcularFechaMaxima18Anios(): string {
+    const hoy = new Date();
+    const hace18 = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate());
+    return hace18.toISOString().slice(0, 10);
+  }
+
   errorFor(campo: string): string | null {
     return this.fieldErrors()[campo]?.[0] ?? null;
+  }
+
+  /** El usuario eligió un CP de las sugerencias: lo usamos para sesgar el autocompletado de Calle. */
+  onCodigoPostalSeleccionado(place: any): void {
+    const direccion = parsearDireccionGoogle(place);
+
+    this.form.patchValue({
+      codigo_postal: direccion.codigo_postal || this.form.value.codigo_postal,
+      estado: direccion.estado || this.form.value.estado,
+      ciudad: direccion.ciudad || this.form.value.ciudad
+    });
+
+    if (direccion.lat && direccion.lng) {
+      this.sesgoDireccion.set({ lat: direccion.lat, lng: direccion.lng });
+    }
+  }
+
+  /** El usuario eligió una calle de las sugerencias: llenamos el resto de la dirección. */
+  onCalleSeleccionada(place: any): void {
+    const direccion = parsearDireccionGoogle(place);
+
+    this.form.patchValue({
+      calle: direccion.calle || this.form.value.calle,
+      numero_ext: direccion.numero_ext || this.form.value.numero_ext,
+      colonia: direccion.colonia || this.form.value.colonia,
+      codigo_postal: direccion.codigo_postal || this.form.value.codigo_postal,
+      estado: direccion.estado || this.form.value.estado,
+      ciudad: direccion.ciudad || this.form.value.ciudad
+    });
   }
 
   onSubmit(): void {

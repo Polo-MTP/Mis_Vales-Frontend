@@ -38,7 +38,9 @@
 
         <div>
           <label class="form-label">Fecha de Nacimiento</label>
-          <input type="date" formControlName="fecha_nacimiento" class="form-input">
+          <input type="date" formControlName="fecha_nacimiento" [max]="fechaMaximaNacimiento"
+                 readonly onkeydown="return false" class="form-input">
+          <p class="text-xs text-slate-500 mt-1">Debe ser mayor de edad (18 años o más).</p>
         </div>
 
         <div>
@@ -50,11 +52,28 @@
 
     <div class="dash-card">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Dirección</h2>
+      <p class="text-xs text-slate-400 -mt-2">Escribe primero el código postal para filtrar mejor las sugerencias de la calle.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="form-label">Código Postal *</label>
+          <input type="text" formControlName="codigo_postal" maxlength="10" class="form-input"
+                 appPlacesAutocomplete appPlacesAutocompleteTipo="postal_code"
+                 (lugarSeleccionado)="onCodigoPostalSeleccionado($event)">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('codigo_postal')">{{ errorFor('codigo_postal') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">Estado *</label>
+          <input type="text" formControlName="estado" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('estado')">{{ errorFor('estado') }}</p>
+        </div>
+
         <div class="sm:col-span-2">
           <label class="form-label">Calle *</label>
-          <input type="text" formControlName="calle" class="form-input">
+          <input type="text" formControlName="calle" class="form-input"
+                 appPlacesAutocomplete appPlacesAutocompleteTipo="address" [appPlacesAutocompleteSesgo]="sesgoDireccion()"
+                 (lugarSeleccionado)="onCalleSeleccionada($event)">
           <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('calle')">{{ errorFor('calle') }}</p>
         </div>
 
@@ -65,9 +84,9 @@
         </div>
 
         <div>
-          <label class="form-label">Código Postal *</label>
-          <input type="text" formControlName="codigo_postal" maxlength="10" class="form-input">
-          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('codigo_postal')">{{ errorFor('codigo_postal') }}</p>
+          <label class="form-label">Ciudad *</label>
+          <input type="text" formControlName="ciudad" class="form-input">
+          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('ciudad')">{{ errorFor('ciudad') }}</p>
         </div>
 
         <div>
@@ -79,18 +98,6 @@
         <div>
           <label class="form-label">Número Interior</label>
           <input type="text" formControlName="numero_int" class="form-input">
-        </div>
-
-        <div>
-          <label class="form-label">Estado *</label>
-          <input type="text" formControlName="estado" class="form-input">
-          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('estado')">{{ errorFor('estado') }}</p>
-        </div>
-
-        <div>
-          <label class="form-label">Ciudad *</label>
-          <input type="text" formControlName="ciudad" class="form-input">
-          <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('ciudad')">{{ errorFor('ciudad') }}</p>
         </div>
       </div>
     </div>
