@@ -6,6 +6,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { MfaSetupData } from '../../../../core/models/auth-response.model';
+import { RecaptchaService } from '../../../../core/services/recaptcha.service';
 
 @Component({
   selector: 'app-mfa-setup',
@@ -20,6 +21,7 @@ export class MfaSetupComponent implements OnInit {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private sanitizer = inject(DomSanitizer);
+  private recaptchaService = inject(RecaptchaService);
 
   setupData = signal<MfaSetupData | null>(null);
   safeQrSvg = signal<SafeHtml>('');
@@ -55,14 +57,23 @@ export class MfaSetupComponent implements OnInit {
     });
   }
 
-  onConfirmSubmit(): void {
+  async onConfirmSubmit(): Promise<void> {
     const setup = this.setupData();
     if (this.confirmForm.invalid || !setup) return;
 
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
-    this.authService.confirmMfaSetup(setup.mfa_method_id, this.confirmForm.value.code!).subscribe({
+    let recaptchaToken: string;
+    try {
+      recaptchaToken = await this.recaptchaService.execute('mfa_setup_confirm');
+    } catch {
+      this.isSubmitting.set(false);
+      this.errorMessage.set('No se pudo verificar el reCAPTCHA. Intenta de nuevo.');
+      return;
+    }
+
+    this.authService.confirmMfaSetup(setup.mfa_method_id, this.confirmForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
         if (res.success) {

@@ -100,8 +100,8 @@ export class AuthService {
     );
   }
 
-  verifyMfa(mfa_method_id: string, code: string): Observable<ApiResponse<LoginResultData>> {
-    return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/mfa/verify`, { mfa_method_id, code }).pipe(
+  verifyMfa(mfa_method_id: string, code: string, recaptcha?: string): Observable<ApiResponse<LoginResultData>> {
+    return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/mfa/verify`, { mfa_method_id, code, recaptcha }).pipe(
       tap(res => {
         if (res.success && res.data?.token && res.data?.user) {
           this.setSession(res.data.user, res.data.token);
@@ -110,8 +110,8 @@ export class AuthService {
     );
   }
 
-  verifyEmailOtp(user_id: number, code: string): Observable<ApiResponse<LoginResultData>> {
-    return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/mfa/email/verify`, { user_id, code }).pipe(
+  verifyEmailOtp(user_id: number, code: string, recaptcha?: string): Observable<ApiResponse<LoginResultData>> {
+    return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/mfa/email/verify`, { user_id, code, recaptcha }).pipe(
       tap(res => {
         if (res.success && res.data?.token && res.data?.user) {
           this.setSession(res.data.user, res.data.token);
@@ -128,8 +128,8 @@ export class AuthService {
     return this.http.get<ApiResponse<MfaSetupData>>(`${environment.apiUrl}/mfa/setup${query}`);
   }
 
-  confirmMfaSetup(mfa_method_id: string, code: string): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/mfa/setup/confirm`, { mfa_method_id, code });
+  confirmMfaSetup(mfa_method_id: string, code: string, recaptcha?: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/mfa/setup/confirm`, { mfa_method_id, code, recaptcha });
   }
 
   logout(): void {

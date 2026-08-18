@@ -85,12 +85,21 @@ export class LoginComponent {
   }
 
 
-  onTotpSubmit(): void {
+  async onTotpSubmit(): Promise<void> {
     if (this.totpForm.invalid || !this.mfaMethodId) return;
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    this.authService.verifyMfa(this.mfaMethodId, this.totpForm.value.code!).subscribe({
+    let recaptchaToken: string;
+    try {
+      recaptchaToken = await this.recaptchaService.execute('mfa_verify');
+    } catch {
+      this.isLoading.set(false);
+      this.errorMessage.set('No se pudo verificar el reCAPTCHA. Intenta de nuevo.');
+      return;
+    }
+
+    this.authService.verifyMfa(this.mfaMethodId, this.totpForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isLoading.set(false);
         if (res.data?.requires_email_otp && res.data?.user_id) {
@@ -110,12 +119,21 @@ export class LoginComponent {
     });
   }
 
-  onOtpMailSubmit(): void {
+  async onOtpMailSubmit(): Promise<void> {
     if (this.otpMailForm.invalid || !this.userId) return;
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    this.authService.verifyEmailOtp(this.userId, this.otpMailForm.value.code!).subscribe({
+    let recaptchaToken: string;
+    try {
+      recaptchaToken = await this.recaptchaService.execute('mfa_email_verify');
+    } catch {
+      this.isLoading.set(false);
+      this.errorMessage.set('No se pudo verificar el reCAPTCHA. Intenta de nuevo.');
+      return;
+    }
+
+    this.authService.verifyEmailOtp(this.userId, this.otpMailForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isLoading.set(false);
         if (res.success && res.data?.token) {
