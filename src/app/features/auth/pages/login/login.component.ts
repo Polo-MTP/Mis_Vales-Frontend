@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { RecaptchaService } from '../../../../core/services/recaptcha.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private recaptchaService = inject(RecaptchaService);
 
   step = signal<number>(1);
   isLoading = signal<boolean>(false);
@@ -38,16 +40,25 @@ export class LoginComponent {
     code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
   });
 
-  onLoginSubmit(): void {
+  async onLoginSubmit(): Promise<void> {
     if (this.loginForm.invalid) return;
     this.isLoading.set(true);
     this.errorMessage.set(null);
+
+    let recaptchaToken: string;
+    try {
+      recaptchaToken = await this.recaptchaService.execute('login');
+    } catch {
+      this.isLoading.set(false);
+      this.errorMessage.set('No se pudo verificar el reCAPTCHA. Intenta de nuevo.');
+      return;
+    }
 
     const val = this.loginForm.value;
     this.authService.login({
       email: val.email!,
       password: val.password!,
-      recaptcha: 'bypass-recaptcha'
+      recaptcha: recaptchaToken
     }).subscribe({
       next: (res) => {
         this.isLoading.set(false);
@@ -72,6 +83,7 @@ export class LoginComponent {
       }
     });
   }
+
 
   onTotpSubmit(): void {
     if (this.totpForm.invalid || !this.mfaMethodId) return;
