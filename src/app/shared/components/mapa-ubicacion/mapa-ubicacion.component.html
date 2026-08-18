@@ -1,0 +1,26 @@
+<div class="relative w-full h-64 rounded-xl overflow-hidden bg-slate-900/40">
+  <div #mapaEl class="w-full h-full"></div>
+
+  <div *ngIf="cargando()" class="absolute inset-0 flex items-center justify-center text-xs text-slate-400">
+    Cargando mapa...
+  </div>
+
+  <div *ngIf="errorCarga()" class="absolute inset-0 flex items-center justify-center text-xs text-red-400 px-4 text-center">
+    {{ errorCarga() }}
+  </div>
+</div>
+
+<div *ngIf="!cargando() && !errorCarga()" class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400">
+  <span class="inline-flex items-center gap-1.5">
+    <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+    Destino{{ etiqueta ? ': ' + etiqueta : '' }}
+  </span>
+  <span class="inline-flex items-center gap-1.5">
+    <span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block"></span>
+    Tu ubicación
+  </span>
+</div>
+
+<p *ngIf="sinUbicacionActual() && !cargando() && !errorCarga()" class="mt-1 text-xs text-slate-500">
+  No se pudo obtener tu ubicación actual. Activa el GPS y da permiso de ubicación al navegador para ver la ruta.
+</p>

@@ -5,11 +5,12 @@ import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { VerificacionService } from '../../services/verificacion.service';
 import { SolicitudProveedor, VerificarSolicitudPayload } from '../../../../../core/models/solicitud-proveedor.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { MapaUbicacionComponent } from '../../../../../shared/components/mapa-ubicacion/mapa-ubicacion.component';
 
 @Component({
   selector: 'app-detalle-verificacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, MapaUbicacionComponent],
   templateUrl: './detalle-verificacion.component.html',
   styleUrl: './detalle-verificacion.component.css'
 })
