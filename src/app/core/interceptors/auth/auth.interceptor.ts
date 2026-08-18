@@ -18,7 +18,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !req.url.includes('/login')) {
+      const isAuthChallengeRequest = req.url.includes('/login') || req.url.includes('/mfa/');
+      if (error.status === 401 && !isAuthChallengeRequest) {
         authService.clearSession();
         router.navigate(['/auth/login']);
       }

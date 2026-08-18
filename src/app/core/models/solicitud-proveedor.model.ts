@@ -7,6 +7,9 @@ export interface Direccion {
   codigo_postal: string | null;
   estado: string | null;
   ciudad: string | null;
+  /** Geocodificadas automáticamente en el backend; null si aún no se procesó o Google no encontró la dirección. */
+  latitud: number | null;
+  longitud: number | null;
 }
 
 export interface DatosPersonales {

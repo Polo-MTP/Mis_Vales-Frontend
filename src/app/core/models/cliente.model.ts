@@ -72,6 +72,8 @@ export interface DatosPersonalesResumen {
     codigo_postal: string | null;
     estado: string | null;
     ciudad: string | null;
+    latitud: number | null;
+    longitud: number | null;
   };
 }
 
