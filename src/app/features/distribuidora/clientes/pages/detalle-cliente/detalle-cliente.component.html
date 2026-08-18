@@ -1,108 +1,108 @@
-<div class="layout-container-narrow">
+  <div class="layout-container-narrow">
 
-  <button type="button" (click)="volver()" class="text-sm font-bold text-slate-400 hover:text-slate-200">
-    ← Volver a mis clientes
-  </button>
+    <button type="button" (click)="volver()" class="text-sm font-bold text-slate-400 hover:text-slate-200">
+      ← Volver a mis clientes
+    </button>
 
-  <div *ngIf="cargando()" class="state-loading">Cargando cliente...</div>
+    <div *ngIf="cargando()" class="state-loading">Cargando cliente...</div>
 
-  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
-    {{ error() }}
-  </div>
-
-  <ng-container *ngIf="!cargando() && !error() && cliente() as c">
-
-    <div class="dash-card flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-black text-slate-100 tracking-tight">
-          {{ c.datos_personales.nombre }} {{ c.datos_personales.apellido_paterno }} {{ c.datos_personales.apellido_materno }}
-        </h1>
-        <p class="text-xs text-slate-400 font-medium mt-1">Cliente desde {{ c.created_at | date:'mediumDate' }}</p>
-      </div>
-      <div class="flex items-center gap-3 shrink-0">
-        <span class="status-badge"
-              [class.bg-emerald-500/15]="c.estado" [class.text-emerald-300]="c.estado" [class.border-emerald-500/30]="c.estado"
-              [class.bg-slate-700]="!c.estado" [class.text-slate-400]="!c.estado">
-          {{ c.estado ? 'Activo' : 'Inactivo' }}
-        </span>
-        <button type="button" (click)="toggleEstado()" class="btn-outline">
-          {{ c.estado ? 'Desactivar' : 'Activar' }}
-        </button>
-      </div>
+    <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ error() }}
     </div>
 
-    <app-alert [message]="errorGuardar()" type="error"></app-alert>
-    <app-alert [message]="successMessage()" type="success"></app-alert>
+    <ng-container *ngIf="!cargando() && !error() && cliente() as c">
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
-      <div class="dash-card">
-        <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos Personales</h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="form-label">Nombre(s)</label>
-            <input type="text" formControlName="nombre" class="form-input">
-            <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('datos_personales.nombre')">{{ errorFor('datos_personales.nombre') }}</p>
-          </div>
-          <div>
-            <label class="form-label">Apellido Paterno</label>
-            <input type="text" formControlName="apellido_paterno" class="form-input">
-          </div>
-          <div>
-            <label class="form-label">Apellido Materno</label>
-            <input type="text" formControlName="apellido_materno" class="form-input">
-          </div>
-          <div>
-            <label class="form-label">CURP</label>
-            <input type="text" formControlName="curp" maxlength="18" class="form-input uppercase">
-            <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('datos_personales.curp')">{{ errorFor('datos_personales.curp') }}</p>
-          </div>
+      <div class="dash-card flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-black text-slate-100 tracking-tight">
+            {{ c.datos_personales.nombre }} {{ c.datos_personales.apellido_paterno }} {{ c.datos_personales.apellido_materno }}
+          </h1>
+          <p class="text-xs text-slate-400 font-medium mt-1">Cliente desde {{ c.created_at | date:'mediumDate' }}</p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <span class="status-badge"
+                [class.bg-emerald-500/15]="c.estado" [class.text-emerald-300]="c.estado" [class.border-emerald-500/30]="c.estado"
+                [class.bg-slate-700]="!c.estado" [class.text-slate-400]="!c.estado">
+            {{ c.estado ? 'Activo' : 'Inactivo' }}
+          </span>
+          <button type="button" (click)="toggleEstado()" class="btn-outline">
+            {{ c.estado ? 'Desactivar' : 'Activar' }}
+          </button>
         </div>
       </div>
 
-      <div class="dash-card">
-        <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Dirección</h2>
+      <app-alert [message]="errorGuardar()" type="error"></app-alert>
+      <app-alert [message]="successMessage()" type="success"></app-alert>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="sm:col-span-2">
-            <label class="form-label">Calle</label>
-            <input type="text" formControlName="calle" class="form-input">
-          </div>
-          <div>
-            <label class="form-label">Colonia</label>
-            <input type="text" formControlName="colonia" class="form-input">
-          </div>
-          <div>
-            <label class="form-label">Código Postal</label>
-            <input type="text" formControlName="codigo_postal" maxlength="10" class="form-input">
-          </div>
-          <div>
-            <label class="form-label">Número Exterior</label>
-            <input type="text" formControlName="numero_ext" class="form-input">
-          </div>
-          <div>
-            <label class="form-label">Número Interior</label>
-            <input type="text" formControlName="numero_int" class="form-input">
-          </div>
-          <div>
-            <label class="form-label">Estado</label>
-            <input type="text" formControlName="estado" class="form-input">
-          </div>
-          <div>
-            <label class="form-label">Ciudad</label>
-            <input type="text" formControlName="ciudad" class="form-input">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="dash-card">
+          <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos Personales</h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Nombre(s)</label>
+              <input type="text" formControlName="nombre" class="form-input">
+              <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('datos_personales.nombre')">{{ errorFor('datos_personales.nombre') }}</p>
+            </div>
+            <div>
+              <label class="form-label">Apellido Paterno</label>
+              <input type="text" formControlName="apellido_paterno" class="form-input">
+            </div>
+            <div>
+              <label class="form-label">Apellido Materno</label>
+              <input type="text" formControlName="apellido_materno" class="form-input">
+            </div>
+            <div>
+              <label class="form-label">CURP</label>
+              <input type="text" formControlName="curp" maxlength="18" class="form-input uppercase">
+              <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('datos_personales.curp')">{{ errorFor('datos_personales.curp') }}</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="flex justify-end">
-        <button type="submit" [disabled]="form.invalid || guardando()" class="btn-primary w-auto">
-          <span *ngIf="!guardando()">Guardar Cambios</span>
-          <span *ngIf="guardando()">Guardando...</span>
-        </button>
-      </div>
-    </form>
+        <div class="dash-card">
+          <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Dirección</h2>
 
-  </ng-container>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="sm:col-span-2">
+              <label class="form-label">Calle</label>
+              <input type="text" formControlName="calle" class="form-input">
+            </div>
+            <div>
+              <label class="form-label">Colonia</label>
+              <input type="text" formControlName="colonia" class="form-input">
+            </div>
+            <div>
+              <label class="form-label">Código Postal</label>
+              <input type="text" formControlName="codigo_postal" maxlength="10" class="form-input">
+            </div>
+            <div>
+              <label class="form-label">Número Exterior</label>
+              <input type="text" formControlName="numero_ext" class="form-input">
+            </div>
+            <div>
+              <label class="form-label">Número Interior</label>
+              <input type="text" formControlName="numero_int" class="form-input">
+            </div>
+            <div>
+              <label class="form-label">Estado</label>
+              <input type="text" formControlName="estado" class="form-input">
+            </div>
+            <div>
+              <label class="form-label">Ciudad</label>
+              <input type="text" formControlName="ciudad" class="form-input">
+            </div>
+          </div>
+        </div>
 
-</div>
+        <div class="flex justify-end">
+          <button type="submit" [disabled]="form.invalid || guardando()" class="btn-primary w-auto">
+            <span *ngIf="!guardando()">Guardar Cambios</span>
+            <span *ngIf="guardando()">Guardando...</span>
+          </button>
+        </div>
+      </form>
+
+    </ng-container>
+
+  </div>

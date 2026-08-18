@@ -1,0 +1,31 @@
+<nav class="bg-slate-900 text-white px-4 py-3">
+
+  <div class="flex items-center justify-around gap-2">
+
+    <a
+      routerLink="/coordinador"
+      *ngIf="authService.userRole() === 'Coordinador'"
+      class="px-4 py-2 rounded-lg hover:bg-slate-800"
+    >
+      Inicio
+    </a>
+
+    <a
+      routerLink="/verificador"
+      *ngIf="authService.userRole() === 'Verificador'"
+      class="px-4 py-2 rounded-lg hover:bg-slate-800"
+    >
+      Inicio
+    </a>
+
+    <button
+      type="button"
+      (click)="authService.logout()"
+      class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
+    >
+      Salir
+    </button>
+
+  </div>
+
+</nav>

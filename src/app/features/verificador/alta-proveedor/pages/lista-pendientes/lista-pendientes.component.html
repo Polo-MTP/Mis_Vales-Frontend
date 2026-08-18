@@ -1,12 +1,12 @@
-<div class="w-[820px] mx-auto py-8 space-y-6">
+<div class="layout-view-tablet">
 
   <!-- Header -->
-  <div class="dash-card flex items-center justify-between">
+  <div class="dash-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
     <div>
       <h1 class="text-2xl font-black text-slate-100 tracking-tight">Panel de Inspección en Campo</h1>
       <p class="text-xs text-slate-400 font-medium mt-1">Selecciona una solicitud para realizar la visita y dictamen.</p>
     </div>
-    <button type="button" (click)="cargarSolicitudes()" [disabled]="cargando()" class="btn-outline shrink-0">
+    <button type="button" (click)="cargarSolicitudes()" [disabled]="cargando()" class="btn-outline shrink-0 w-full sm:w-auto justify-center">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 mr-2">
         <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
       </svg>
@@ -50,16 +50,16 @@
     No hay pendientes de revisión bajo este estado actualmente.
   </div>
 
-  <!-- Grid de Tarjetas -->
-  <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="grid grid-cols-2 gap-4">
+  <!-- Grid de Tarjetas (1 col en móvil, 2 en tablet/desktop) -->
+  <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div *ngFor="let solicitud of solicitudes()" (click)="irADetalle(solicitud.id)"
-         class="list-card-item flex-col items-stretch active:scale-[0.98]">
+         class="list-card-item flex-col justify-between items-stretch active:scale-[0.98] transition-transform cursor-pointer">
       <div>
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-bold uppercase text-slate-400 bg-slate-900/60 px-2 py-1 rounded">
+        <div class="flex items-center justify-between mb-3 gap-2">
+          <span class="text-xs font-bold uppercase text-slate-400 bg-slate-900/60 px-2 py-1 rounded truncate">
             {{ solicitud.sucursal?.nombre || 'Sucursal General' }}
           </span>
-          <span class="status-badge"
+          <span class="status-badge shrink-0"
                 [class.bg-amber-500/15]="solicitud.estado === 'pendiente_verificacion'"
                 [class.text-amber-300]="solicitud.estado === 'pendiente_verificacion'"
                 [class.border-amber-500/30]="solicitud.estado === 'pendiente_verificacion'"
@@ -76,23 +76,23 @@
           </span>
         </div>
 
-        <h2 class="text-base font-bold text-slate-100 mb-3">
+        <h2 class="text-base font-bold text-slate-100 mb-2">
           {{ solicitud.datos_personales?.nombre }}
           {{ solicitud.datos_personales?.apellido_paterno }}
           {{ solicitud.datos_personales?.apellido_materno }}
         </h2>
 
-        <p class="text-sm text-slate-400 mb-1.5">
+        <p class="text-xs text-slate-400 mb-1.5 leading-relaxed">
           {{ solicitud.datos_personales?.direccion?.calle }} #{{ solicitud.datos_personales?.direccion?.numero_ext }},
           {{ solicitud.datos_personales?.direccion?.colonia }}
         </p>
-        <p class="text-sm text-slate-400">
+        <p class="text-xs text-slate-400">
           CURP: <strong class="text-slate-200">{{ solicitud.datos_personales?.curp }}</strong>
         </p>
       </div>
 
-      <div class="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between">
-        <span class="text-xs text-slate-400">
+      <div class="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between gap-2">
+        <span class="text-xs text-slate-400 truncate">
           Capturado por: {{ solicitud.coordinador?.name || 'Coordinador' }}
         </span>
         <span class="shrink-0 inline-flex items-center gap-1 bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-lg">

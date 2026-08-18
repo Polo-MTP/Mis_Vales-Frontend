@@ -1,0 +1,34 @@
+<header class="h-16 bg-white border-b border-slate-200 px-4 flex items-center justify-between">
+
+  <a
+    [routerLink]="homeRoute"
+    (click)="cerrarMenu()"
+    class="font-bold text-lg text-slate-800"
+  >
+    Mis Vales
+  </a>
+
+  <div class="flex items-center gap-3">
+
+    <div class="hidden sm:block text-right">
+      <p class="text-sm font-semibold text-slate-800">
+        {{ authService.currentUser()?.name }}
+      </p>
+
+      <p class="text-xs text-slate-500">
+        {{ authService.userRole() }}
+      </p>
+    </div>
+
+    <button
+      type="button"
+      (click)="toggleMenu()"
+      class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200"
+      aria-label="Abrir menú"
+    >
+      ☰
+    </button>
+
+  </div>
+
+</header>
