@@ -1,0 +1,32 @@
+<header class="h-16 border-b border-slate-800 px-6 flex items-center justify-between">
+
+  <div>
+    <a
+      [routerLink]="['/']"
+      class="text-xl font-bold"
+    >
+      Mis Vales
+    </a>
+  </div>
+
+  <div class="flex items-center gap-4">
+
+    <span class="text-sm text-slate-300">
+      {{ authService.currentUser()?.name }}
+    </span>
+
+    <span class="text-sm text-slate-400">
+      {{ authService.userRole() }}
+    </span>
+
+    <button
+      type="button"
+      (click)="logout()"
+      class="px-3 py-2 rounded"
+    >
+      Cerrar sesión
+    </button>
+
+  </div>
+
+</header>

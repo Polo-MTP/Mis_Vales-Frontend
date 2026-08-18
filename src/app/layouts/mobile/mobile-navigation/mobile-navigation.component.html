@@ -1,0 +1,48 @@
+<nav
+  class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200"
+>
+  <div class="h-16 flex items-center justify-around">
+
+    <!-- Inicio -->
+    <a
+      routerLink="/distribuidora"
+      routerLinkActive="text-blue-600"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="flex flex-col items-center justify-center gap-1 text-slate-500"
+    >
+      <span class="text-xl">⌂</span>
+      <span class="text-[10px]">Inicio</span>
+    </a>
+
+    <!-- Clientes -->
+    <a
+      routerLink="/distribuidora/clientes"
+      routerLinkActive="text-blue-600"
+      class="flex flex-col items-center justify-center gap-1 text-slate-500"
+    >
+      <span class="text-xl">♙</span>
+      <span class="text-[10px]">Clientes</span>
+    </a>
+
+    <!-- Vales -->
+    <a
+      routerLink="/distribuidora/vales"
+      routerLinkActive="text-blue-600"
+      class="flex flex-col items-center justify-center gap-1 text-slate-500"
+    >
+      <span class="text-xl">▣</span>
+      <span class="text-[10px]">Vales</span>
+    </a>
+
+    <!-- Puntos -->
+    <a
+      routerLink="/distribuidora/puntos/historial"
+      routerLinkActive="text-blue-600"
+      class="flex flex-col items-center justify-center gap-1 text-slate-500"
+    >
+      <span class="text-xl">★</span>
+      <span class="text-[10px]">Puntos</span>
+    </a>
+
+  </div>
+</nav>
