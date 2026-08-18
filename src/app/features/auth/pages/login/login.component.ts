@@ -1,10 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { RecaptchaService } from '../../../../core/services/recaptcha.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -13,16 +15,18 @@ import { RecaptchaService } from '../../../../core/services/recaptcha.service';
   templateUrl: './login.component.html',
   styleUrls: []
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private recaptchaService = inject(RecaptchaService);
+  private http = inject(HttpClient);
 
   step = signal<number>(1);
   isLoading = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
+  serverNumber = signal<string | null>(null);
 
   mfaMethodId: string | null = null;
   userId: number | null = null;
@@ -39,6 +43,13 @@ export class LoginComponent {
   otpMailForm = this.fb.group({
     code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
   });
+
+  ngOnInit(): void {
+    this.http.get<{ server: string }>(`${environment.apiUrl}/status`).subscribe({
+      next: (res) => this.serverNumber.set(res.server),
+      error: () => this.serverNumber.set(null),
+    });
+  }
 
   async onLoginSubmit(): Promise<void> {
     if (this.loginForm.invalid) return;
