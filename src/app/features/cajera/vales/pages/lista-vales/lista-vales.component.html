@@ -3,7 +3,7 @@
   <div class="dash-card">
     <h1 class="text-2xl font-black text-slate-100 tracking-tight">Consultar Vales</h1>
     <p class="text-xs text-slate-400 font-medium mt-1">
-      Vales de las distribuidoras de tu sucursal — confirma a quién corresponde y autoriza/cobra el vale en caja.
+      Vales de las distribuidoras de tu sucursal — valida los datos del cliente en caja y luego autoriza (paga) el vale.
     </p>
   </div>
 
@@ -11,6 +11,7 @@
   <div class="flex flex-wrap gap-2">
     <button type="button" (click)="cambiarFiltro('todos')" [class]="filtroEstado() === 'todos' ? 'btn-filter-active' : 'btn-filter'">Todos</button>
     <button type="button" (click)="cambiarFiltro('solicitado')" [class]="filtroEstado() === 'solicitado' ? 'btn-filter-active' : 'btn-filter'">Solicitados</button>
+    <button type="button" (click)="cambiarFiltro('validado')" [class]="filtroEstado() === 'validado' ? 'btn-filter-active' : 'btn-filter'">Validados</button>
     <button type="button" (click)="cambiarFiltro('autorizado')" [class]="filtroEstado() === 'autorizado' ? 'btn-filter-active' : 'btn-filter'">Autorizados</button>
     <button type="button" (click)="cambiarFiltro('pagado')" [class]="filtroEstado() === 'pagado' ? 'btn-filter-active' : 'btn-filter'">Pagados</button>
     <button type="button" (click)="cambiarFiltro('vencido')" [class]="filtroEstado() === 'vencido' ? 'btn-filter-active' : 'btn-filter'">Vencidos</button>
@@ -43,6 +44,7 @@
       <div class="flex items-center gap-3 shrink-0">
         <span class="status-badge"
               [class.bg-amber-500/15]="v.estado === 'solicitado'" [class.text-amber-300]="v.estado === 'solicitado'" [class.border-amber-500/30]="v.estado === 'solicitado'"
+              [class.bg-cyan-500/15]="v.estado === 'validado'" [class.text-cyan-300]="v.estado === 'validado'" [class.border-cyan-500/30]="v.estado === 'validado'"
               [class.bg-blue-500/15]="v.estado === 'autorizado'" [class.text-blue-300]="v.estado === 'autorizado'" [class.border-blue-500/30]="v.estado === 'autorizado'"
               [class.bg-emerald-500/15]="v.estado === 'pagado'" [class.text-emerald-300]="v.estado === 'pagado'" [class.border-emerald-500/30]="v.estado === 'pagado'"
               [class.bg-orange-500/15]="v.estado === 'parcial'" [class.text-orange-300]="v.estado === 'parcial'" [class.border-orange-500/30]="v.estado === 'parcial'"
@@ -51,9 +53,15 @@
         </span>
         <span *ngIf="!v.activo" class="status-badge bg-slate-500/15 text-slate-400 border-slate-500/30">Inactivo</span>
 
-        <button *ngIf="v.estado === 'solicitado' && v.activo" type="button" (click)="autorizar(v)"
+        <button *ngIf="v.estado === 'solicitado' && v.activo" type="button" (click)="validar(v)"
+                [disabled]="validandoId() === v.id" class="btn-outline w-auto py-2 px-4 text-xs">
+          <span *ngIf="validandoId() !== v.id">Validar Datos</span>
+          <span *ngIf="validandoId() === v.id">Validando...</span>
+        </button>
+
+        <button *ngIf="v.estado === 'validado' && v.activo" type="button" (click)="autorizar(v)"
                 [disabled]="autorizandoId() === v.id" class="btn-primary w-auto py-2 px-4 text-xs">
-          <span *ngIf="autorizandoId() !== v.id">Autorizar y Cobrar</span>
+          <span *ngIf="autorizandoId() !== v.id">Autorizar</span>
           <span *ngIf="autorizandoId() === v.id">Autorizando...</span>
         </button>
       </div>

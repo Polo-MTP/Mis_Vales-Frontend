@@ -41,6 +41,7 @@ export function estadoSolicitudLabel(estado: string | null | undefined): string 
 
 const ESTADO_VALE_LABELS: Record<string, string> = {
   solicitado: 'Solicitado',
+  validado: 'Validado',
   autorizado: 'Autorizado',
   pagado: 'Pagado',
   parcial: 'Pago parcial',

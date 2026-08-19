@@ -1,4 +1,4 @@
-export type EstadoVale = 'solicitado' | 'autorizado' | 'pagado' | 'vencido' | 'incidencia' | 'parcial';
+export type EstadoVale = 'solicitado' | 'validado' | 'autorizado' | 'pagado' | 'vencido' | 'incidencia' | 'parcial';
 export type TipoVale = 'pre-vale' | 'vale-digital';
 
 export interface Vale {
@@ -13,6 +13,8 @@ export interface Vale {
   estado: EstadoVale;
   activo: boolean;
   fecha_solicitud: string | null;
+  validado_por: number | null;
+  fecha_validacion: string | null;
   fecha_autorizacion: string | null;
   numero_transferencia: string | null;
   created_at: string;

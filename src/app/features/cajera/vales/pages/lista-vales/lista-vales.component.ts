@@ -23,6 +23,7 @@ export class ListaValesComponent implements OnInit {
   error = signal<string | null>(null);
   pagina = signal(1);
   filtroEstado = signal<EstadoVale | 'todos'>('todos');
+  validandoId = signal<number | null>(null);
   autorizandoId = signal<number | null>(null);
   errorAutorizar = signal<string | null>(null);
 
@@ -65,6 +66,24 @@ export class ListaValesComponent implements OnInit {
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();
+  }
+
+  validar(vale: Vale): void {
+    this.validandoId.set(vale.id);
+    this.errorAutorizar.set(null);
+
+    this.valeService.validar(vale.id).subscribe({
+      next: (res) => {
+        this.validandoId.set(null);
+        if (res.data) {
+          this.vales.update((lista) => lista.map((v) => (v.id === vale.id ? res.data! : v)));
+        }
+      },
+      error: (err) => {
+        this.validandoId.set(null);
+        this.errorAutorizar.set(err.error?.message || 'No se pudo validar el vale.');
+      }
+    });
   }
 
   autorizar(vale: Vale): void {

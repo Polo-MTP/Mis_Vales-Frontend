@@ -20,7 +20,12 @@ export class ValeService {
     return this.http.get<ApiResponse<PaginatedResponse<Vale>>>(this.baseUrl, { params });
   }
 
-  /** Autoriza/cobra el vale al cliente en caja. Solo Cajera; pasa el vale a 'autorizado'. */
+  /** Valida en persona los datos del cliente contra el vale. Paso obligatorio antes de autorizar. */
+  validar(valeId: number): Observable<ApiResponse<Vale>> {
+    return this.http.put<ApiResponse<Vale>>(`${this.baseUrl}/${valeId}/validar`, {});
+  }
+
+  /** Autoriza/paga el vale al cliente en caja. Solo Cajera; requiere que ya esté 'validado'. */
   autorizar(valeId: number): Observable<ApiResponse<Vale>> {
     return this.http.put<ApiResponse<Vale>>(`${this.baseUrl}/${valeId}/autorizar`, {});
   }
