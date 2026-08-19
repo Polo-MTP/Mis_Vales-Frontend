@@ -29,9 +29,9 @@ export class ListaValesComponent implements OnInit {
   autorizandoId = signal<number | null>(null);
   errorAutorizar = signal<string | null>(null);
 
-  /** Vale para el que estamos pidiendo el número de tarjeta (el backend lo exige la primera vez). */
+  /** Vale para el que estamos pidiendo la CLABE (el backend la exige la primera vez). */
   capturandoTarjetaId = signal<number | null>(null);
-  numeroTarjetaValor = signal('');
+  clabeValor = signal('');
 
   readonly estadoValeLabel = estadoValeLabel;
 
@@ -89,12 +89,12 @@ export class ListaValesComponent implements OnInit {
         this.validandoId.set(null);
         const mensaje: string = err.error?.message || 'No se pudo validar el vale.';
 
-        // El backend pide el número de tarjeta la primera vez que se valida un vale de este
-        // cliente (para poder transferirle el pago) — en vez de un error genérico, mostramos
-        // el campo para capturarlo y reintentar.
-        if (mensaje.includes('número de tarjeta')) {
+        // El backend pide la CLABE la primera vez que se valida un vale de este cliente (para
+        // poder transferirle el pago) — en vez de un error genérico, mostramos el campo para
+        // capturarla y reintentar.
+        if (mensaje.includes('CLABE')) {
           this.capturandoTarjetaId.set(vale.id);
-          this.numeroTarjetaValor.set('');
+          this.clabeValor.set('');
           return;
         }
 
@@ -105,25 +105,25 @@ export class ListaValesComponent implements OnInit {
 
   cancelarCapturaTarjeta(): void {
     this.capturandoTarjetaId.set(null);
-    this.numeroTarjetaValor.set('');
+    this.clabeValor.set('');
   }
 
   confirmarValidarConTarjeta(vale: Vale): void {
-    const numeroTarjeta = this.numeroTarjetaValor().trim();
+    const clabe = this.clabeValor().trim();
 
-    if (numeroTarjeta.length < 10) {
-      this.errorAutorizar.set('Captura un número de tarjeta o cuenta CLABE válido.');
+    if (clabe.length !== 18) {
+      this.errorAutorizar.set('La CLABE interbancaria debe tener exactamente 18 dígitos.');
       return;
     }
 
     this.validandoId.set(vale.id);
     this.errorAutorizar.set(null);
 
-    this.valeService.validar(vale.id, numeroTarjeta).subscribe({
+    this.valeService.validar(vale.id, clabe).subscribe({
       next: (res) => {
         this.validandoId.set(null);
         this.capturandoTarjetaId.set(null);
-        this.numeroTarjetaValor.set('');
+        this.clabeValor.set('');
         if (res.data) {
           this.vales.update((lista) => lista.map((v) => (v.id === vale.id ? res.data! : v)));
         }

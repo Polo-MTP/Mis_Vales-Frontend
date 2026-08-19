@@ -22,12 +22,12 @@ export class ValeService {
 
   /**
    * Valida en persona los datos del cliente contra el vale. Paso obligatorio antes de autorizar.
-   * numeroTarjeta solo hace falta la primera vez que se valida un vale de ese cliente (el
-   * backend regresa 422 pidiéndolo si aún no tiene una guardada); en vales futuros no se manda.
+   * clabe (18 dígitos) solo hace falta la primera vez que se valida un vale de ese cliente (el
+   * backend regresa 422 pidiéndola si aún no tiene una guardada); en vales futuros no se manda.
    */
-  validar(valeId: number, numeroTarjeta?: string): Observable<ApiResponse<Vale>> {
+  validar(valeId: number, clabe?: string): Observable<ApiResponse<Vale>> {
     return this.http.put<ApiResponse<Vale>>(`${this.baseUrl}/${valeId}/validar`, {
-      numero_tarjeta: numeroTarjeta || undefined
+      clabe: clabe || undefined
     });
   }
 

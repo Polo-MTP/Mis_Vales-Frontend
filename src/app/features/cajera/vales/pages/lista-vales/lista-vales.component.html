@@ -68,12 +68,12 @@
         </div>
       </div>
 
-      <!-- Este cliente todavía no tiene tarjeta/CLABE registrada: hace falta para transferirle el pago. -->
+      <!-- Este cliente todavía no tiene CLABE registrada: hace falta para transferirle el pago. -->
       <div *ngIf="capturandoTarjetaId() === v.id" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 space-y-2">
-        <label class="form-label">Número de tarjeta o CLABE del cliente (primera vez, no se vuelve a pedir)</label>
+        <label class="form-label">CLABE interbancaria del cliente (primera vez, no se vuelve a pedir)</label>
         <div class="flex gap-2">
-          <input type="text" [ngModel]="numeroTarjetaValor()" (ngModelChange)="numeroTarjetaValor.set($event)"
-                 appSoloNumeros maxlength="18" placeholder="16 dígitos (tarjeta) o 18 (CLABE)" class="form-input flex-1">
+          <input type="text" [ngModel]="clabeValor()" (ngModelChange)="clabeValor.set($event)"
+                 appSoloNumeros maxlength="18" placeholder="18 dígitos" class="form-input flex-1">
           <button type="button" (click)="confirmarValidarConTarjeta(v)" [disabled]="validandoId() === v.id" class="btn-primary w-auto shrink-0">
             <span *ngIf="validandoId() !== v.id">Confirmar</span>
             <span *ngIf="validandoId() === v.id">Validando...</span>
