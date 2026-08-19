@@ -5,11 +5,16 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClienteService } from '../../services/cliente.service';
 import { Cliente, EditarClientePayload } from '../../../../../core/models/cliente.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { GooglePlacesAutocompleteDirective } from '../../../../../shared/directives/google-places-autocomplete.directive';
+import { parsearDireccionGoogle } from '../../../../../shared/utils/google-address.util';
+import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
+import { MayusculasDirective } from '../../../../../shared/directives/mayusculas.directive';
+import { MENSAJES_PATRON, codigoPostalValidators, curpValidators, numeroExtValidators, numeroIntValidators } from '../../../../../shared/utils/mexico-validators';
 
 @Component({
   selector: 'app-detalle-cliente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
   templateUrl: './detalle-cliente.component.html',
   styleUrl: './detalle-cliente.component.css'
 })
@@ -27,17 +32,20 @@ export class DetalleClienteComponent implements OnInit {
   errorGuardar = signal<string | null>(null);
   successMessage = signal<string | null>(null);
   fieldErrors = signal<Record<string, string[]>>({});
+  sesgoDireccion = signal<{ lat: number; lng: number } | null>(null);
+
+  readonly mensajesPatron = MENSAJES_PATRON;
 
   form = this.fb.group({
     nombre: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_paterno: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_materno: ['', [Validators.maxLength(255)]],
-    curp: ['', [Validators.required, Validators.minLength(18), Validators.maxLength(18)]],
+    curp: ['', curpValidators],
+    codigo_postal: ['', codigoPostalValidators],
     calle: ['', [Validators.required, Validators.maxLength(255)]],
     colonia: ['', [Validators.required, Validators.maxLength(255)]],
-    numero_ext: ['', [Validators.required, Validators.maxLength(50)]],
-    numero_int: ['', [Validators.maxLength(50)]],
-    codigo_postal: ['', [Validators.required, Validators.maxLength(10)]],
+    numero_ext: ['', numeroExtValidators],
+    numero_int: ['', numeroIntValidators],
     estado: ['', [Validators.required, Validators.maxLength(255)]],
     ciudad: ['', [Validators.required, Validators.maxLength(255)]]
   });
@@ -81,7 +89,41 @@ export class DetalleClienteComponent implements OnInit {
   }
 
   errorFor(campo: string): string | null {
+    const control = this.form.get(campo);
+    if (control?.invalid && (control.touched || control.dirty)) {
+      if (control.errors?.['required']) return 'Este campo es obligatorio.';
+      if (control.errors?.['pattern']) return this.mensajesPatron[campo] ?? 'Formato inválido.';
+    }
     return this.fieldErrors()[campo]?.[0] ?? null;
+  }
+
+  /** El usuario eligió un CP de las sugerencias: lo usamos para sesgar el autocompletado de Calle. */
+  onCodigoPostalSeleccionado(place: any): void {
+    const direccion = parsearDireccionGoogle(place);
+
+    this.form.patchValue({
+      codigo_postal: direccion.codigo_postal || this.form.value.codigo_postal,
+      estado: direccion.estado || this.form.value.estado,
+      ciudad: direccion.ciudad || this.form.value.ciudad
+    });
+
+    if (direccion.lat && direccion.lng) {
+      this.sesgoDireccion.set({ lat: direccion.lat, lng: direccion.lng });
+    }
+  }
+
+  /** El usuario eligió una calle de las sugerencias: llenamos el resto de la dirección. */
+  onCalleSeleccionada(place: any): void {
+    const direccion = parsearDireccionGoogle(place);
+
+    this.form.patchValue({
+      calle: direccion.calle || this.form.value.calle,
+      numero_ext: direccion.numero_ext || this.form.value.numero_ext,
+      colonia: direccion.colonia || this.form.value.colonia,
+      codigo_postal: direccion.codigo_postal || this.form.value.codigo_postal,
+      estado: direccion.estado || this.form.value.estado,
+      ciudad: direccion.ciudad || this.form.value.ciudad
+    });
   }
 
   private soloCambios(

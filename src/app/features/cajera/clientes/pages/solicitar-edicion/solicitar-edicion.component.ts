@@ -7,11 +7,16 @@ import { SolicitudEdicionCliente } from '../../../../../core/models/solicitud-ed
 import { Cliente } from '../../../../../core/models/cliente.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
 import { estadoSolicitudLabel } from '../../../../../shared/utils/labels';
+import { GooglePlacesAutocompleteDirective } from '../../../../../shared/directives/google-places-autocomplete.directive';
+import { parsearDireccionGoogle } from '../../../../../shared/utils/google-address.util';
+import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
+import { MayusculasDirective } from '../../../../../shared/directives/mayusculas.directive';
+import { MENSAJES_PATRON, CODIGO_POSTAL_PATTERN, CURP_PATTERN, NUMERO_PATTERN } from '../../../../../shared/utils/mexico-validators';
 
 @Component({
   selector: 'app-solicitar-edicion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
   templateUrl: './solicitar-edicion.component.html',
   styleUrl: './solicitar-edicion.component.css'
 })
@@ -19,6 +24,8 @@ export class SolicitarEdicionComponent implements OnInit {
   private fb = inject(FormBuilder);
   private solicitudEdicionClienteService = inject(SolicitudEdicionClienteService);
   private clienteService = inject(ClienteService);
+  sesgoDireccion = signal<{ lat: number; lng: number } | null>(null);
+  readonly mensajesPatron = MENSAJES_PATRON;
 
   // Búsqueda de cliente
   terminoBusqueda = signal('');
@@ -28,17 +35,17 @@ export class SolicitarEdicionComponent implements OnInit {
   clienteSeleccionado = signal<Cliente | null>(null);
 
   form = this.fb.group({
-    nombre: [''],
-    apellido_paterno: [''],
-    apellido_materno: [''],
-    curp: [''],
-    calle: [''],
-    colonia: [''],
-    numero_ext: [''],
-    numero_int: [''],
-    codigo_postal: [''],
-    estado: [''],
-    ciudad: [''],
+    nombre: ['', [Validators.maxLength(255)]],
+    apellido_paterno: ['', [Validators.maxLength(255)]],
+    apellido_materno: ['', [Validators.maxLength(255)]],
+    curp: ['', [Validators.pattern(CURP_PATTERN)]],
+    calle: ['', [Validators.maxLength(255)]],
+    colonia: ['', [Validators.maxLength(255)]],
+    numero_ext: ['', [Validators.pattern(NUMERO_PATTERN), Validators.maxLength(50)]],
+    numero_int: ['', [Validators.pattern(NUMERO_PATTERN), Validators.maxLength(50)]],
+    codigo_postal: ['', [Validators.pattern(CODIGO_POSTAL_PATTERN)]],
+    estado: ['', [Validators.maxLength(255)]],
+    ciudad: ['', [Validators.maxLength(255)]],
     motivo: ['', [Validators.required, Validators.maxLength(500)]]
   });
 
@@ -92,6 +99,45 @@ export class SolicitarEdicionComponent implements OnInit {
   quitarSeleccion(): void {
     this.clienteSeleccionado.set(null);
     this.form.reset();
+    this.sesgoDireccion.set(null);
+  }
+
+  errorFor(campo: string): string | null {
+    const control = this.form.get(campo);
+    if (control?.invalid && (control.touched || control.dirty)) {
+      if (control.errors?.['required']) return 'Este campo es obligatorio.';
+      if (control.errors?.['pattern']) return this.mensajesPatron[campo] ?? 'Formato inválido.';
+    }
+    return null;
+  }
+
+  /** El usuario eligió un CP de las sugerencias: lo usamos para sesgar el autocompletado de Calle. */
+  onCodigoPostalSeleccionado(place: any): void {
+    const direccion = parsearDireccionGoogle(place);
+
+    this.form.patchValue({
+      codigo_postal: direccion.codigo_postal || this.form.value.codigo_postal,
+      estado: direccion.estado || this.form.value.estado,
+      ciudad: direccion.ciudad || this.form.value.ciudad
+    });
+
+    if (direccion.lat && direccion.lng) {
+      this.sesgoDireccion.set({ lat: direccion.lat, lng: direccion.lng });
+    }
+  }
+
+  /** El usuario eligió una calle de las sugerencias: llenamos el resto de la dirección. */
+  onCalleSeleccionada(place: any): void {
+    const direccion = parsearDireccionGoogle(place);
+
+    this.form.patchValue({
+      calle: direccion.calle || this.form.value.calle,
+      numero_ext: direccion.numero_ext || this.form.value.numero_ext,
+      colonia: direccion.colonia || this.form.value.colonia,
+      codigo_postal: direccion.codigo_postal || this.form.value.codigo_postal,
+      estado: direccion.estado || this.form.value.estado,
+      ciudad: direccion.ciudad || this.form.value.ciudad
+    });
   }
 
   cargarSolicitudes(): void {

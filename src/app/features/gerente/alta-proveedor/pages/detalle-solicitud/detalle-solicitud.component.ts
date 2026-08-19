@@ -40,8 +40,8 @@ export class DetalleSolicitudComponent implements OnInit {
     decision: ['', [Validators.required]],
     comentario_gerente: [''],
     limite_credito_asignado: ['', [DetalleSolicitudComponent.multiploDe(1000)]],
-    email: [''],
-    password: ['']
+    email: ['', [Validators.email]],
+    password: ['', [Validators.minLength(8)]]
   });
 
   ngOnInit(): void {
@@ -70,6 +70,11 @@ export class DetalleSolicitudComponent implements OnInit {
   }
 
   errorFor(campo: string): string | null {
+    const control = this.decisionForm.get(campo);
+    if (control?.invalid && (control.touched || control.dirty)) {
+      if (control.errors?.['email']) return 'Ingresa un correo válido.';
+      if (control.errors?.['minlength']) return 'La contraseña debe tener al menos 8 caracteres.';
+    }
     return this.fieldErrors()[campo]?.[0] ?? null;
   }
 
