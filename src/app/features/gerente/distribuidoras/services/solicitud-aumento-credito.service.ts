@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from '../../../../core/models/auth-response.model';
 import { SolicitudAumentoCredito } from '../../../../core/models/solicitud-aumento-credito.model';
-import { PaginacionAnidada } from '../../../../core/models/solicitud-transferencia-cliente.model';
+import { PaginacionAnidada } from '../../../../core/models/paginacion-anidada.model';
 
 @Injectable({ providedIn: 'root' })
 export class SolicitudAumentoCreditoService {

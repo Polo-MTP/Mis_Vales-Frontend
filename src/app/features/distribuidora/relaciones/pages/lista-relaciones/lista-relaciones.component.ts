@@ -23,10 +23,6 @@ export class ListaRelacionesComponent implements OnInit {
   pagina = signal(1);
   filtroEstado = signal<EstadoRelacion | 'todas'>('todas');
 
-  generando = signal(false);
-  errorGenerar = signal<string | null>(null);
-  successGenerar = signal<string | null>(null);
-
   ngOnInit(): void {
     this.cargar();
   }
@@ -35,7 +31,8 @@ export class ListaRelacionesComponent implements OnInit {
     this.cargando.set(true);
     this.error.set(null);
 
-    const estado = this.filtroEstado() === 'todas' ? undefined : this.filtroEstado();
+    const filtro = this.filtroEstado();
+    const estado = filtro === 'todas' ? undefined : filtro;
 
     this.relacionService.listar(this.pagina(), estado).subscribe({
       next: (res) => {
@@ -44,7 +41,7 @@ export class ListaRelacionesComponent implements OnInit {
         this.cargando.set(false);
       },
       error: () => {
-        this.error.set('No se pudieron cargar las relaciones.');
+        this.error.set('No se pudieron cargar tus cortes.');
         this.cargando.set(false);
       }
     });
@@ -65,25 +62,7 @@ export class ListaRelacionesComponent implements OnInit {
     this.cargar();
   }
 
-  generarCortesDelDia(): void {
-    this.generando.set(true);
-    this.errorGenerar.set(null);
-    this.successGenerar.set(null);
-
-    this.relacionService.generar().subscribe({
-      next: (res) => {
-        this.generando.set(false);
-        this.successGenerar.set(res.message || 'Cortes generados.');
-        this.cargar();
-      },
-      error: (err) => {
-        this.generando.set(false);
-        this.errorGenerar.set(err.error?.message || 'Ocurrió un error al generar los cortes.');
-      }
-    });
-  }
-
   irADetalle(id: number): void {
-    this.router.navigate(['/gerente/relaciones', id]);
+    this.router.navigate(['/distribuidora/relaciones', id]);
   }
 }

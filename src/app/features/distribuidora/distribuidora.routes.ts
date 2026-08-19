@@ -9,6 +9,8 @@ import { HistorialPuntosComponent } from './puntos/pages/historial-puntos/histor
 import { ListaConciliacionesComponent } from './conciliaciones/pages/lista-conciliaciones/lista-conciliaciones.component';
 import { TransferenciasComponent } from './clientes/pages/transferencias/transferencias.component';
 import { AumentoCreditoComponent } from './creditos/pages/aumento-credito/aumento-credito.component';
+import { ListaRelacionesComponent } from './relaciones/pages/lista-relaciones/lista-relaciones.component';
+import { DetalleRelacionComponent } from './relaciones/pages/detalle-relacion/detalle-relacion.component';
 
 export const DISTRIBUIDORA_ROUTES: Routes = [
   { path: '', component: DistribuidoraDashboardComponent },
@@ -20,5 +22,7 @@ export const DISTRIBUIDORA_ROUTES: Routes = [
   { path: 'vales/solicitar', component: SolicitarValeComponent },
   { path: 'puntos/historial', component: HistorialPuntosComponent },
   { path: 'conciliaciones', component: ListaConciliacionesComponent },
-  { path: 'creditos/aumento', component: AumentoCreditoComponent }
+  { path: 'creditos/aumento', component: AumentoCreditoComponent },
+  { path: 'relaciones', component: ListaRelacionesComponent },
+  { path: 'relaciones/:id', component: DetalleRelacionComponent }
 ];

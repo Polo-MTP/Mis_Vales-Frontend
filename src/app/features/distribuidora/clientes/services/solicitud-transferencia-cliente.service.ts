@@ -3,10 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from '../../../../core/models/auth-response.model';
-import {
-  PaginacionAnidada,
-  SolicitudTransferenciaCliente
-} from '../../../../core/models/solicitud-transferencia-cliente.model';
+import { SolicitudTransferenciaCliente } from '../../../../core/models/solicitud-transferencia-cliente.model';
+import { PaginacionAnidada } from '../../../../core/models/paginacion-anidada.model';
 
 @Injectable({ providedIn: 'root' })
 export class SolicitudTransferenciaClienteService {
