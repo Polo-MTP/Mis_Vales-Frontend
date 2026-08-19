@@ -9,11 +9,14 @@ import { MapaUbicacionComponent } from '../../../../../shared/components/mapa-ub
 import { EvidenciaService } from '../../../../../core/services/evidencia.service';
 import { GooglePlacesAutocompleteDirective } from '../../../../../shared/directives/google-places-autocomplete.directive';
 import { parsearDireccionGoogle } from '../../../../../shared/utils/google-address.util';
+import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
+import { MayusculasDirective } from '../../../../../shared/directives/mayusculas.directive';
+import { MENSAJES_PATRON, codigoPostalValidators, curpValidators, numeroExtValidators, numeroIntValidators } from '../../../../../shared/utils/mexico-validators';
 
 @Component({
   selector: 'app-detalle-verificacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, MapaUbicacionComponent, GooglePlacesAutocompleteDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, MapaUbicacionComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
   templateUrl: './detalle-verificacion.component.html',
   styleUrl: './detalle-verificacion.component.css'
 })
@@ -35,17 +38,18 @@ export class DetalleVerificacionComponent implements OnInit {
   subiendoEvidenciaIndex = signal<number | null>(null);
 
   tiposDocumento = ['foto_fachada', 'foto_interior', 'foto_ine_titular', 'otro'];
+  readonly mensajesPatron = MENSAJES_PATRON;
 
   datosForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_paterno: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_materno: ['', [Validators.maxLength(255)]],
-    curp: ['', [Validators.required, Validators.minLength(18), Validators.maxLength(18)]],
+    curp: ['', curpValidators],
     calle: ['', [Validators.required, Validators.maxLength(255)]],
     colonia: ['', [Validators.required, Validators.maxLength(255)]],
-    numero_ext: ['', [Validators.required, Validators.maxLength(50)]],
-    numero_int: ['', [Validators.maxLength(50)]],
-    codigo_postal: ['', [Validators.required, Validators.maxLength(10)]],
+    numero_ext: ['', numeroExtValidators],
+    numero_int: ['', numeroIntValidators],
+    codigo_postal: ['', codigoPostalValidators],
     estado: ['', [Validators.required, Validators.maxLength(255)]],
     ciudad: ['', [Validators.required, Validators.maxLength(255)]]
   });
@@ -179,6 +183,11 @@ export class DetalleVerificacionComponent implements OnInit {
   }
 
   errorFor(campo: string): string | null {
+    const control = this.datosForm.get(campo) ?? this.dictamenForm.get(campo);
+    if (control?.invalid && (control.touched || control.dirty)) {
+      if (control.errors?.['required']) return 'Este campo es obligatorio.';
+      if (control.errors?.['pattern']) return this.mensajesPatron[campo] ?? 'Formato inválido.';
+    }
     return this.fieldErrors()[campo]?.[0] ?? null;
   }
 

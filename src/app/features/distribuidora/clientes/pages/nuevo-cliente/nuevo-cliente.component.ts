@@ -7,11 +7,14 @@ import { CrearClientePayload } from '../../../../../core/models/cliente.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 import { GooglePlacesAutocompleteDirective } from '../../../../../shared/directives/google-places-autocomplete.directive';
 import { parsearDireccionGoogle } from '../../../../../shared/utils/google-address.util';
+import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
+import { MayusculasDirective } from '../../../../../shared/directives/mayusculas.directive';
+import { MENSAJES_PATRON, codigoPostalValidators, curpValidators, numeroExtValidators, numeroIntValidators } from '../../../../../shared/utils/mexico-validators';
 
 @Component({
   selector: 'app-nuevo-cliente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
   templateUrl: './nuevo-cliente.component.html',
   styleUrl: './nuevo-cliente.component.css'
 })
@@ -28,18 +31,20 @@ export class NuevoClienteComponent {
   /** No se puede escribir la fecha a mano (readonly), solo elegirla en el calendario, y no permite menores de edad. */
   readonly fechaMaximaNacimiento = this.calcularFechaMaxima18Anios();
 
+  readonly mensajesPatron = MENSAJES_PATRON;
+
   form = this.fb.group({
     nombre: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_paterno: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_materno: ['', [Validators.maxLength(255)]],
-    curp: ['', [Validators.required, Validators.minLength(18), Validators.maxLength(18)]],
+    curp: ['', curpValidators],
     fecha_nacimiento: [''],
     lugar_nacimiento: ['', [Validators.maxLength(255)]],
-    codigo_postal: ['', [Validators.required, Validators.maxLength(10)]],
+    codigo_postal: ['', codigoPostalValidators],
     calle: ['', [Validators.required, Validators.maxLength(255)]],
     colonia: ['', [Validators.required, Validators.maxLength(255)]],
-    numero_ext: ['', [Validators.required, Validators.maxLength(50)]],
-    numero_int: ['', [Validators.maxLength(50)]],
+    numero_ext: ['', numeroExtValidators],
+    numero_int: ['', numeroIntValidators],
     estado: ['', [Validators.required, Validators.maxLength(255)]],
     ciudad: ['', [Validators.required, Validators.maxLength(255)]]
   });
@@ -51,6 +56,11 @@ export class NuevoClienteComponent {
   }
 
   errorFor(campo: string): string | null {
+    const control = this.form.get(campo);
+    if (control?.invalid && (control.touched || control.dirty)) {
+      if (control.errors?.['required']) return 'Este campo es obligatorio.';
+      if (control.errors?.['pattern']) return this.mensajesPatron[campo] ?? 'Formato inválido.';
+    }
     return this.fieldErrors()[campo]?.[0] ?? null;
   }
 

@@ -24,7 +24,7 @@
 
         <div>
           <label class="form-label">RFC *</label>
-          <input type="text" formControlName="rfc" maxlength="13" class="form-input uppercase">
+          <input type="text" formControlName="rfc" maxlength="13" appMayusculas class="form-input uppercase">
           <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('rfc')">{{ errorFor('rfc') }}</p>
         </div>
       </div>
@@ -54,7 +54,7 @@
 
         <div>
           <label class="form-label">CURP *</label>
-          <input type="text" formControlName="curp" maxlength="18" class="form-input uppercase">
+          <input type="text" formControlName="curp" maxlength="18" appMayusculas class="form-input uppercase">
           <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('curp')">{{ errorFor('curp') }}</p>
         </div>
 
@@ -80,7 +80,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="form-label">Código Postal *</label>
-          <input type="text" formControlName="codigo_postal" maxlength="10" class="form-input"
+          <input type="text" formControlName="codigo_postal" maxlength="5" inputmode="numeric" appSoloNumeros class="form-input"
                  appPlacesAutocomplete appPlacesAutocompleteTipo="postal_code"
                  (lugarSeleccionado)="onCodigoPostalSeleccionado($event)">
           <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('codigo_postal')">{{ errorFor('codigo_postal') }}</p>
@@ -121,6 +121,7 @@
         <div>
           <label class="form-label">Número Interior</label>
           <input type="text" formControlName="numero_int" class="form-input">
+          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('numero_int')">{{ errorFor('numero_int') }}</p>
         </div>
       </div>
     </div>
