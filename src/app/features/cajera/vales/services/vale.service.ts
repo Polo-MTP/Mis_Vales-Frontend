@@ -20,9 +20,15 @@ export class ValeService {
     return this.http.get<ApiResponse<PaginatedResponse<Vale>>>(this.baseUrl, { params });
   }
 
-  /** Valida en persona los datos del cliente contra el vale. Paso obligatorio antes de autorizar. */
-  validar(valeId: number): Observable<ApiResponse<Vale>> {
-    return this.http.put<ApiResponse<Vale>>(`${this.baseUrl}/${valeId}/validar`, {});
+  /**
+   * Valida en persona los datos del cliente contra el vale. Paso obligatorio antes de autorizar.
+   * numeroTarjeta solo hace falta la primera vez que se valida un vale de ese cliente (el
+   * backend regresa 422 pidiéndolo si aún no tiene una guardada); en vales futuros no se manda.
+   */
+  validar(valeId: number, numeroTarjeta?: string): Observable<ApiResponse<Vale>> {
+    return this.http.put<ApiResponse<Vale>>(`${this.baseUrl}/${valeId}/validar`, {
+      numero_tarjeta: numeroTarjeta || undefined
+    });
   }
 
   /** Autoriza/paga el vale al cliente en caja. Solo Cajera; requiere que ya esté 'validado'. */

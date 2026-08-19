@@ -1,16 +1,18 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ValeService } from '../../services/vale.service';
 import { Vale, EstadoVale } from '../../../../../core/models/vale.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
 import { estadoValeLabel } from '../../../../../shared/utils/labels';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
 
 @Component({
   selector: 'app-lista-vales',
   standalone: true,
-  imports: [CommonModule, RouterModule, AlertComponent],
+  imports: [CommonModule, RouterModule, AlertComponent, FormsModule, SoloNumerosDirective],
   templateUrl: './lista-vales.component.html',
   styleUrl: './lista-vales.component.css'
 })
@@ -26,6 +28,10 @@ export class ListaValesComponent implements OnInit {
   validandoId = signal<number | null>(null);
   autorizandoId = signal<number | null>(null);
   errorAutorizar = signal<string | null>(null);
+
+  /** Vale para el que estamos pidiendo el número de tarjeta (el backend lo exige la primera vez). */
+  capturandoTarjetaId = signal<number | null>(null);
+  numeroTarjetaValor = signal('');
 
   readonly estadoValeLabel = estadoValeLabel;
 
@@ -75,6 +81,49 @@ export class ListaValesComponent implements OnInit {
     this.valeService.validar(vale.id).subscribe({
       next: (res) => {
         this.validandoId.set(null);
+        if (res.data) {
+          this.vales.update((lista) => lista.map((v) => (v.id === vale.id ? res.data! : v)));
+        }
+      },
+      error: (err) => {
+        this.validandoId.set(null);
+        const mensaje: string = err.error?.message || 'No se pudo validar el vale.';
+
+        // El backend pide el número de tarjeta la primera vez que se valida un vale de este
+        // cliente (para poder transferirle el pago) — en vez de un error genérico, mostramos
+        // el campo para capturarlo y reintentar.
+        if (mensaje.includes('número de tarjeta')) {
+          this.capturandoTarjetaId.set(vale.id);
+          this.numeroTarjetaValor.set('');
+          return;
+        }
+
+        this.errorAutorizar.set(mensaje);
+      }
+    });
+  }
+
+  cancelarCapturaTarjeta(): void {
+    this.capturandoTarjetaId.set(null);
+    this.numeroTarjetaValor.set('');
+  }
+
+  confirmarValidarConTarjeta(vale: Vale): void {
+    const numeroTarjeta = this.numeroTarjetaValor().trim();
+
+    if (numeroTarjeta.length < 10) {
+      this.errorAutorizar.set('Captura un número de tarjeta o cuenta CLABE válido.');
+      return;
+    }
+
+    this.validandoId.set(vale.id);
+    this.errorAutorizar.set(null);
+
+    this.valeService.validar(vale.id, numeroTarjeta).subscribe({
+      next: (res) => {
+        this.validandoId.set(null);
+        this.capturandoTarjetaId.set(null);
+        this.numeroTarjetaValor.set('');
         if (res.data) {
           this.vales.update((lista) => lista.map((v) => (v.id === vale.id ? res.data! : v)));
         }

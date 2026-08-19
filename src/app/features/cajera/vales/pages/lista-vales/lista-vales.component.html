@@ -30,40 +30,56 @@
   </div>
 
   <div *ngIf="!cargando() && !error() && vales().length > 0" class="space-y-3">
-    <div *ngFor="let v of vales()" class="list-card-item cursor-default">
-      <div>
-        <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — ${{ v.monto }}</p>
-        <p class="text-xs text-slate-400 mt-0.5">
-          {{ v.distribuidora?.razon_social || ('Distribuidora #' + v.distribuidora_id) }}
-          <span *ngIf="v.distribuidora?.numero_distribuidora"> ({{ v.distribuidora?.numero_distribuidora }})</span>
-        </p>
-        <p class="text-xs text-slate-500 mt-0.5">
-          {{ v.producto?.descripcion || (v.quincenas + ' quincenas') }} · Solicitado {{ v.fecha_solicitud | date:'short' }}
-        </p>
+    <div *ngFor="let v of vales()">
+      <div class="list-card-item cursor-default">
+        <div>
+          <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — ${{ v.monto }}</p>
+          <p class="text-xs text-slate-400 mt-0.5">
+            {{ v.distribuidora?.razon_social || ('Distribuidora #' + v.distribuidora_id) }}
+            <span *ngIf="v.distribuidora?.numero_distribuidora"> ({{ v.distribuidora?.numero_distribuidora }})</span>
+          </p>
+          <p class="text-xs text-slate-500 mt-0.5">
+            {{ v.producto?.descripcion || (v.quincenas + ' quincenas') }} · Solicitado {{ v.fecha_solicitud | date:'short' }}
+          </p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <span class="status-badge"
+                [class.bg-amber-500/15]="v.estado === 'solicitado'" [class.text-amber-300]="v.estado === 'solicitado'" [class.border-amber-500/30]="v.estado === 'solicitado'"
+                [class.bg-cyan-500/15]="v.estado === 'validado'" [class.text-cyan-300]="v.estado === 'validado'" [class.border-cyan-500/30]="v.estado === 'validado'"
+                [class.bg-blue-500/15]="v.estado === 'autorizado'" [class.text-blue-300]="v.estado === 'autorizado'" [class.border-blue-500/30]="v.estado === 'autorizado'"
+                [class.bg-emerald-500/15]="v.estado === 'pagado'" [class.text-emerald-300]="v.estado === 'pagado'" [class.border-emerald-500/30]="v.estado === 'pagado'"
+                [class.bg-orange-500/15]="v.estado === 'parcial'" [class.text-orange-300]="v.estado === 'parcial'" [class.border-orange-500/30]="v.estado === 'parcial'"
+                [class.bg-red-500/15]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.text-red-300]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.border-red-500/30]="v.estado === 'vencido' || v.estado === 'incidencia'">
+            {{ estadoValeLabel(v.estado) }}
+          </span>
+          <span *ngIf="!v.activo" class="status-badge bg-slate-500/15 text-slate-400 border-slate-500/30">Inactivo</span>
+
+          <button *ngIf="v.estado === 'solicitado' && v.activo && capturandoTarjetaId() !== v.id" type="button" (click)="validar(v)"
+                  [disabled]="validandoId() === v.id" class="btn-outline w-auto py-2 px-4 text-xs">
+            <span *ngIf="validandoId() !== v.id">Validar Datos</span>
+            <span *ngIf="validandoId() === v.id">Validando...</span>
+          </button>
+
+          <button *ngIf="v.estado === 'validado' && v.activo" type="button" (click)="autorizar(v)"
+                  [disabled]="autorizandoId() === v.id" class="btn-primary w-auto py-2 px-4 text-xs">
+            <span *ngIf="autorizandoId() !== v.id">Autorizar</span>
+            <span *ngIf="autorizandoId() === v.id">Autorizando...</span>
+          </button>
+        </div>
       </div>
-      <div class="flex items-center gap-3 shrink-0">
-        <span class="status-badge"
-              [class.bg-amber-500/15]="v.estado === 'solicitado'" [class.text-amber-300]="v.estado === 'solicitado'" [class.border-amber-500/30]="v.estado === 'solicitado'"
-              [class.bg-cyan-500/15]="v.estado === 'validado'" [class.text-cyan-300]="v.estado === 'validado'" [class.border-cyan-500/30]="v.estado === 'validado'"
-              [class.bg-blue-500/15]="v.estado === 'autorizado'" [class.text-blue-300]="v.estado === 'autorizado'" [class.border-blue-500/30]="v.estado === 'autorizado'"
-              [class.bg-emerald-500/15]="v.estado === 'pagado'" [class.text-emerald-300]="v.estado === 'pagado'" [class.border-emerald-500/30]="v.estado === 'pagado'"
-              [class.bg-orange-500/15]="v.estado === 'parcial'" [class.text-orange-300]="v.estado === 'parcial'" [class.border-orange-500/30]="v.estado === 'parcial'"
-              [class.bg-red-500/15]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.text-red-300]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.border-red-500/30]="v.estado === 'vencido' || v.estado === 'incidencia'">
-          {{ estadoValeLabel(v.estado) }}
-        </span>
-        <span *ngIf="!v.activo" class="status-badge bg-slate-500/15 text-slate-400 border-slate-500/30">Inactivo</span>
 
-        <button *ngIf="v.estado === 'solicitado' && v.activo" type="button" (click)="validar(v)"
-                [disabled]="validandoId() === v.id" class="btn-outline w-auto py-2 px-4 text-xs">
-          <span *ngIf="validandoId() !== v.id">Validar Datos</span>
-          <span *ngIf="validandoId() === v.id">Validando...</span>
-        </button>
-
-        <button *ngIf="v.estado === 'validado' && v.activo" type="button" (click)="autorizar(v)"
-                [disabled]="autorizandoId() === v.id" class="btn-primary w-auto py-2 px-4 text-xs">
-          <span *ngIf="autorizandoId() !== v.id">Autorizar</span>
-          <span *ngIf="autorizandoId() === v.id">Autorizando...</span>
-        </button>
+      <!-- Este cliente todavía no tiene tarjeta/CLABE registrada: hace falta para transferirle el pago. -->
+      <div *ngIf="capturandoTarjetaId() === v.id" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 space-y-2">
+        <label class="form-label">Número de tarjeta o CLABE del cliente (primera vez, no se vuelve a pedir)</label>
+        <div class="flex gap-2">
+          <input type="text" [ngModel]="numeroTarjetaValor()" (ngModelChange)="numeroTarjetaValor.set($event)"
+                 appSoloNumeros maxlength="18" placeholder="16 dígitos (tarjeta) o 18 (CLABE)" class="form-input flex-1">
+          <button type="button" (click)="confirmarValidarConTarjeta(v)" [disabled]="validandoId() === v.id" class="btn-primary w-auto shrink-0">
+            <span *ngIf="validandoId() !== v.id">Confirmar</span>
+            <span *ngIf="validandoId() === v.id">Validando...</span>
+          </button>
+          <button type="button" (click)="cancelarCapturaTarjeta()" class="btn-outline w-auto shrink-0">Cancelar</button>
+        </div>
       </div>
     </div>
   </div>
