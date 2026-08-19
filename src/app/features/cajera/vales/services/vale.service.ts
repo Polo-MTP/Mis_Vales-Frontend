@@ -22,11 +22,19 @@ export class ValeService {
 
   /**
    * Valida en persona los datos del cliente contra el vale. Paso obligatorio antes de autorizar.
-   * clabe (18 dígitos) solo hace falta la primera vez que se valida un vale de ese cliente (el
-   * backend regresa 422 pidiéndola si aún no tiene una guardada); en vales futuros no se manda.
+   * ineVerificada/comprobanteDomicilioVerificado son siempre obligatorios (el backend rechaza
+   * si falta cualquiera de los dos, o si alguno viene en false). clabe (18 dígitos) solo hace
+   * falta la primera vez que se valida un vale de ese cliente; en vales futuros no hace falta.
    */
-  validar(valeId: number, clabe?: string): Observable<ApiResponse<Vale>> {
+  validar(
+    valeId: number,
+    ineVerificada: boolean,
+    comprobanteDomicilioVerificado: boolean,
+    clabe?: string
+  ): Observable<ApiResponse<Vale>> {
     return this.http.put<ApiResponse<Vale>>(`${this.baseUrl}/${valeId}/validar`, {
+      ine_verificada: ineVerificada,
+      comprobante_domicilio_verificado: comprobanteDomicilioVerificado,
       clabe: clabe || undefined
     });
   }

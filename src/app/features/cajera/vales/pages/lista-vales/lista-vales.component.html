@@ -54,10 +54,9 @@
           </span>
           <span *ngIf="!v.activo" class="status-badge bg-slate-500/15 text-slate-400 border-slate-500/30">Inactivo</span>
 
-          <button *ngIf="v.estado === 'solicitado' && v.activo && capturandoTarjetaId() !== v.id" type="button" (click)="validar(v)"
-                  [disabled]="validandoId() === v.id" class="btn-outline w-auto py-2 px-4 text-xs">
-            <span *ngIf="validandoId() !== v.id">Validar Datos</span>
-            <span *ngIf="validandoId() === v.id">Validando...</span>
+          <button *ngIf="v.estado === 'solicitado' && v.activo && validandoDatosId() !== v.id" type="button" (click)="iniciarValidacion(v)"
+                  class="btn-outline w-auto py-2 px-4 text-xs">
+            Validar Datos
           </button>
 
           <button *ngIf="v.estado === 'validado' && v.activo" type="button" (click)="autorizar(v)"
@@ -68,18 +67,34 @@
         </div>
       </div>
 
-      <!-- Este cliente todavía no tiene CLABE registrada: hace falta para transferirle el pago. -->
-      <div *ngIf="capturandoTarjetaId() === v.id" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 space-y-2">
-        <label class="form-label">CLABE interbancaria del cliente (primera vez, no se vuelve a pedir)</label>
-        <div class="flex gap-2">
+      <!-- Checklist obligatorio antes de validar: la cajera debe confirmar qué revisó en persona. -->
+      <div *ngIf="validandoDatosId() === v.id" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 space-y-3">
+        <label class="flex items-center gap-2 text-sm text-slate-200">
+          <input type="checkbox" [ngModel]="ineVerificada()" (ngModelChange)="ineVerificada.set($event)" class="w-4 h-4">
+          La INE del cliente coincide con sus datos registrados
+        </label>
+        <label class="flex items-center gap-2 text-sm text-slate-200">
+          <input type="checkbox" [ngModel]="comprobanteVerificado()" (ngModelChange)="comprobanteVerificado.set($event)" class="w-4 h-4">
+          El comprobante de domicilio coincide
+        </label>
+
+        <div>
+          <label class="form-label">CLABE interbancaria del cliente (solo si es la primera vez, si no la tiene aún)</label>
           <input type="text" [ngModel]="clabeValor()" (ngModelChange)="clabeValor.set($event)"
-                 appSoloNumeros maxlength="18" placeholder="18 dígitos" class="form-input flex-1">
-          <button type="button" (click)="confirmarValidarConTarjeta(v)" [disabled]="validandoId() === v.id" class="btn-primary w-auto shrink-0">
-            <span *ngIf="validandoId() !== v.id">Confirmar</span>
+                 appSoloNumeros maxlength="18" placeholder="18 dígitos" class="form-input">
+        </div>
+
+        <div class="flex gap-2">
+          <button type="button" (click)="confirmarValidacion(v)" [disabled]="validandoId() === v.id" class="btn-primary w-auto shrink-0">
+            <span *ngIf="validandoId() !== v.id">Confirmar Validación</span>
             <span *ngIf="validandoId() === v.id">Validando...</span>
           </button>
-          <button type="button" (click)="cancelarCapturaTarjeta()" class="btn-outline w-auto shrink-0">Cancelar</button>
+          <button type="button" (click)="cancelarValidacion()" class="btn-outline w-auto shrink-0">Cancelar</button>
         </div>
+
+        <p class="text-xs text-slate-500">
+          Si la INE o el comprobante no coinciden, deja la casilla sin marcar — el sistema no dejará continuar y te dirá que corrijas los datos o pidas autorización de edición.
+        </p>
       </div>
     </div>
   </div>

@@ -15,6 +15,8 @@ export interface Vale {
   fecha_solicitud: string | null;
   validado_por: number | null;
   fecha_validacion: string | null;
+  ine_verificada: boolean | null;
+  comprobante_domicilio_verificado: boolean | null;
   fecha_autorizacion: string | null;
   numero_transferencia: string | null;
   created_at: string;

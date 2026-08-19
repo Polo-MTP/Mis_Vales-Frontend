@@ -29,8 +29,10 @@ export class ListaValesComponent implements OnInit {
   autorizandoId = signal<number | null>(null);
   errorAutorizar = signal<string | null>(null);
 
-  /** Vale para el que estamos pidiendo la CLABE (el backend la exige la primera vez). */
-  capturandoTarjetaId = signal<number | null>(null);
+  /** Vale para el que estamos llenando el checklist de validación (INE, comprobante, CLABE). */
+  validandoDatosId = signal<number | null>(null);
+  ineVerificada = signal(false);
+  comprobanteVerificado = signal(false);
   clabeValor = signal('');
 
   readonly estadoValeLabel = estadoValeLabel;
@@ -74,44 +76,25 @@ export class ListaValesComponent implements OnInit {
     this.cargar();
   }
 
-  validar(vale: Vale): void {
-    this.validandoId.set(vale.id);
-    this.errorAutorizar.set(null);
-
-    this.valeService.validar(vale.id).subscribe({
-      next: (res) => {
-        this.validandoId.set(null);
-        if (res.data) {
-          this.vales.update((lista) => lista.map((v) => (v.id === vale.id ? res.data! : v)));
-        }
-      },
-      error: (err) => {
-        this.validandoId.set(null);
-        const mensaje: string = err.error?.message || 'No se pudo validar el vale.';
-
-        // El backend pide la CLABE la primera vez que se valida un vale de este cliente (para
-        // poder transferirle el pago) — en vez de un error genérico, mostramos el campo para
-        // capturarla y reintentar.
-        if (mensaje.includes('CLABE')) {
-          this.capturandoTarjetaId.set(vale.id);
-          this.clabeValor.set('');
-          return;
-        }
-
-        this.errorAutorizar.set(mensaje);
-      }
-    });
-  }
-
-  cancelarCapturaTarjeta(): void {
-    this.capturandoTarjetaId.set(null);
+  /** Abre el checklist de validación (INE, comprobante, CLABE si hace falta) para este vale. */
+  iniciarValidacion(vale: Vale): void {
+    this.validandoDatosId.set(vale.id);
+    this.ineVerificada.set(false);
+    this.comprobanteVerificado.set(false);
     this.clabeValor.set('');
+    this.errorAutorizar.set(null);
   }
 
-  confirmarValidarConTarjeta(vale: Vale): void {
+  cancelarValidacion(): void {
+    this.validandoDatosId.set(null);
+  }
+
+  confirmarValidacion(vale: Vale): void {
     const clabe = this.clabeValor().trim();
 
-    if (clabe.length !== 18) {
+    // La CLABE es opcional aquí a propósito: el backend solo la exige si el cliente no tiene
+    // una guardada todavía. Si la escribieron, sí debe venir completa (18 dígitos).
+    if (clabe.length > 0 && clabe.length !== 18) {
       this.errorAutorizar.set('La CLABE interbancaria debe tener exactamente 18 dígitos.');
       return;
     }
@@ -119,11 +102,10 @@ export class ListaValesComponent implements OnInit {
     this.validandoId.set(vale.id);
     this.errorAutorizar.set(null);
 
-    this.valeService.validar(vale.id, clabe).subscribe({
+    this.valeService.validar(vale.id, this.ineVerificada(), this.comprobanteVerificado(), clabe || undefined).subscribe({
       next: (res) => {
         this.validandoId.set(null);
-        this.capturandoTarjetaId.set(null);
-        this.clabeValor.set('');
+        this.validandoDatosId.set(null);
         if (res.data) {
           this.vales.update((lista) => lista.map((v) => (v.id === vale.id ? res.data! : v)));
         }
