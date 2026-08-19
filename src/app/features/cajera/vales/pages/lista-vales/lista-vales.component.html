@@ -3,7 +3,7 @@
   <div class="dash-card">
     <h1 class="text-2xl font-black text-slate-100 tracking-tight">Consultar Vales</h1>
     <p class="text-xs text-slate-400 font-medium mt-1">
-      Vales de las distribuidoras de tu sucursal — para confirmar a quién corresponde antes de entregarlo.
+      Vales de las distribuidoras de tu sucursal — confirma a quién corresponde y autoriza/cobra el vale en caja.
     </p>
   </div>
 
@@ -15,6 +15,8 @@
     <button type="button" (click)="cambiarFiltro('pagado')" [class]="filtroEstado() === 'pagado' ? 'btn-filter-active' : 'btn-filter'">Pagados</button>
     <button type="button" (click)="cambiarFiltro('vencido')" [class]="filtroEstado() === 'vencido' ? 'btn-filter-active' : 'btn-filter'">Vencidos</button>
   </div>
+
+  <app-alert [message]="errorAutorizar()" type="error"></app-alert>
 
   <div *ngIf="cargando()" class="state-loading">Cargando vales...</div>
 
@@ -48,6 +50,12 @@
           {{ estadoValeLabel(v.estado) }}
         </span>
         <span *ngIf="!v.activo" class="status-badge bg-slate-500/15 text-slate-400 border-slate-500/30">Inactivo</span>
+
+        <button *ngIf="v.estado === 'solicitado' && v.activo" type="button" (click)="autorizar(v)"
+                [disabled]="autorizandoId() === v.id" class="btn-primary w-auto py-2 px-4 text-xs">
+          <span *ngIf="autorizandoId() !== v.id">Autorizar y Cobrar</span>
+          <span *ngIf="autorizandoId() === v.id">Autorizando...</span>
+        </button>
       </div>
     </div>
   </div>
