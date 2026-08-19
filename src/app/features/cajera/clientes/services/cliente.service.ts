@@ -18,4 +18,9 @@ export class ClienteService {
     }
     return this.http.get<ApiResponse<PaginatedResponse<Cliente>>>(this.baseUrl, { params });
   }
+
+  /** Para llegar directo a un cliente (ej. desde "Solicitar Edición" con ?clienteId=X). */
+  detalle(id: number): Observable<ApiResponse<Cliente>> {
+    return this.http.get<ApiResponse<Cliente>>(`${this.baseUrl}/${id}`);
+  }
 }

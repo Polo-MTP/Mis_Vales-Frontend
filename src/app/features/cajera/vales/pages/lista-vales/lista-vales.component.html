@@ -69,6 +69,13 @@
 
       <!-- Checklist obligatorio antes de validar: la cajera debe confirmar qué revisó en persona. -->
       <div *ngIf="validandoDatosId() === v.id" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 space-y-3">
+        <div class="bg-slate-800/60 rounded-xl p-3 text-sm space-y-1">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-tight">Compara contra la INE y el comprobante físicos</p>
+          <p><span class="text-slate-400">Nombre:</span> <span class="text-slate-100 font-semibold">{{ v.cliente?.nombre || 'N/D' }}</span></p>
+          <p><span class="text-slate-400">CURP:</span> <span class="text-slate-100 font-semibold">{{ v.cliente?.curp || 'N/D' }}</span></p>
+          <p><span class="text-slate-400">Dirección:</span> <span class="text-slate-100 font-semibold">{{ v.cliente?.direccion || 'N/D' }}</span></p>
+        </div>
+
         <label class="flex items-center gap-2 text-sm text-slate-200">
           <input type="checkbox" [ngModel]="ineVerificada()" (ngModelChange)="ineVerificada.set($event)" class="w-4 h-4">
           La INE del cliente coincide con sus datos registrados
@@ -84,16 +91,20 @@
                  appSoloNumeros maxlength="18" placeholder="18 dígitos" class="form-input">
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
           <button type="button" (click)="confirmarValidacion(v)" [disabled]="validandoId() === v.id" class="btn-primary w-auto shrink-0">
             <span *ngIf="validandoId() !== v.id">Confirmar Validación</span>
             <span *ngIf="validandoId() === v.id">Validando...</span>
           </button>
           <button type="button" (click)="cancelarValidacion()" class="btn-outline w-auto shrink-0">Cancelar</button>
+          <a *ngIf="v.cliente" [routerLink]="['/cajera/clientes/solicitar-edicion']" [queryParams]="{clienteId: v.cliente.id}"
+             class="btn-outline w-auto shrink-0 ml-auto">
+            ¿No coinciden? Solicitar edición de datos
+          </a>
         </div>
 
         <p class="text-xs text-slate-500">
-          Si la INE o el comprobante no coinciden, deja la casilla sin marcar — el sistema no dejará continuar y te dirá que corrijas los datos o pidas autorización de edición.
+          Si la INE o el comprobante no coinciden, deja la casilla sin marcar y dale clic a "Solicitar edición de datos" — el sistema no te dejará validar el vale hasta que se corrijan y autoricen los datos del cliente.
         </p>
       </div>
     </div>

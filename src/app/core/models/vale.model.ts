@@ -5,7 +5,7 @@ export interface Vale {
   id: number;
   distribuidora_id: number;
   distribuidora: { id: number; razon_social: string | null; numero_distribuidora: string | null } | null;
-  cliente: { id: number; nombre: string } | null;
+  cliente: { id: number; nombre: string; curp: string | null; direccion: string | null } | null;
   producto: { id: number; monto: string; descripcion: string | null } | null;
   monto: string;
   quincenas: number | null;

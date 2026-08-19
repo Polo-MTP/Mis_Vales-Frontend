@@ -3,11 +3,13 @@
   <div class="dash-card">
     <h1 class="text-2xl font-black text-slate-100 tracking-tight">Corregir Datos de Cliente</h1>
     <p class="text-xs text-slate-400 font-medium mt-1">
-      Busca al cliente por nombre o CURP y captura solo los campos que necesitan corregirse. Queda pendiente de autorización.
+      Busca al cliente por nombre o CURP. Los datos actuales se precargan solos — edita solo lo que esté mal. Queda pendiente de autorización.
     </p>
   </div>
 
-  <div *ngIf="!clienteSeleccionado()" class="dash-card space-y-3">
+  <div *ngIf="cargandoClientePreseleccionado()" class="state-loading">Cargando cliente...</div>
+
+  <div *ngIf="!clienteSeleccionado() && !cargandoClientePreseleccionado()" class="dash-card space-y-3">
     <label class="form-label">Buscar Cliente</label>
     <input
       type="text"

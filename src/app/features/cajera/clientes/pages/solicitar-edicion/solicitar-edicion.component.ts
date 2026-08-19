@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudEdicionClienteService } from '../../services/solicitud-edicion-cliente.service';
 import { ClienteService } from '../../services/cliente.service';
@@ -22,6 +23,7 @@ import { MENSAJES_PATRON, CODIGO_POSTAL_PATTERN, CURP_PATTERN, NUMERO_PATTERN } 
 })
 export class SolicitarEdicionComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
   private solicitudEdicionClienteService = inject(SolicitudEdicionClienteService);
   private clienteService = inject(ClienteService);
   sesgoDireccion = signal<{ lat: number; lng: number } | null>(null);
@@ -33,6 +35,8 @@ export class SolicitarEdicionComponent implements OnInit {
   errorBusqueda = signal<string | null>(null);
   resultados = signal<Cliente[]>([]);
   clienteSeleccionado = signal<Cliente | null>(null);
+  /** Si llegamos aquí desde "Validar Datos" de un vale, ya sabemos qué cliente corregir. */
+  cargandoClientePreseleccionado = signal(false);
 
   form = this.fb.group({
     nombre: ['', [Validators.maxLength(255)]],
@@ -65,6 +69,20 @@ export class SolicitarEdicionComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarSolicitudes();
+
+    const clienteId = Number(this.route.snapshot.queryParamMap.get('clienteId'));
+    if (clienteId) {
+      this.cargandoClientePreseleccionado.set(true);
+      this.clienteService.detalle(clienteId).subscribe({
+        next: (res) => {
+          this.cargandoClientePreseleccionado.set(false);
+          if (res.data) {
+            this.seleccionarCliente(res.data);
+          }
+        },
+        error: () => this.cargandoClientePreseleccionado.set(false)
+      });
+    }
   }
 
   buscarCliente(termino: string): void {
@@ -94,6 +112,23 @@ export class SolicitarEdicionComponent implements OnInit {
     this.clienteSeleccionado.set(cliente);
     this.resultados.set([]);
     this.terminoBusqueda.set('');
+
+    // Precarga lo que ya existe: la cajera ve los datos actuales y solo toca el campo que
+    // esté mal, en vez de partir de un formulario vacío sin nada contra qué comparar.
+    const dp = cliente.datos_personales;
+    this.form.patchValue({
+      nombre: dp?.nombre ?? '',
+      apellido_paterno: dp?.apellido_paterno ?? '',
+      apellido_materno: dp?.apellido_materno ?? '',
+      curp: dp?.curp ?? '',
+      calle: dp?.direccion?.calle ?? '',
+      colonia: dp?.direccion?.colonia ?? '',
+      numero_ext: dp?.direccion?.numero_ext ?? '',
+      numero_int: dp?.direccion?.numero_int ?? '',
+      codigo_postal: dp?.direccion?.codigo_postal ?? '',
+      estado: dp?.direccion?.estado ?? '',
+      ciudad: dp?.direccion?.ciudad ?? ''
+    });
   }
 
   quitarSeleccion(): void {
@@ -174,23 +209,43 @@ export class SolicitarEdicionComponent implements OnInit {
     }
 
     const val = this.form.value;
+    const dp = cliente.datos_personales;
 
-    const datosPersonales = this.filtrarVacios({
-      nombre: val.nombre,
-      apellido_paterno: val.apellido_paterno,
-      apellido_materno: val.apellido_materno,
-      curp: val.curp
-    });
+    const datosPersonales = this.soloCambios(
+      {
+        nombre: dp?.nombre,
+        apellido_paterno: dp?.apellido_paterno,
+        apellido_materno: dp?.apellido_materno,
+        curp: dp?.curp
+      },
+      {
+        nombre: val.nombre,
+        apellido_paterno: val.apellido_paterno,
+        apellido_materno: val.apellido_materno,
+        curp: val.curp
+      }
+    );
 
-    const direccion = this.filtrarVacios({
-      calle: val.calle,
-      colonia: val.colonia,
-      numero_ext: val.numero_ext,
-      numero_int: val.numero_int,
-      codigo_postal: val.codigo_postal,
-      estado: val.estado,
-      ciudad: val.ciudad
-    });
+    const direccion = this.soloCambios(
+      {
+        calle: dp?.direccion?.calle,
+        colonia: dp?.direccion?.colonia,
+        numero_ext: dp?.direccion?.numero_ext,
+        numero_int: dp?.direccion?.numero_int,
+        codigo_postal: dp?.direccion?.codigo_postal,
+        estado: dp?.direccion?.estado,
+        ciudad: dp?.direccion?.ciudad
+      },
+      {
+        calle: val.calle,
+        colonia: val.colonia,
+        numero_ext: val.numero_ext,
+        numero_int: val.numero_int,
+        codigo_postal: val.codigo_postal,
+        estado: val.estado,
+        ciudad: val.ciudad
+      }
+    );
 
     if (Object.keys(datosPersonales).length === 0 && Object.keys(direccion).length === 0) {
       this.errorEnviar.set('Captura al menos un campo a corregir.');
@@ -231,13 +286,21 @@ export class SolicitarEdicionComponent implements OnInit {
     });
   }
 
-  private filtrarVacios(obj: Record<string, string | null | undefined>): Record<string, string> {
-    const resultado: Record<string, string> = {};
-    for (const [key, value] of Object.entries(obj)) {
-      if (value) {
-        resultado[key] = value;
+  /** Como los campos vienen precargados con lo ya guardado, solo se manda lo que realmente cambió. */
+  private soloCambios(
+    original: Record<string, string | null | undefined>,
+    actual: Record<string, string | null | undefined>
+  ): Record<string, string> {
+    const cambios: Record<string, string> = {};
+
+    for (const campo of Object.keys(actual)) {
+      const valorOriginal = original[campo] ?? '';
+      const valorActual = actual[campo] ?? '';
+      if (valorActual !== valorOriginal && valorActual !== '') {
+        cambios[campo] = valorActual;
       }
     }
-    return resultado;
+
+    return cambios;
   }
 }
