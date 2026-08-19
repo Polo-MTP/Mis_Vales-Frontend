@@ -60,8 +60,7 @@
 
         <div>
           <label class="form-label">Fecha de Nacimiento</label>
-          <input type="date" formControlName="fecha_nacimiento" [max]="fechaMaximaNacimiento"
-                 readonly onkeydown="return false" class="form-input">
+          <app-selector-fecha formControlName="fecha_nacimiento" [fechaMaxima]="fechaMaximaNacimiento"></app-selector-fecha>
           <p class="text-xs text-slate-500 mt-1">Debe ser mayor de edad (18 años o más).</p>
         </div>
 

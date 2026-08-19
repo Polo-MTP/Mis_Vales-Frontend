@@ -13,11 +13,12 @@ import { parsearDireccionGoogle } from '../../../../../shared/utils/google-addre
 import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
 import { MayusculasDirective } from '../../../../../shared/directives/mayusculas.directive';
 import { MENSAJES_PATRON, codigoPostalValidators, curpValidators, numeroExtValidators, numeroIntValidators, rfcValidators } from '../../../../../shared/utils/mexico-validators';
+import { SelectorFechaComponent } from '../../../../../shared/components/selector-fecha/selector-fecha.component';
 
 @Component({
   selector: 'app-nueva-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective, SelectorFechaComponent],
   templateUrl: './nueva-solicitud.component.html',
   styleUrl: './nueva-solicitud.component.css'
 })

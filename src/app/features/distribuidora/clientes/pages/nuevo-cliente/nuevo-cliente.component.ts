@@ -10,11 +10,12 @@ import { parsearDireccionGoogle } from '../../../../../shared/utils/google-addre
 import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
 import { MayusculasDirective } from '../../../../../shared/directives/mayusculas.directive';
 import { MENSAJES_PATRON, codigoPostalValidators, curpValidators, numeroExtValidators, numeroIntValidators } from '../../../../../shared/utils/mexico-validators';
+import { SelectorFechaComponent } from '../../../../../shared/components/selector-fecha/selector-fecha.component';
 
 @Component({
   selector: 'app-nuevo-cliente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective, SelectorFechaComponent],
   templateUrl: './nuevo-cliente.component.html',
   styleUrl: './nuevo-cliente.component.css'
 })

@@ -1,0 +1,49 @@
+<div class="relative">
+  <button #trigger type="button" (click)="toggleAbierto()" [disabled]="disabled"
+          class="form-input flex items-center justify-between w-full text-left"
+          [class.text-slate-500]="!valorSeleccionado()">
+    <span>{{ textoMostrado || placeholder }}</span>
+    <span class="flex items-center gap-2">
+      <span *ngIf="valorSeleccionado()" (click)="limpiar($event)" class="text-slate-500 hover:text-slate-300 text-xs">✕</span>
+      <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    </span>
+  </button>
+
+  <div #panel [hidden]="!abierto()" class="w-72 bg-slate-900 border border-slate-700 rounded-xl shadow-xl p-3">
+    <div class="flex items-center justify-between mb-3 gap-2">
+      <button type="button" (click)="cambiarMes(-1)" class="text-slate-400 hover:text-slate-100 px-2 py-1">‹</button>
+
+      <span class="text-sm font-bold text-slate-200">{{ meses[mesVisible()] }}</span>
+
+      <select [ngModel]="anioVisible()" (ngModelChange)="cambiarAnio($event)"
+              class="bg-slate-800 text-slate-200 text-sm rounded-lg px-2 py-1 border border-slate-700">
+        <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
+      </select>
+
+      <button type="button" (click)="cambiarMes(1)" class="text-slate-400 hover:text-slate-100 px-2 py-1">›</button>
+    </div>
+
+    <div class="grid grid-cols-7 gap-1 text-center text-[10px] text-slate-500 font-bold mb-1">
+      <span>D</span><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span>
+    </div>
+
+    <div class="grid grid-cols-7 gap-1">
+      <ng-container *ngFor="let dia of diasDelMes">
+        <button *ngIf="dia !== null" type="button" (click)="seleccionarDia(dia)" [disabled]="esDeshabilitado(dia)"
+                class="text-xs rounded-lg py-1.5 transition-colors"
+                [class.text-slate-200]="!esDeshabilitado(dia) && !esSeleccionado(dia)"
+                [class.hover:bg-slate-700]="!esDeshabilitado(dia) && !esSeleccionado(dia)"
+                [class.text-slate-700]="esDeshabilitado(dia)"
+                [class.cursor-not-allowed]="esDeshabilitado(dia)"
+                [class.bg-blue-600]="esSeleccionado(dia)"
+                [class.text-white]="esSeleccionado(dia)">
+          {{ dia }}
+        </button>
+        <span *ngIf="dia === null"></span>
+      </ng-container>
+    </div>
+  </div>
+</div>
