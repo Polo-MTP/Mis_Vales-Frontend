@@ -5,7 +5,6 @@ import { DetalleSolicitudComponent } from './alta-proveedor/pages/detalle-solici
 import { ListaDistribuidorasComponent } from './distribuidoras/pages/lista-distribuidoras/lista-distribuidoras.component';
 import { DetalleDistribuidoraComponent } from './distribuidoras/pages/detalle-distribuidora/detalle-distribuidora.component';
 import { ListaProductosComponent } from './productos/pages/lista-productos/lista-productos.component';
-import { ValesPendientesComponent } from './vales/pages/vales-pendientes/vales-pendientes.component';
 import { ListaRelacionesComponent } from './relaciones/pages/lista-relaciones/lista-relaciones.component';
 import { DetalleRelacionComponent } from './relaciones/pages/detalle-relacion/detalle-relacion.component';
 import { ListaMorososComponent } from './reportes/pages/lista-morosos/lista-morosos.component';
@@ -22,7 +21,6 @@ export const GERENTE_ROUTES: Routes = [
   { path: 'distribuidoras', component: ListaDistribuidorasComponent },
   { path: 'distribuidoras/:id', component: DetalleDistribuidoraComponent },
   { path: 'productos', component: ListaProductosComponent },
-  { path: 'vales', component: ValesPendientesComponent },
   { path: 'relaciones', component: ListaRelacionesComponent },
   { path: 'relaciones/:id', component: DetalleRelacionComponent },
   { path: 'reportes/morosos', component: ListaMorososComponent },
