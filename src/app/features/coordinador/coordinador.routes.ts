@@ -5,6 +5,8 @@ import { ListaMorososComponent } from './reportes/pages/lista-morosos/lista-moro
 import { ListaConciliacionesComponent } from './conciliaciones/pages/lista-conciliaciones/lista-conciliaciones.component';
 import { AutorizacionesPendientesComponent } from './conciliaciones/pages/autorizaciones-pendientes/autorizaciones-pendientes.component';
 import { EdicionesPendientesComponent } from './clientes/pages/ediciones-pendientes/ediciones-pendientes.component';
+import { ReasignarClientesComponent } from './distribuidoras/pages/reasignar-clientes/reasignar-clientes.component';
+import { TransferenciasPendientesComponent } from './clientes/pages/transferencias-pendientes/transferencias-pendientes.component';
 
 export const COORDINADOR_ROUTES: Routes = [
   { path: '', component: CoordinadorDashboardComponent },
@@ -12,5 +14,7 @@ export const COORDINADOR_ROUTES: Routes = [
   { path: 'reportes/morosos', component: ListaMorososComponent },
   { path: 'conciliaciones', component: ListaConciliacionesComponent },
   { path: 'conciliaciones/autorizaciones', component: AutorizacionesPendientesComponent },
-  { path: 'clientes/ediciones', component: EdicionesPendientesComponent }
+  { path: 'clientes/ediciones', component: EdicionesPendientesComponent },
+  { path: 'clientes/transferencias', component: TransferenciasPendientesComponent },
+  { path: 'distribuidoras/reasignar-clientes', component: ReasignarClientesComponent }
 ];

@@ -1,0 +1,67 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Aumento de Línea de Crédito</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Solicita un aumento a tu límite de crédito. El gerente decide el monto otorgado, que puede ser distinto al solicitado.</p>
+  </div>
+
+  <div class="dash-card space-y-3">
+    <form [formGroup]="solicitudForm" (ngSubmit)="solicitar()" class="space-y-3">
+      <div>
+        <label class="form-label">Monto solicitado</label>
+        <input type="number" formControlName="monto_solicitado" class="form-input" min="1" step="0.01" placeholder="Ej. 75000" />
+      </div>
+      <div>
+        <label class="form-label">Motivo</label>
+        <textarea formControlName="motivo" class="form-input" rows="2" placeholder="Ej. Mi volumen de ventas creció y ya no me alcanza el límite actual..."></textarea>
+      </div>
+      <button type="submit" [disabled]="solicitudForm.invalid || enviando()" class="btn-primary w-auto">
+        <span *ngIf="!enviando()">Solicitar Aumento</span>
+        <span *ngIf="enviando()">Enviando...</span>
+      </button>
+    </form>
+
+    <div *ngIf="errorSolicitar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ errorSolicitar() }}
+    </div>
+    <div *ngIf="successSolicitar()" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm">
+      {{ successSolicitar() }}
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <p class="text-sm font-bold text-slate-200">Mis Solicitudes</p>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando tus solicitudes...</div>
+
+  <div *ngIf="!cargando() && errorSolicitudes()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorSolicitudes() }}
+  </div>
+
+  <div *ngIf="!cargando() && !errorSolicitudes() && solicitudes().length === 0" class="state-empty">
+    No has solicitado ningún aumento de crédito todavía.
+  </div>
+
+  <div *ngIf="!cargando() && !errorSolicitudes() && solicitudes().length > 0" class="space-y-3">
+    <div *ngFor="let s of solicitudes()" class="list-card-item cursor-default flex-col items-stretch">
+      <div class="flex items-start justify-between w-full">
+        <div>
+          <p class="font-bold text-slate-100">
+            De ${{ s.limite_credito_anterior }} a ${{ s.monto_solicitado }} solicitado<span *ngIf="s.monto_otorgado !== null"> (${{ s.monto_otorgado }} otorgado)</span>
+          </p>
+          <p class="text-xs text-slate-400 mt-0.5">{{ s.created_at | date:'short' }}</p>
+          <p class="text-xs text-slate-300 mt-1">{{ s.motivo }}</p>
+          <p *ngIf="s.comentario_decision" class="text-xs text-slate-400 mt-1">Comentario del gerente: {{ s.comentario_decision }}</p>
+        </div>
+        <span class="status-badge shrink-0"
+              [class.bg-amber-500/15]="s.estado === 'pendiente'" [class.text-amber-300]="s.estado === 'pendiente'" [class.border-amber-500/30]="s.estado === 'pendiente'"
+              [class.bg-emerald-500/15]="s.estado === 'aprobada'" [class.text-emerald-300]="s.estado === 'aprobada'" [class.border-emerald-500/30]="s.estado === 'aprobada'"
+              [class.bg-red-500/15]="s.estado === 'rechazada'" [class.text-red-300]="s.estado === 'rechazada'" [class.border-red-500/30]="s.estado === 'rechazada'">
+          {{ s.estado }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>

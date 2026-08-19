@@ -6,13 +6,19 @@ import { DetalleClienteComponent } from './clientes/pages/detalle-cliente/detall
 import { MisValesComponent } from './vales/pages/mis-vales/mis-vales.component';
 import { SolicitarValeComponent } from './vales/pages/solicitar-vale/solicitar-vale.component';
 import { HistorialPuntosComponent } from './puntos/pages/historial-puntos/historial-puntos.component';
+import { ListaConciliacionesComponent } from './conciliaciones/pages/lista-conciliaciones/lista-conciliaciones.component';
+import { TransferenciasComponent } from './clientes/pages/transferencias/transferencias.component';
+import { AumentoCreditoComponent } from './creditos/pages/aumento-credito/aumento-credito.component';
 
 export const DISTRIBUIDORA_ROUTES: Routes = [
   { path: '', component: DistribuidoraDashboardComponent },
   { path: 'clientes', component: ListaClientesComponent },
   { path: 'clientes/nuevo', component: NuevoClienteComponent },
+  { path: 'clientes/transferencias', component: TransferenciasComponent },
   { path: 'clientes/:id', component: DetalleClienteComponent },
   { path: 'vales', component: MisValesComponent },
   { path: 'vales/solicitar', component: SolicitarValeComponent },
-  { path: 'puntos/historial', component: HistorialPuntosComponent }
+  { path: 'puntos/historial', component: HistorialPuntosComponent },
+  { path: 'conciliaciones', component: ListaConciliacionesComponent },
+  { path: 'creditos/aumento', component: AumentoCreditoComponent }
 ];

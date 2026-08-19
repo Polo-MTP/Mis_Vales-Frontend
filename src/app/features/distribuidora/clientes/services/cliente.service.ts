@@ -49,4 +49,9 @@ export class ClienteService {
   cambiarEstado(id: number, estado: boolean): Observable<ApiResponse<Cliente>> {
     return this.http.patch<ApiResponse<Cliente>>(`${this.baseUrl}/clientes/${id}/estado`, { estado });
   }
+
+  buscarPorCurp(curp: string): Observable<ApiResponse<Cliente>> {
+    const params = new HttpParams().set('curp', curp);
+    return this.http.get<ApiResponse<Cliente>>(`${this.baseUrl}/clientes/buscar-por-curp`, { params });
+  }
 }

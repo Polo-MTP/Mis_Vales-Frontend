@@ -34,6 +34,7 @@ export interface DistribuidoraResumen {
   verificador: UsuarioResumen;
   datos_personales: DatosPersonalesResumen;
   comentarios_verificador: string | null;
+  contrato_url: string | null;
   fecha_aprobacion: string | null;
   created_at: string;
   updated_at: string;

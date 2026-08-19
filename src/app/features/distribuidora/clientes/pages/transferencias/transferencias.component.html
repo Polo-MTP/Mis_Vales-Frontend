@@ -1,0 +1,102 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Transferencia de Clientes</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Solicita quedarte con un cliente que hoy pertenece a otra distribuidora, o confirma una transferencia ya autorizada a tu favor.</p>
+  </div>
+
+  <!-- Buscar y solicitar -->
+  <div class="dash-card space-y-3">
+    <p class="text-sm font-bold text-slate-200">Buscar cliente por CURP</p>
+    <form [formGroup]="curpForm" (ngSubmit)="buscar()" class="flex flex-col sm:flex-row gap-3 sm:items-center">
+      <input formControlName="curp" class="form-input" placeholder="CURP de 18 caracteres" maxlength="18" style="text-transform: uppercase;" />
+      <button type="submit" [disabled]="curpForm.invalid || buscando()" class="btn-primary w-auto shrink-0">
+        <span *ngIf="!buscando()">Buscar</span>
+        <span *ngIf="buscando()">Buscando...</span>
+      </button>
+    </form>
+
+    <div *ngIf="errorBuscar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ errorBuscar() }}
+    </div>
+
+    <div *ngIf="errorSolicitar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ errorSolicitar() }}
+    </div>
+    <div *ngIf="successSolicitar()" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm">
+      {{ successSolicitar() }}
+    </div>
+
+    <div *ngIf="clienteEncontrado() as c" class="bg-slate-900/40 rounded-2xl p-4 space-y-3">
+      <div>
+        <p class="font-bold text-slate-100">{{ c.datos_personales.nombre }} {{ c.datos_personales.apellido_paterno }} {{ c.datos_personales.apellido_materno }}</p>
+        <p class="text-xs text-slate-400 mt-0.5">CURP {{ c.datos_personales.curp }}</p>
+      </div>
+
+      <form [formGroup]="motivoForm" (ngSubmit)="solicitarTransferencia()" class="space-y-3">
+        <div>
+          <label class="form-label">Motivo de la solicitud</label>
+          <textarea formControlName="motivo" class="form-input" rows="2" placeholder="Ej. El cliente ahora compra conmigo..."></textarea>
+        </div>
+        <button type="submit" [disabled]="motivoForm.invalid || solicitando()" class="btn-primary w-auto">
+          <span *ngIf="!solicitando()">Solicitar Transferencia</span>
+          <span *ngIf="solicitando()">Enviando...</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mis solicitudes -->
+  <div class="dash-card">
+    <p class="text-sm font-bold text-slate-200">Mis Solicitudes</p>
+  </div>
+
+  <div *ngIf="errorDecidir()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorDecidir() }}
+  </div>
+
+  <div *ngIf="cargandoSolicitudes()" class="state-loading">Cargando tus solicitudes...</div>
+
+  <div *ngIf="!cargandoSolicitudes() && errorSolicitudes()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorSolicitudes() }}
+  </div>
+
+  <div *ngIf="!cargandoSolicitudes() && !errorSolicitudes() && solicitudes().length === 0" class="state-empty">
+    No has solicitado ninguna transferencia todavía.
+  </div>
+
+  <div *ngIf="!cargandoSolicitudes() && !errorSolicitudes() && solicitudes().length > 0" class="space-y-3">
+    <div *ngFor="let s of solicitudes()" class="list-card-item cursor-default flex-col items-stretch">
+      <div class="flex items-start justify-between w-full">
+        <div>
+          <p class="font-bold text-slate-100">{{ s.cliente_nombre || ('Cliente #' + s.cliente_id) }}</p>
+          <p class="text-xs text-slate-400 mt-0.5">
+            De {{ s.distribuidora_origen }} · {{ s.created_at | date:'short' }}
+          </p>
+          <p class="text-xs text-slate-300 mt-1">{{ s.motivo }}</p>
+          <p *ngIf="s.comentario_autorizacion" class="text-xs text-slate-400 mt-1">Comentario del autorizador: {{ s.comentario_autorizacion }}</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="status-badge"
+                [class.bg-amber-500/15]="s.estado === 'pendiente_autorizacion'" [class.text-amber-300]="s.estado === 'pendiente_autorizacion'" [class.border-amber-500/30]="s.estado === 'pendiente_autorizacion'"
+                [class.bg-blue-500/15]="s.estado === 'autorizada'" [class.text-blue-300]="s.estado === 'autorizada'" [class.border-blue-500/30]="s.estado === 'autorizada'"
+                [class.bg-emerald-500/15]="s.estado === 'aceptada'" [class.text-emerald-300]="s.estado === 'aceptada'" [class.border-emerald-500/30]="s.estado === 'aceptada'"
+                [class.bg-red-500/15]="s.estado === 'rechazada'" [class.text-red-300]="s.estado === 'rechazada'" [class.border-red-500/30]="s.estado === 'rechazada'">
+            {{ s.estado }}
+          </span>
+        </div>
+      </div>
+
+      <div *ngIf="s.estado === 'autorizada'" class="flex items-center gap-2 mt-3">
+        <button type="button" (click)="declinar(s)" [disabled]="decidiendo() === s.id" class="btn-outline w-auto">
+          Ya no quiero al cliente
+        </button>
+        <button type="button" (click)="confirmar(s)" [disabled]="decidiendo() === s.id" class="btn-primary w-auto">
+          <span *ngIf="decidiendo() !== s.id">Confirmar Transferencia</span>
+          <span *ngIf="decidiendo() === s.id">Confirmando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

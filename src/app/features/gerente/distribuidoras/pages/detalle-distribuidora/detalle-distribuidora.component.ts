@@ -39,6 +39,10 @@ export class DetalleDistribuidoraComponent implements OnInit {
   cargandoHistorialPuntos = signal(false);
   mostrarHistorialPuntos = signal(false);
 
+  archivoContrato = signal<File | null>(null);
+  subiendoContrato = signal(false);
+  errorContrato = signal<string | null>(null);
+
   creditoForm = this.fb.group({
     limite_credito: ['', [Validators.required, Validators.min(0)]],
     categoria_id: ['', [Validators.required]]
@@ -145,6 +149,32 @@ export class DetalleDistribuidoraComponent implements OnInit {
         error: () => this.cargandoHistorialPuntos.set(false)
       });
     }
+  }
+
+  onArchivoContratoSeleccionado(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.archivoContrato.set(input.files?.[0] ?? null);
+  }
+
+  subirContrato(): void {
+    const d = this.distribuidora();
+    const archivo = this.archivoContrato();
+    if (!d || !archivo) return;
+
+    this.subiendoContrato.set(true);
+    this.errorContrato.set(null);
+
+    this.distribuidoraService.subirContrato(d.id, archivo).subscribe({
+      next: (res) => {
+        this.subiendoContrato.set(false);
+        this.distribuidora.set(res.data);
+        this.archivoContrato.set(null);
+      },
+      error: (err) => {
+        this.subiendoContrato.set(false);
+        this.errorContrato.set(err.error?.message || 'Ocurrió un error al subir el contrato.');
+      }
+    });
   }
 
   volver(): void {

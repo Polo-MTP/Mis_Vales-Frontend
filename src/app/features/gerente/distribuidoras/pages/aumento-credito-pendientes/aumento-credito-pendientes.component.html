@@ -1,0 +1,47 @@
+<div class="w-[820px] mx-auto py-8 space-y-6">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Solicitudes de Aumento de Crédito</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Aprueba con el monto que decidas otorgar (puede ser distinto al solicitado) o rechaza la solicitud.</p>
+  </div>
+
+  <div *ngIf="errorDecidir()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorDecidir() }}
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando solicitudes...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && solicitudes().length === 0" class="state-empty">
+    No hay solicitudes pendientes de decisión.
+  </div>
+
+  <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="space-y-3">
+    <div *ngFor="let s of solicitudes()" class="list-card-item cursor-default flex-col items-stretch">
+      <div class="flex items-start justify-between w-full">
+        <div>
+          <p class="font-bold text-slate-100">{{ s.distribuidora }} — solicita ${{ s.monto_solicitado }}</p>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Límite actual ${{ s.limite_credito_anterior }} · Solicitado por {{ s.solicitante }} · {{ s.created_at | date:'short' }}
+          </p>
+          <p class="text-xs text-slate-300 mt-1">{{ s.motivo }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 mt-3 w-full">
+        <input type="number" [(ngModel)]="montosOtorgados[s.id]" class="form-input" min="1" step="0.01" placeholder="Monto a otorgar" />
+        <button type="button" (click)="rechazar(s)" [disabled]="decidiendo() === s.id" class="btn-outline w-auto shrink-0">
+          Rechazar
+        </button>
+        <button type="button" (click)="aprobar(s)" [disabled]="decidiendo() === s.id" class="btn-primary w-auto shrink-0">
+          <span *ngIf="decidiendo() !== s.id">Aprobar</span>
+          <span *ngIf="decidiendo() === s.id">Guardando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,72 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Reasignación Masiva de Clientes</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Mueve TODA la cartera de una de tus distribuidoras a otra que también coordinas. Útil cuando una distribuidora deja de operar.</p>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando tu cartera...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="errorConfirmar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorConfirmar() }}
+  </div>
+
+  <div *ngIf="resultado() as r" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm">
+    {{ r.mensaje }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && distribuidoras().length < 2" class="state-empty">
+    Necesitas al menos 2 distribuidoras a tu cargo para hacer una reasignación.
+  </div>
+
+  <ng-container *ngIf="!cargando() && !error() && distribuidoras().length >= 2">
+    <div class="dash-card space-y-3">
+      <p class="text-sm font-bold text-slate-200">1. Distribuidora de origen (de donde salen los clientes)</p>
+      <div class="space-y-2">
+        <div *ngFor="let d of distribuidoras()"
+             (click)="elegirOrigen(d.id)"
+             class="list-card-item"
+             [class.ring-2]="origenId() === d.id"
+             [class.ring-blue-500]="origenId() === d.id">
+          <div>
+            <p class="font-bold text-slate-100">{{ d.razon_social || ('Distribuidora #' + d.id) }}</p>
+            <p class="text-xs text-slate-400 mt-0.5">{{ d.numero_distribuidora }} · {{ d.estado }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-card space-y-3">
+      <p class="text-sm font-bold text-slate-200">2. Distribuidora de destino (a donde llegan los clientes)</p>
+      <div class="space-y-2">
+        <div *ngFor="let d of distribuidoras()"
+             (click)="d.id !== origenId() && elegirDestino(d.id)"
+             class="list-card-item"
+             [class.opacity-40]="d.id === origenId()"
+             [class.cursor-not-allowed]="d.id === origenId()"
+             [class.ring-2]="destinoId() === d.id"
+             [class.ring-emerald-500]="destinoId() === d.id">
+          <div>
+            <p class="font-bold text-slate-100">{{ d.razon_social || ('Distribuidora #' + d.id) }}</p>
+            <p class="text-xs text-slate-400 mt-0.5">{{ d.numero_distribuidora }} · {{ d.estado }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <button type="button"
+              (click)="confirmar()"
+              [disabled]="!origenId() || !destinoId() || confirmando()"
+              class="btn-primary w-auto">
+        <span *ngIf="!confirmando()">Reasignar Toda la Cartera</span>
+        <span *ngIf="confirmando()">Reasignando...</span>
+      </button>
+    </div>
+  </ng-container>
+
+</div>

@@ -140,6 +140,28 @@
       </form>
     </div>
 
+    <!-- Contrato Firmado -->
+    <div class="dash-card space-y-3">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Contrato Firmado</h2>
+
+      <p *ngIf="d.contrato_url" class="text-sm text-slate-300">
+        <a [href]="d.contrato_url" target="_blank" rel="noopener" class="text-blue-400 hover:underline">Ver contrato actual</a>
+      </p>
+      <p *ngIf="!d.contrato_url" class="text-xs text-slate-500">Todavía no se ha subido un contrato firmado.</p>
+
+      <div *ngIf="errorContrato()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-sm">
+        {{ errorContrato() }}
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+        <input type="file" accept="application/pdf" (change)="onArchivoContratoSeleccionado($event)" class="form-input" />
+        <button type="button" (click)="subirContrato()" [disabled]="!archivoContrato() || subiendoContrato()" class="btn-primary w-auto shrink-0">
+          <span *ngIf="!subiendoContrato()">Subir Contrato</span>
+          <span *ngIf="subiendoContrato()">Subiendo...</span>
+        </button>
+      </div>
+    </div>
+
   </ng-container>
 
 </div>

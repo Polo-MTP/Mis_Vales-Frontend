@@ -52,4 +52,20 @@ export class DistribuidoraService {
     const params = new HttpParams().set('page', String(page));
     return this.http.get<ApiResponse<PaginatedResponse<PuntoMovimiento>>>(`${this.baseUrl}/${id}/puntos`, { params });
   }
+
+  subirContrato(id: number, archivo: File): Observable<{ message: string; data: DistribuidoraResumen }> {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    return this.http.post<{ message: string; data: DistribuidoraResumen }>(`${this.baseUrl}/${id}/contrato`, formData);
+  }
+
+  reasignarCoordinador(
+    coordinadorOrigenId: number,
+    coordinadorDestinoId: number
+  ): Observable<{ message: string; data: { distribuidoras_reasignadas: number } }> {
+    return this.http.post<{ message: string; data: { distribuidoras_reasignadas: number } }>(`${this.baseUrl}/reasignar-coordinador`, {
+      coordinador_origen_id: coordinadorOrigenId,
+      coordinador_destino_id: coordinadorDestinoId
+    });
+  }
 }
