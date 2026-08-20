@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../auth/services/auth.service';
-import { LoginAttempt, PaginatedResponse } from '../../../../core/models/user.model';
-import { loginStatusLabel } from '../../../../shared/utils/labels';
+import { AuditService } from '../../services/audit.service';
+import { LoginAttempt, PaginatedResponse } from '../../../../../core/models/user.model';
+import { loginStatusLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-audit-table',
@@ -11,7 +11,7 @@ import { loginStatusLabel } from '../../../../shared/utils/labels';
   templateUrl: './audit-table.component.html'
 })
 export class AuditTableComponent implements OnInit {
-  private authService = inject(AuthService);
+  private auditService = inject(AuditService);
 
   paginationData = signal<PaginatedResponse<LoginAttempt> | null>(null);
   currentPage = signal<number>(1);
@@ -23,7 +23,7 @@ export class AuditTableComponent implements OnInit {
 
   loadLogs(page: number): void {
     this.isLoading.set(true);
-    this.authService.getAuditLogs(page).subscribe({
+    this.auditService.listar(page).subscribe({
       next: (res) => {
         this.isLoading.set(false);
         if (res.success && res.data) {

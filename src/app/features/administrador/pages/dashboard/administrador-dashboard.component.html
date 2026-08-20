@@ -1,28 +1,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-  <div class="dash-card">
-    <h1 class="text-2xl font-black text-slate-100 uppercase tracking-tight">
-      Dashboard Administrador
-    </h1>
-    <p class="text-xs text-slate-400 font-medium">
-      Bienvenido, {{ authService.currentUser()?.name }} ({{ authService.currentUser()?.email }})
-    </p>
-  </div>
 
-  <div class="dash-card flex gap-3">
-    <a routerLink="/administrador/logs" class="btn-primary">
-      Log de Auditoría
-    </a>
-    <a routerLink="/administrador/notificaciones" class="btn-outline">
-      Notificaciones
-    </a>
-  </div>
+  <app-dashboard-welcome
+    [user]="authService.currentUser()"
+  />
 
-  <div class="dash-card">
-    <p class="text-xs text-slate-400">
-      Tu rol es de solo lectura sobre auditoría del sistema. La operación del negocio
-      (configuraciones, conciliaciones, reportes, distribuidoras) la manejan Gerencia y Coordinación.
-    </p>
-  </div>
-
-  <app-audit-table></app-audit-table>
 </div>

@@ -1,5 +1,6 @@
 <aside class="w-64 shrink-0 bg-slate-900 text-white">
 
+  <!-- Usuario -->
   <div class="p-4 border-b border-slate-700">
     <p class="text-sm text-slate-400">
       Usuario
@@ -14,18 +15,62 @@
     </p>
   </div>
 
-  <nav class="p-4">
 
-    <a
-      [routerLink]="['/', authService.userRole() === 'Administrador'
-        ? 'administrador'
-        : authService.userRole() === 'Cajera'
-        ? 'cajera'
-        : 'gerente']"
-      class="block px-4 py-2 rounded hover:bg-slate-800"
-    >
-      Dashboard
-    </a>
+  <!-- Navegación -->
+  <nav class="p-4 space-y-1">
+
+    <ng-container *ngFor="let item of menuItems">
+
+      <!-- Opción normal -->
+      <a
+        *ngIf="item.route"
+        [routerLink]="item.route"
+        routerLinkActive="bg-slate-800"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="block px-4 py-2 rounded hover:bg-slate-800"
+      >
+        {{ item.label }}
+      </a>
+
+
+      <!-- Opción con submenú -->
+      <div *ngIf="item.children">
+
+        <button
+          type="button"
+          (click)="toggleSubmenu(item.label)"
+          class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-slate-800"
+        >
+          <span>
+            {{ item.label }}
+          </span>
+
+          <span>
+            {{ submenuAbierto() === item.label ? '−' : '+' }}
+          </span>
+        </button>
+
+
+        <!-- Submenú -->
+        <div
+          *ngIf="submenuAbierto() === item.label"
+          class="ml-4 mt-1 space-y-1"
+        >
+
+          <a
+            *ngFor="let child of item.children"
+            [routerLink]="child.route"
+            routerLinkActive="bg-slate-800"
+            class="block px-3 py-2 rounded text-sm text-slate-300 hover:bg-slate-800 hover:text-white"
+          >
+            {{ child.label }}
+          </a>
+
+        </div>
+
+      </div>
+
+    </ng-container>
 
   </nav>
 

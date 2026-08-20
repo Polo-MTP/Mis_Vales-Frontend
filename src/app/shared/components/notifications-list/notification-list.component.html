@@ -1,0 +1,60 @@
+<div *ngIf="cargando()" class="state-loading">
+  Cargando notificaciones...
+</div>
+
+
+<div
+  *ngIf="!cargando() && error()"
+  class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm"
+>
+  {{ error() }}
+</div>
+
+
+<div
+  *ngIf="!cargando() && !error() && notificaciones().length === 0"
+  class="state-empty"
+>
+  No hay notificaciones todavía.
+</div>
+
+
+<div
+  *ngIf="!cargando() && !error() && notificaciones().length > 0"
+  class="space-y-3"
+>
+
+  <div
+    *ngFor="let n of notificaciones()"
+    class="list-card-item cursor-default"
+  >
+
+    <div>
+
+      <p class="font-bold text-slate-100">
+        {{ auditAccionLabel(n.accion) }}
+      </p>
+
+      <p class="text-xs text-slate-400 mt-0.5">
+
+        {{ auditRecursoLabel(n.recurso) }}
+
+        <span *ngIf="n.sucursal">
+          · {{ n.sucursal.nombre }}
+        </span>
+
+        <span *ngIf="n.usuario">
+          · {{ n.usuario.name }}
+        </span>
+
+      </p>
+
+    </div>
+
+    <span class="text-xs text-slate-500 shrink-0">
+      {{ n.created_at | date:'short' }}
+    </span>
+
+  </div>
+
+</div>
