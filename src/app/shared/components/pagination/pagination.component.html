@@ -1,0 +1,26 @@
+<div
+  *ngIf="lastPage > 1"
+  class="flex items-center justify-between pt-2"
+>
+  <button
+    type="button"
+    (click)="previous()"
+    [disabled]="currentPage <= 1 || loading"
+    class="btn-pagination"
+  >
+    ← Anterior
+  </button>
+
+  <span class="text-xs font-semibold text-slate-500">
+    Página {{ currentPage }} de {{ lastPage }}
+  </span>
+
+  <button
+    type="button"
+    (click)="next()"
+    [disabled]="currentPage >= lastPage || loading"
+    class="btn-pagination"
+  >
+    Siguiente →
+  </button>
+</div>

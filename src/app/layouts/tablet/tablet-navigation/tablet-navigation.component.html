@@ -1,31 +1,39 @@
 <nav class="bg-slate-900 text-white px-4 py-3">
+  <div class="flex items-center justify-between gap-2">
+    
+    <!-- Lado Izquierdo: Botón Menú -->
+    <div class="flex items-center gap-3">
+      <button 
+        type="button" 
+        (click)="toggleSidebar()" 
+        class="p-2 hover:bg-slate-800 rounded-lg text-slate-300"
+      >
+        <span class="text-2xl">☰</span>
+      </button>
+      
+      <a routerLink="/" class="text-lg font-bold tracking-tight">
+        MisVales
+      </a>
+    </div>
 
-  <div class="flex items-center justify-around gap-2">
-
-    <a
-      routerLink="/coordinador"
-      *ngIf="authService.userRole() === 'Coordinador'"
-      class="px-4 py-2 rounded-lg hover:bg-slate-800"
-    >
-      Inicio
-    </a>
-
-    <a
-      routerLink="/verificador"
-      *ngIf="authService.userRole() === 'Verificador'"
-      class="px-4 py-2 rounded-lg hover:bg-slate-800"
-    >
-      Inicio
-    </a>
-
-    <button
-      type="button"
-      (click)="authService.logout()"
-      class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
-    >
-      Salir
-    </button>
+    <!-- Lado Derecho: Notificaciones y Salir -->
+    <div class="flex items-center gap-3">
+      <app-notification-bell></app-notification-bell>
+      
+      <button
+        type="button"
+        (click)="authService.logout()"
+        class="px-3 py-1.5 text-sm rounded-lg bg-red-600/20 text-red-500 hover:bg-red-600 hover:text-white transition-colors"
+      >
+        Salir
+      </button>
+    </div>
 
   </div>
-
 </nav>
+
+<!-- Sidebar Compartido -->
+<app-shared-sidebar 
+  [isOpen]="sidebarOpen()" 
+  (closeSidebar)="sidebarOpen.set(false)">
+</app-shared-sidebar>

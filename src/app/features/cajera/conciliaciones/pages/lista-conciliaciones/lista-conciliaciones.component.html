@@ -126,11 +126,13 @@
     </div>
   </div>
 
-  <div *ngIf="!cargando() && !error() && paginacion() && paginacion()!.last_page > 1"
-       class="flex items-center justify-between pt-2">
-    <button type="button" (click)="cambiarPagina(-1)" [disabled]="pagina() <= 1" class="btn-pagination">← Anterior</button>
-    <span class="text-xs font-semibold text-slate-500">Página {{ paginacion()?.current_page }} de {{ paginacion()?.last_page }}</span>
-    <button type="button" (click)="cambiarPagina(1)" [disabled]="pagina() >= (paginacion()?.last_page || 1)" class="btn-pagination">Siguiente →</button>
-  </div>
+  <!-- Paginación -->
+  <app-pagination 
+    *ngIf="!cargando() && !error() && paginacion() && paginacion()!.last_page > 1"
+    [currentPage]="paginacion()?.current_page || 1"
+    [lastPage]="paginacion()?.last_page || 1"
+    [loading]="cargando()"
+    (pageChange)="cambiarPagina($event)">
+  </app-pagination>
 
 </div>

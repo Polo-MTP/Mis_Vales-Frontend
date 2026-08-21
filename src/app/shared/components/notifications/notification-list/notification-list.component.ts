@@ -1,19 +1,19 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NotificationService } from '../../services/notification.service';
-import { Notificacion } from '../../../core/models/notificacion.model';
-import { PaginatedResponse } from '../../../core/models/user.model';
-
+import { NotificationService } from '../../../services/notification.service';
+import { Notificacion } from '../../../../core/models/notificacion.model';
+import { PaginatedResponse } from '../../../../core/models/user.model';
+import { PaginationComponent } from '../../pagination/pagination.component';
 import {
   auditAccionLabel,
   auditRecursoLabel
-} from '../../utils/labels';
+} from '../../../utils/labels';
 
 @Component({
   selector: 'app-notification-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PaginationComponent],
   templateUrl: './notification-list.component.html'
 })
 export class NotificationListComponent implements OnInit {
@@ -42,7 +42,7 @@ export class NotificationListComponent implements OnInit {
 
     this.notificationService.listar(this.pagina()).subscribe({
 
-      next: (res) => {
+      next: (res: any) => {
 
         this.paginacion.set(res.data ?? null);
         this.notificaciones.set(res.data?.data ?? []);
@@ -62,22 +62,20 @@ export class NotificationListComponent implements OnInit {
     });
   }
 
-  cambiarPagina(delta: number): void {
+ cambiarPagina(nuevaPagina: number): void {
 
-    const p = this.paginacion();
+  const p = this.paginacion();
 
-    if (!p) {
-      return;
-    }
-
-    const nuevaPagina = this.pagina() + delta;
-
-    if (nuevaPagina < 1 || nuevaPagina > p.last_page) {
-      return;
-    }
-
-    this.pagina.set(nuevaPagina);
-    this.cargar();
+  if (!p) {
+    return;
   }
+
+  if (nuevaPagina < 1 || nuevaPagina > p.last_page) {
+    return;
+  }
+
+  this.pagina.set(nuevaPagina);
+  this.cargar();
+}
 
 }

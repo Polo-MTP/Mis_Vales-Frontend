@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 import { RouterModule } from '@angular/router';
 import { PuntoMovimientoService } from '../../services/punto-movimiento.service';
 import { ClienteService } from '../../../clientes/services/cliente.service';
@@ -9,7 +10,7 @@ import { PaginatedResponse } from '../../../../../core/models/user.model';
 @Component({
   selector: 'app-historial-puntos',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PaginationComponent],
   templateUrl: './historial-puntos.component.html',
   styleUrl: './historial-puntos.component.css'
 })
@@ -62,10 +63,9 @@ export class HistorialPuntosComponent implements OnInit {
     });
   }
 
-  cambiarPagina(delta: number): void {
+    cambiarPagina(nuevaPagina: number): void {
     const p = this.paginacion();
     if (!p) return;
-    const nuevaPagina = this.pagina() + delta;
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();

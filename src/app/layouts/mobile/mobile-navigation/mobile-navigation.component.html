@@ -3,6 +3,16 @@
 >
   <div class="h-16 flex items-center justify-around">
 
+    <!-- Menú (Izquierda) -->
+    <button
+      type="button"
+      (click)="toggleSidebar()"
+      class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-blue-600"
+    >
+      <span class="text-xl">☰</span>
+      <span class="text-[10px]">Menú</span>
+    </button>
+
     <!-- Inicio -->
     <a
       routerLink="/distribuidora"
@@ -24,25 +34,21 @@
       <span class="text-[10px]">Clientes</span>
     </a>
 
-    <!-- Vales -->
+    <!-- Pagos y Abonos -->
     <a
-      routerLink="/distribuidora/vales"
+      routerLink="/distribuidora/pagos-abonos"
       routerLinkActive="text-blue-600"
       class="flex flex-col items-center justify-center gap-1 text-slate-500"
     >
-      <span class="text-xl">▣</span>
-      <span class="text-[10px]">Vales</span>
-    </a>
-
-    <!-- Puntos -->
-    <a
-      routerLink="/distribuidora/puntos/historial"
-      routerLinkActive="text-blue-600"
-      class="flex flex-col items-center justify-center gap-1 text-slate-500"
-    >
-      <span class="text-xl">★</span>
-      <span class="text-[10px]">Puntos</span>
+      <span class="text-xl">💰</span>
+      <span class="text-[10px]">Pagos y Abonos</span>
     </a>
 
   </div>
 </nav>
+
+<!-- Sidebar Compartido -->
+<app-shared-sidebar 
+  [isOpen]="sidebarOpen()" 
+  (closeSidebar)="sidebarOpen.set(false)">
+</app-shared-sidebar>

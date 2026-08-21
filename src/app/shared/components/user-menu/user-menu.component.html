@@ -1,0 +1,82 @@
+<div class="relative">
+
+  <!-- Botón de usuario -->
+  <button
+    type="button"
+    (click)="toggleMenu()"
+    class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-800 transition"
+  >
+
+    <!-- Avatar -->
+    <div
+      class="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center text-sm font-bold text-slate-200"
+    >
+      {{ authService.currentUser()?.name?.charAt(0)?.toUpperCase() }}
+    </div>
+
+    <!-- Información -->
+    <div class="hidden sm:block text-left">
+
+      <p class="text-sm font-semibold text-slate-100">
+        {{ authService.currentUser()?.name }}
+      </p>
+
+      <p class="text-xs text-slate-400">
+        {{ authService.userRole() }}
+      </p>
+
+    </div>
+
+    <!-- Flecha -->
+    <span
+      class="text-slate-400 text-xs"
+      [class.rotate-180]="menuAbierto()"
+    >
+      ▼
+    </span>
+
+  </button>
+
+
+  <!-- Dropdown -->
+  <div
+    *ngIf="menuAbierto()"
+    class="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden"
+  >
+
+    <!-- Información del usuario -->
+    <div class="px-4 py-3 border-b border-slate-700">
+
+      <p class="text-sm font-bold text-slate-100">
+        {{ authService.currentUser()?.name }}
+      </p>
+
+      <p class="text-xs text-slate-400 mt-1">
+        {{ authService.currentUser()?.email }}
+      </p>
+
+      <span
+        class="inline-block mt-2 px-2 py-1 rounded-md bg-slate-800 text-xs text-slate-300"
+      >
+        {{ authService.userRole() }}
+      </span>
+
+    </div>
+
+
+    <!-- Acciones -->
+    <div class="p-2">
+
+      <button
+        type="button"
+        (click)="logout()"
+        class="w-full text-left px-3 py-2 rounded-lg text-sm text-red-300 hover:bg-red-500/10 transition"
+      >
+        Cerrar sesión
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

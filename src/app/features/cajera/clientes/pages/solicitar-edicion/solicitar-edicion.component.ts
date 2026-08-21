@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudEdicionClienteService } from '../../services/solicitud-edicion-cliente.service';
@@ -17,7 +18,7 @@ import { MENSAJES_PATRON, CODIGO_POSTAL_PATTERN, CURP_PATTERN, NUMERO_PATTERN } 
 @Component({
   selector: 'app-solicitar-edicion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
+  imports: [CommonModule, ReactiveFormsModule, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective, PaginationComponent],
   templateUrl: './solicitar-edicion.component.html',
   styleUrl: './solicitar-edicion.component.css'
 })
@@ -192,10 +193,9 @@ export class SolicitarEdicionComponent implements OnInit {
     });
   }
 
-  cambiarPagina(delta: number): void {
+    cambiarPagina(nuevaPagina: number): void {
     const p = this.paginacion();
     if (!p) return;
-    const nuevaPagina = this.pagina() + delta;
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargarSolicitudes();

@@ -10,6 +10,48 @@ interface SidebarItem {
   children?: SidebarItem[];
 }
 
+const MENU_GERENTE: SidebarItem[] = [
+  {
+    label: 'Dashboard',
+    route: '/gerente'
+  },
+  {
+    label: 'Solicitudes',
+    route: '/gerente/solicitudes'
+  },
+  {
+    label: 'Distribuidoras',
+    route: '/gerente/distribuidoras'
+  },
+  {
+    label: 'Productos',
+    route: '/gerente/productos'
+  },
+  {
+    label: 'Relaciones',
+    route: '/gerente/relaciones'
+  },
+  {
+    label: 'Conciliaciones',
+    route: '/gerente/conciliaciones'
+  },
+  {
+    label: 'Clientes',
+    children: [
+      { label: 'Ediciones Pendientes', route: '/gerente/clientes/ediciones' },
+      { label: 'Transferencias Pendientes', route: '/gerente/clientes/transferencias' }
+    ]
+  },
+  {
+    label: 'Reportes',
+    route: '/gerente/reportes/morosos'
+  },
+  {
+    label: 'Configuraciones',
+    route: '/gerente/configuraciones'
+  }
+];
+
 @Component({
   selector: 'app-desktop-sidebar',
   standalone: true,
@@ -38,7 +80,8 @@ export class DesktopSidebarComponent {
       }
     ],
 
-    Gerente: [],
+    'Gerente General': MENU_GERENTE,
+    'Gerente de Sucursal': MENU_GERENTE,
 
     Cajera: []
   };
