@@ -15,6 +15,7 @@ const MENU_GERENTE: SidebarItem[] = [
   { label: 'Solicitudes', route: '/gerente/solicitudes' },
   { label: 'Distribuidoras', route: '/gerente/distribuidoras' },
   { label: 'Productos', route: '/gerente/productos' },
+  { label: 'Vales', route: '/gerente/vales' },
   { label: 'Relaciones', route: '/gerente/relaciones' },
   { label: 'Conciliaciones', route: '/gerente/conciliaciones' },
   {
@@ -70,6 +71,7 @@ export class SharedSidebarComponent {
       { label: 'Ediciones de Cliente', route: '/coordinador/clientes/ediciones' },
       { label: 'Transferencias Pendientes', route: '/coordinador/clientes/transferencias' },
       { label: 'Reasignar Clientes', route: '/coordinador/distribuidoras/reasignar-clientes' },
+      { label: 'Vales', route: '/coordinador/vales' },
       { label: 'Mis Autorizaciones', route: '/coordinador/autorizaciones' }
     ],
     Verificador: [

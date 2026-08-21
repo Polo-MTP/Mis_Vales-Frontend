@@ -1,0 +1,95 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Vales</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">
+      Consulta de todos los vales solicitados, con su estado y desglose de pago. Solo lectura.
+    </p>
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex flex-wrap gap-2">
+    <button type="button" (click)="cambiarFiltro('todos')" [class]="filtroEstado() === 'todos' ? 'btn-filter-active' : 'btn-filter'">Todos</button>
+    <button type="button" (click)="cambiarFiltro('solicitado')" [class]="filtroEstado() === 'solicitado' ? 'btn-filter-active' : 'btn-filter'">Solicitados</button>
+    <button type="button" (click)="cambiarFiltro('validado')" [class]="filtroEstado() === 'validado' ? 'btn-filter-active' : 'btn-filter'">Validados</button>
+    <button type="button" (click)="cambiarFiltro('autorizado')" [class]="filtroEstado() === 'autorizado' ? 'btn-filter-active' : 'btn-filter'">Autorizados</button>
+    <button type="button" (click)="cambiarFiltro('pagado')" [class]="filtroEstado() === 'pagado' ? 'btn-filter-active' : 'btn-filter'">Pagados</button>
+    <button type="button" (click)="cambiarFiltro('vencido')" [class]="filtroEstado() === 'vencido' ? 'btn-filter-active' : 'btn-filter'">Vencidos</button>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando vales...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && vales().length === 0" class="state-empty">
+    No hay vales en este estado.
+  </div>
+
+  <div *ngIf="!cargando() && !error() && vales().length > 0" class="space-y-3">
+    <div *ngFor="let v of vales()">
+      <div class="list-card-item cursor-default">
+        <div>
+          <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — ${{ v.monto }}</p>
+          <p class="text-xs text-slate-400 mt-0.5">
+            {{ v.distribuidora?.razon_social || ('Distribuidora #' + v.distribuidora_id) }}
+            <span *ngIf="v.distribuidora?.numero_distribuidora"> ({{ v.distribuidora?.numero_distribuidora }})</span>
+          </p>
+          <p class="text-xs text-slate-500 mt-0.5">
+            {{ v.producto?.descripcion || (v.quincenas + ' quincenas') }} · Solicitado {{ v.fecha_solicitud | date:'short' }}
+          </p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <span class="status-badge"
+                [class.bg-amber-500/15]="v.estado === 'solicitado'" [class.text-amber-300]="v.estado === 'solicitado'" [class.border-amber-500/30]="v.estado === 'solicitado'"
+                [class.bg-cyan-500/15]="v.estado === 'validado'" [class.text-cyan-300]="v.estado === 'validado'" [class.border-cyan-500/30]="v.estado === 'validado'"
+                [class.bg-blue-500/15]="v.estado === 'autorizado'" [class.text-blue-300]="v.estado === 'autorizado'" [class.border-blue-500/30]="v.estado === 'autorizado'"
+                [class.bg-emerald-500/15]="v.estado === 'pagado'" [class.text-emerald-300]="v.estado === 'pagado'" [class.border-emerald-500/30]="v.estado === 'pagado'"
+                [class.bg-orange-500/15]="v.estado === 'parcial'" [class.text-orange-300]="v.estado === 'parcial'" [class.border-orange-500/30]="v.estado === 'parcial'"
+                [class.bg-red-500/15]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.text-red-300]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.border-red-500/30]="v.estado === 'vencido' || v.estado === 'incidencia'">
+            {{ estadoValeLabel(v.estado) }}
+          </span>
+          <span *ngIf="!v.activo" class="status-badge bg-slate-500/15 text-slate-400 border-slate-500/30">Inactivo</span>
+        </div>
+      </div>
+
+      <!-- Cortes donde ya se facturó una cuota de este vale -->
+      <div *ngIf="v.cortes.length > 0" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 flex flex-wrap gap-2">
+        <span *ngFor="let c of v.cortes"
+              class="text-xs bg-slate-800/60 border border-slate-700 rounded-lg px-2.5 py-1.5 inline-flex items-center gap-1.5">
+          <span class="text-slate-400">Cuota {{ c.cuota }} · Corte {{ c.fecha_corte }}</span>
+          <span class="font-bold" [class.text-emerald-400]="c.estado_cuota === 'pagado'" [class.text-amber-400]="c.estado_cuota !== 'pagado'">
+            ${{ c.total }}
+          </span>
+        </span>
+      </div>
+
+      <!-- Estimado del pago quincenal mientras no tenga ninguna cuota facturada en un corte -->
+      <div *ngIf="v.cortes.length === 0 && v.estimacion as e" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 space-y-1.5">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Estimado por quincena (aún sin corte)</p>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-x-4 gap-y-1 text-xs">
+          <span><span class="text-slate-500 block">Capital</span><span class="text-slate-300">${{ e.capital }}</span></span>
+          <span><span class="text-slate-500 block">Comisión</span><span class="text-slate-300">${{ e.comision }}</span></span>
+          <span><span class="text-slate-500 block">Interés</span><span class="text-slate-300">${{ e.interes }}</span></span>
+          <span><span class="text-slate-500 block">Seguro</span><span class="text-slate-300">${{ e.seguro }}</span></span>
+          <span *ngIf="e.categoria > 0"><span class="text-slate-500 block">Descuento categoría</span><span class="text-emerald-400">-${{ e.categoria }}</span></span>
+        </div>
+        <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+          <span class="font-bold text-slate-200 text-xs">Pago por quincena</span>
+          <span class="font-black text-slate-100">${{ e.pago_quincenal }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <app-pagination
+    *ngIf="!cargando() && !error() && paginacion() && paginacion()!.last_page > 1"
+    [currentPage]="paginacion()?.current_page || 1"
+    [lastPage]="paginacion()?.last_page || 1"
+    [loading]="cargando()"
+    (pageChange)="cambiarPagina($event)">
+  </app-pagination>
+
+</div>

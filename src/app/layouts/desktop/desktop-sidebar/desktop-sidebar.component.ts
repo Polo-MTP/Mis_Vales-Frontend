@@ -37,6 +37,7 @@ export class DesktopSidebarComponent {
       ]
     },
     { label: 'Productos', route: '/gerente/productos' },
+    { label: 'Vales', route: '/gerente/vales' },
     { label: 'Relaciones (Cortes)', route: '/gerente/relaciones' },
     { label: 'Reporte de Morosos', route: '/gerente/reportes/morosos' },
     {
