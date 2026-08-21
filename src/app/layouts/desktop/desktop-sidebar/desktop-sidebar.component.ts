@@ -53,7 +53,9 @@ export class DesktopSidebarComponent {
         { label: 'Transferencias Pendientes', route: '/gerente/clientes/transferencias' }
       ]
     },
-    { label: 'Configuraciones', route: '/gerente/configuraciones' }
+    { label: 'Configuraciones', route: '/gerente/configuraciones' },
+    { label: 'Personal y Sucursales', route: '/gerente/personal' },
+    { label: 'Mis Autorizaciones', route: '/gerente/autorizaciones' }
   ];
 
   readonly menusPorRol: Record<string, SidebarItem[]> = {

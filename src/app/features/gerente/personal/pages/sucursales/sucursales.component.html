@@ -1,0 +1,89 @@
+<div class="dash-card">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-base font-black text-slate-100">Sucursales</h2>
+      <p class="text-xs text-slate-400 font-medium">Alta y edición de sucursales de la empresa.</p>
+    </div>
+    <button *ngIf="!mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nueva sucursal</button>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando sucursales...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <form *ngIf="mostrandoNueva()" [formGroup]="nuevaForm" (ngSubmit)="crear()" class="bg-slate-900/40 rounded-2xl p-4 flex flex-wrap items-end gap-3">
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">Nombre</label>
+      <input type="text" formControlName="nombre" class="form-input py-1.5 px-2 text-xs w-40">
+    </div>
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">Código</label>
+      <input type="text" formControlName="codigo" class="form-input py-1.5 px-2 text-xs w-24">
+    </div>
+    <label class="flex items-center gap-2 text-xs text-slate-400 pb-2">
+      <input type="checkbox" formControlName="es_matriz"> Es matriz
+    </label>
+    <button type="submit" [disabled]="nuevaForm.invalid || guardando()" class="btn-link-primary">Crear</button>
+    <button type="button" (click)="cancelarNueva()" class="btn-link-danger">Cancelar</button>
+    <p *ngIf="errorForm()" class="w-full text-red-400 text-xs">{{ errorForm() }}</p>
+  </form>
+
+  <div *ngIf="!cargando() && !error()" class="table-container">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr>
+          <th class="table-head-cell">Nombre</th>
+          <th class="table-head-cell">Código</th>
+          <th class="table-head-cell">Matriz</th>
+          <th class="table-head-cell">Estado</th>
+          <th class="table-head-cell"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of sucursales()" class="table-row">
+          <td class="p-3.5 font-semibold text-slate-100">
+            <span *ngIf="editando() !== s.id">{{ s.nombre }}</span>
+            <form *ngIf="editando() === s.id" [formGroup]="editForm">
+              <input type="text" formControlName="nombre" class="form-input py-1.5 px-2 text-xs w-32">
+            </form>
+          </td>
+          <td class="p-3.5">
+            <span *ngIf="editando() !== s.id" class="font-bold text-blue-400">{{ s.codigo }}</span>
+            <form *ngIf="editando() === s.id" [formGroup]="editForm">
+              <input type="text" formControlName="codigo" class="form-input py-1.5 px-2 text-xs w-20">
+            </form>
+          </td>
+          <td class="p-3.5 text-slate-400">
+            <span *ngIf="editando() !== s.id">{{ s.es_matriz ? 'Sí' : 'No' }}</span>
+            <form *ngIf="editando() === s.id" [formGroup]="editForm">
+              <input type="checkbox" formControlName="es_matriz">
+            </form>
+          </td>
+          <td class="p-3.5">
+            <span *ngIf="editando() !== s.id" class="status-badge" [class.bg-emerald-500/15]="s.is_active" [class.text-emerald-300]="s.is_active" [class.border-emerald-500/30]="s.is_active"
+                  [class.bg-slate-500/15]="!s.is_active" [class.text-slate-400]="!s.is_active" [class.border-slate-500/30]="!s.is_active">
+              {{ s.is_active ? 'Activa' : 'Inactiva' }}
+            </span>
+            <form *ngIf="editando() === s.id" [formGroup]="editForm">
+              <label class="flex items-center gap-1.5 text-xs text-slate-400">
+                <input type="checkbox" formControlName="is_active"> Activa
+              </label>
+            </form>
+          </td>
+          <td class="p-3.5 whitespace-nowrap">
+            <ng-container *ngIf="editando() !== s.id">
+              <button type="button" (click)="iniciarEdicion(s)" class="btn-link-primary">Editar</button>
+            </ng-container>
+            <ng-container *ngIf="editando() === s.id">
+              <button type="button" (click)="guardar(s)" [disabled]="editForm.invalid || guardando()" class="btn-link-primary mr-3">Guardar</button>
+              <button type="button" (click)="cancelarEdicion()" class="btn-link-danger">Cancelar</button>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="errorForm() && editando() !== null" class="text-red-400 text-xs mt-2">{{ errorForm() }}</p>
+  </div>
+</div>

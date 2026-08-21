@@ -1,0 +1,54 @@
+<div class="dash-card space-y-4">
+  <div>
+    <h2 class="text-base font-black text-slate-100">Dar de alta un Gerente de Sucursal</h2>
+    <p class="text-xs text-slate-400 font-medium">La cuenta nace activa y con el correo ya verificado.</p>
+  </div>
+
+  <p *ngIf="exito()" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-3 text-xs font-semibold">
+    {{ exito() }}
+  </p>
+  <p *ngIf="errorMessage()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-xs font-semibold">
+    {{ errorMessage() }}
+  </p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label class="form-label">Nombre *</label>
+      <input type="text" formControlName="name" class="form-input">
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('name')">{{ errorFor('name') }}</p>
+    </div>
+
+    <div>
+      <label class="form-label">Correo *</label>
+      <input type="email" formControlName="email" class="form-input">
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('email')">{{ errorFor('email') }}</p>
+    </div>
+
+    <div>
+      <label class="form-label">Contraseña *</label>
+      <input type="password" formControlName="password" class="form-input">
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('password')">{{ errorFor('password') }}</p>
+    </div>
+
+    <div>
+      <label class="form-label">Confirmar contraseña *</label>
+      <input type="password" formControlName="password_confirmation" class="form-input">
+    </div>
+
+    <div class="sm:col-span-2">
+      <label class="form-label">Sucursal *</label>
+      <select formControlName="sucursal_id" class="form-select" [disabled]="cargandoSucursales()">
+        <option value="" disabled>Selecciona una sucursal</option>
+        <option *ngFor="let s of sucursales()" [value]="s.id">{{ s.nombre }} ({{ s.codigo }})</option>
+      </select>
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('sucursal_id')">{{ errorFor('sucursal_id') }}</p>
+    </div>
+
+    <div class="sm:col-span-2">
+      <button type="submit" [disabled]="form.invalid || enviando()" class="btn-primary">
+        <span *ngIf="!enviando()">Crear Gerente de Sucursal</span>
+        <span *ngIf="enviando()">Creando...</span>
+      </button>
+    </div>
+  </form>
+</div>

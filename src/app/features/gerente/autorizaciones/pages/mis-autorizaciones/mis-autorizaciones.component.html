@@ -1,0 +1,37 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Mis Autorizaciones</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Todo lo que has decidido: perdones, conciliaciones, ediciones de cliente, aumentos de crédito, transferencias, cambios de estado de distribuidora, altas de proveedor y cortes generados a mano.</p>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando historial...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && movimientos().length === 0" class="state-empty">
+    Todavía no has autorizado ningún movimiento.
+  </div>
+
+  <div *ngIf="!cargando() && !error() && movimientos().length > 0" class="dash-card space-y-3">
+    <div *ngFor="let m of movimientos()" class="list-card-item cursor-default">
+      <div>
+        <p class="font-bold text-slate-100">{{ m.titulo }}</p>
+        <p class="text-xs text-slate-400 mt-0.5">{{ m.descripcion }}</p>
+        <p class="text-xs text-slate-500 mt-0.5">{{ m.fecha | date:'short' }}</p>
+      </div>
+      <span *ngIf="m.estado" class="status-badge shrink-0">{{ m.estado }}</span>
+    </div>
+  </div>
+
+  <app-pagination
+    *ngIf="!cargando() && !error() && paginacion() && paginacion()!.last_page > 1"
+    [currentPage]="paginacion()?.current_page || 1"
+    [lastPage]="paginacion()?.last_page || 1"
+    [loading]="cargando()"
+    (pageChange)="cambiarPagina($event)">
+  </app-pagination>
+
+</div>
