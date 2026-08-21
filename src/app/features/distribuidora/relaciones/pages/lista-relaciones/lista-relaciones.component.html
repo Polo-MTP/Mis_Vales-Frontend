@@ -5,18 +5,26 @@
     <p class="text-xs text-slate-400 font-medium mt-1">Cuánto te toca pagar en cada quincena y para cuándo.</p>
   </div>
 
-  <!-- Próximo corte, antes de que exista -->
+  <!-- Próximo corte, antes de que exista -- solo si ya hay algo autorizado detrás; una
+       solicitud sola todavía se puede cancelar, así que no hay nada firme que mostrar. -->
   <div *ngIf="proximoPago() as p" class="dash-card border border-blue-800/40 space-y-2">
     <h2 class="text-sm font-black text-blue-300 uppercase tracking-tight">Próximo Pago (estimado)</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
-      <p><span class="block text-slate-500 text-xs">Fecha de corte</span><span class="font-bold text-slate-100">{{ p.fecha_corte }}</span></p>
-      <p><span class="block text-slate-500 text-xs">Fecha límite de pago</span><span class="font-bold text-slate-100">{{ p.fecha_limite_pago }}</span></p>
-      <p><span class="block text-slate-500 text-xs">Monto estimado</span><span class="font-black text-blue-400">${{ p.monto_estimado }}</span></p>
-    </div>
-    <p class="text-xs text-slate-400">
-      Referencia de pago: <span class="font-mono font-bold text-slate-200">{{ p.referencia_pago }}</span>
-    </p>
-    <p class="text-xs text-slate-500">{{ p.nota }}</p>
+
+    <ng-container *ngIf="p.referencia_pago; else sinAutorizados">
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+        <p><span class="block text-slate-500 text-xs">Fecha de corte</span><span class="font-bold text-slate-100">{{ p.fecha_corte }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Fecha límite de pago</span><span class="font-bold text-slate-100">{{ p.fecha_limite_pago }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Monto estimado</span><span class="font-black text-blue-400">${{ p.monto_estimado }}</span></p>
+      </div>
+      <p class="text-xs text-slate-400">
+        Referencia de pago: <span class="font-mono font-bold text-slate-200">{{ p.referencia_pago }}</span>
+      </p>
+      <p class="text-xs text-slate-500">{{ p.nota }}</p>
+    </ng-container>
+
+    <ng-template #sinAutorizados>
+      <p class="text-xs text-slate-500">Todavía no tienes vales autorizados -- en cuanto se autorice al menos uno, aquí verás la fecha y la referencia de tu próximo corte.</p>
+    </ng-template>
   </div>
 
   <!-- Filtros -->

@@ -25,7 +25,9 @@ export interface RelacionDetalle {
 export interface ProximoPago {
   fecha_corte: string;
   fecha_limite_pago: string;
-  referencia_pago: string;
+  /** null si no hay ningún vale autorizado/parcial/vencido todavía -- solo hay solicitudes que
+   *  la distribuidora aún puede cancelar, así que no hay nada firme que respalde una referencia. */
+  referencia_pago: string | null;
   monto_estimado: number;
   vales: Array<{ vale_id: number; monto: number; pago_estimado: number }>;
   nota: string;
