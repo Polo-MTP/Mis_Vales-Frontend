@@ -58,7 +58,24 @@
           </span>
         </a>
       </div>
-      <p *ngIf="v.cortes.length === 0 && v.estado === 'autorizado'" class="w-full mt-2 text-xs text-slate-500">
+      <!-- Estimado del pago quincenal mientras no tenga ninguna cuota facturada en un corte -->
+      <div *ngIf="v.cortes.length === 0 && v.estimacion as e" class="w-full mt-3 pt-3 border-t border-slate-700/60 space-y-1.5">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Estimado por quincena (aún sin corte)</p>
+        <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+          <span class="text-slate-500">Capital</span><span class="text-slate-300 text-right">${{ e.capital }}</span>
+          <span class="text-slate-500">Comisión</span><span class="text-slate-300 text-right">${{ e.comision }}</span>
+          <span class="text-slate-500">Interés</span><span class="text-slate-300 text-right">${{ e.interes }}</span>
+          <span class="text-slate-500">Seguro</span><span class="text-slate-300 text-right">${{ e.seguro }}</span>
+          <span class="text-slate-500" *ngIf="e.categoria > 0">Descuento categoría</span>
+          <span class="text-emerald-400 text-right" *ngIf="e.categoria > 0">-${{ e.categoria }}</span>
+        </div>
+        <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+          <span class="font-bold text-slate-200">Pago por quincena</span>
+          <span class="font-black text-slate-100 text-base">${{ e.pago_quincenal }}</span>
+        </div>
+        <p class="text-xs text-slate-500 pt-1">{{ e.nota }}</p>
+      </div>
+      <p *ngIf="v.cortes.length === 0 && !v.estimacion" class="w-full mt-2 text-xs text-slate-500">
         Todavía no se ha incluido en ningún corte.
       </p>
     </div>

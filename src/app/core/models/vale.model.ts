@@ -11,6 +11,18 @@ export interface CorteDeVale {
   total: string;
 }
 
+/** Estimado del pago quincenal mientras el vale no tiene ninguna cuota facturada en un corte. */
+export interface EstimacionPagoVale {
+  capital: number;
+  comision: number;
+  interes: number;
+  seguro: number;
+  categoria: number;
+  pago_quincenal: number;
+  total_estimado_plazo: number;
+  nota: string;
+}
+
 export interface Vale {
   id: number;
   distribuidora_id: number;
@@ -31,6 +43,7 @@ export interface Vale {
   numero_transferencia: string | null;
   created_at: string;
   cortes: CorteDeVale[];
+  estimacion: EstimacionPagoVale | null;
 }
 
 export interface SolicitarValePayload {

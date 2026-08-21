@@ -26,7 +26,6 @@ const MENU_GERENTE: SidebarItem[] = [
   },
   { label: 'Reportes', route: '/gerente/reportes/morosos' },
   { label: 'Configuraciones', route: '/gerente/configuraciones' },
-  { label: 'Personal y Sucursales', route: '/gerente/personal' },
   { label: 'Mis Autorizaciones', route: '/gerente/autorizaciones' }
 ];
 
@@ -49,7 +48,9 @@ export class SharedSidebarComponent {
       { label: 'Auditoría', route: '/administrador/logs' },
       { label: 'Notificaciones', route: '/administrador/notificaciones' }
     ],
-    'Gerente General': MENU_GERENTE,
+    // "Personal y Sucursales" es exclusivo de Gerente General en el backend -- Gerente de
+    // Sucursal no lo ve, no le sirve de nada verlo de solo lectura.
+    'Gerente General': [...MENU_GERENTE, { label: 'Personal y Sucursales', route: '/gerente/personal' }],
     'Gerente de Sucursal': MENU_GERENTE,
     Cajera: [
       { label: 'Dashboard', route: '/cajera' },

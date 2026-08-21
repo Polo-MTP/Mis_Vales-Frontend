@@ -54,7 +54,6 @@ export class DesktopSidebarComponent {
       ]
     },
     { label: 'Configuraciones', route: '/gerente/configuraciones' },
-    { label: 'Personal y Sucursales', route: '/gerente/personal' },
     { label: 'Mis Autorizaciones', route: '/gerente/autorizaciones' }
   ];
 
@@ -66,7 +65,10 @@ export class DesktopSidebarComponent {
       { label: 'Notificaciones', route: '/administrador/notificaciones' }
     ],
 
-    'Gerente General': this.menuGerente,
+    // "Personal y Sucursales" (dar de alta Gerentes de Sucursal, administrar sucursales) es
+    // exclusivo de Gerente General en el backend -- a Gerente de Sucursal no le sirve de nada
+    // verlo de solo lectura, así que ni se le muestra el link.
+    'Gerente General': [...this.menuGerente, { label: 'Personal y Sucursales', route: '/gerente/personal' }],
     'Gerente de Sucursal': this.menuGerente,
 
     Cajera: [
