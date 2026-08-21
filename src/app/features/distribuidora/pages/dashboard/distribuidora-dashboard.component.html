@@ -42,6 +42,23 @@
     </div>
   </ng-container>
 
+  <!-- Próximo pago, antes de que exista como corte -- solo si ya hay algo autorizado detrás;
+       una solicitud sola todavía se puede cancelar, así que no hay nada firme que mostrar.
+       Vive aquí y no en "Mis Cortes": esa pantalla es el historial de cortes reales, mezclar
+       ahí una proyección de lo que todavía no ha pasado confundía el propósito de la vista. -->
+  <div *ngIf="proximoPagoConReferencia() as p" class="dash-card border border-blue-800/40 space-y-2">
+    <h2 class="text-sm font-black text-blue-300 uppercase tracking-tight">Próximo Pago (estimado)</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+      <p><span class="block text-slate-500 text-xs">Fecha de corte</span><span class="font-bold text-slate-100">{{ p.fecha_corte }}</span></p>
+      <p><span class="block text-slate-500 text-xs">Fecha límite de pago</span><span class="font-bold text-slate-100">{{ p.fecha_limite_pago }}</span></p>
+      <p><span class="block text-slate-500 text-xs">Monto estimado</span><span class="font-black text-blue-400">${{ p.monto_estimado }}</span></p>
+    </div>
+    <p class="text-xs text-slate-400">
+      Referencia de pago: <span class="font-mono font-bold text-slate-200">{{ p.referencia_pago }}</span>
+    </p>
+    <p class="text-xs text-slate-500">{{ p.nota }}</p>
+  </div>
+
   <!-- Un solo acceso rápido: el resto de las secciones ya viven en la barra de abajo
        (Inicio/Clientes/Vales/Cortes/Más), repetirlas aquí solo era ruido. -->
   <a routerLink="/distribuidora/vales/solicitar" class="btn-primary">
