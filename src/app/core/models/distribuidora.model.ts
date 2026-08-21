@@ -9,6 +9,13 @@ export interface CategoriaDistribuidora {
   activo: boolean;
 }
 
+export interface CategoriaDistribuidoraPayload {
+  nombre: string;
+  porcentaje_comision: number;
+  descripcion?: string | null;
+  activo?: boolean;
+}
+
 export type EstadoDistribuidora =
   | 'EN_CAPTURA'
   | 'EN_VERIFICACION'

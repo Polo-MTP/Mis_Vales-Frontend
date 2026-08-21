@@ -1,0 +1,86 @@
+<div class="dash-card">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-base font-black text-slate-100">Tabla de Seguros</h2>
+      <p class="text-xs text-slate-400 font-medium">Monto de seguro por rango de vale, usado en el cálculo de cada cuota.</p>
+    </div>
+    <button *ngIf="!mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nuevo rango</button>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando tabla de seguros...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <form *ngIf="mostrandoNueva()" [formGroup]="nuevaForm" (ngSubmit)="crear()" class="bg-slate-900/40 rounded-2xl p-4 flex flex-wrap items-end gap-3">
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">Monto Desde</label>
+      <input type="number" step="0.01" formControlName="monto_desde" class="form-input py-1.5 px-2 text-xs w-28">
+    </div>
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">Monto Hasta</label>
+      <input type="number" step="0.01" formControlName="monto_hasta" placeholder="Sin límite" class="form-input py-1.5 px-2 text-xs w-28">
+    </div>
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">Seguro</label>
+      <input type="number" step="0.01" formControlName="seguro_monto" class="form-input py-1.5 px-2 text-xs w-24">
+    </div>
+    <button type="submit" [disabled]="nuevaForm.invalid || guardando()" class="btn-link-primary">Crear</button>
+    <button type="button" (click)="cancelarNueva()" class="btn-link-danger">Cancelar</button>
+    <p *ngIf="errorForm()" class="w-full text-red-400 text-xs">{{ errorForm() }}</p>
+  </form>
+
+  <div *ngIf="!cargando() && !error()" class="table-container">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr>
+          <th class="table-head-cell">Monto Desde</th>
+          <th class="table-head-cell">Monto Hasta</th>
+          <th class="table-head-cell">Seguro</th>
+          <th class="table-head-cell">Estado</th>
+          <th class="table-head-cell"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of seguros()" class="table-row">
+          <td class="p-3.5 font-semibold text-slate-100">
+            <span *ngIf="editando() !== s.id">${{ s.monto_desde }}</span>
+            <form *ngIf="editando() === s.id" [formGroup]="editForm">
+              <input type="number" step="0.01" formControlName="monto_desde" class="form-input py-1.5 px-2 text-xs w-24">
+            </form>
+          </td>
+          <td class="p-3.5">
+            <span *ngIf="editando() !== s.id" class="text-slate-400">{{ s.monto_hasta !== null ? '$' + s.monto_hasta : 'Sin límite' }}</span>
+            <form *ngIf="editando() === s.id" [formGroup]="editForm">
+              <input type="number" step="0.01" formControlName="monto_hasta" placeholder="Sin límite" class="form-input py-1.5 px-2 text-xs w-24">
+            </form>
+          </td>
+          <td class="p-3.5">
+            <span *ngIf="editando() !== s.id" class="font-bold text-blue-400">${{ s.seguro_monto }}</span>
+            <form *ngIf="editando() === s.id" [formGroup]="editForm">
+              <input type="number" step="0.01" formControlName="seguro_monto" class="form-input py-1.5 px-2 text-xs w-20">
+            </form>
+          </td>
+          <td class="p-3.5">
+            <span class="status-badge" [class.bg-emerald-500/15]="s.activo" [class.text-emerald-300]="s.activo" [class.border-emerald-500/30]="s.activo"
+                  [class.bg-slate-500/15]="!s.activo" [class.text-slate-400]="!s.activo" [class.border-slate-500/30]="!s.activo">
+              {{ s.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td class="p-3.5 whitespace-nowrap">
+            <ng-container *ngIf="editando() !== s.id">
+              <button type="button" (click)="iniciarEdicion(s)" class="btn-link-primary mr-3">Editar</button>
+              <button *ngIf="s.activo" type="button" (click)="desactivar(s)" class="btn-link-danger">Desactivar</button>
+            </ng-container>
+            <ng-container *ngIf="editando() === s.id">
+              <button type="button" (click)="guardar(s)" [disabled]="editForm.invalid || guardando()" class="btn-link-primary mr-3">Guardar</button>
+              <button type="button" (click)="cancelarEdicion()" class="btn-link-danger">Cancelar</button>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="errorForm() && editando() !== null" class="text-red-400 text-xs mt-2">{{ errorForm() }}</p>
+  </div>
+</div>

@@ -33,6 +33,7 @@ export class ListaRelacionesComponent implements OnInit {
   generando = signal(false);
   errorGenerar = signal<string | null>(null);
   successGenerar = signal<string | null>(null);
+  erroresGenerar = signal<string[]>([]);
 
   ngOnInit(): void {
     this.cargar();
@@ -76,11 +77,13 @@ export class ListaRelacionesComponent implements OnInit {
     this.generando.set(true);
     this.errorGenerar.set(null);
     this.successGenerar.set(null);
+    this.erroresGenerar.set([]);
 
     this.relacionService.generar().subscribe({
       next: (res) => {
         this.generando.set(false);
         this.successGenerar.set(res.message || 'Cortes generados.');
+        this.erroresGenerar.set(res.data?.errores ?? []);
         this.cargar();
       },
       error: (err) => {

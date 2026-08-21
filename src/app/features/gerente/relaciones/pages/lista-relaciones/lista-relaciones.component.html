@@ -17,6 +17,12 @@
   <div *ngIf="successGenerar()" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm">
     {{ successGenerar() }}
   </div>
+  <div *ngIf="erroresGenerar().length > 0" class="bg-amber-950/40 text-amber-300 border border-amber-800/60 rounded-2xl p-4 text-sm">
+    <p class="font-bold mb-1">Distribuidoras que fallaron y se omitieron:</p>
+    <ul class="list-disc list-inside space-y-0.5">
+      <li *ngFor="let e of erroresGenerar()">{{ e }}</li>
+    </ul>
+  </div>
 
   <!-- Filtros -->
   <div class="flex flex-wrap gap-2">

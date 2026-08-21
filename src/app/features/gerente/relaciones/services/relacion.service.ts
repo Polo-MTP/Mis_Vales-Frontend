@@ -26,12 +26,15 @@ export class RelacionService {
     return this.http.get<ApiResponse<Relacion>>(`${this.baseUrl}/${id}`);
   }
 
-  /** Sin distribuidoraId, dispara el corte del día para todas las sucursales cuyo día de corte sea hoy. */
-  generar(distribuidoraId?: number, fechaCorte?: string): Observable<ApiResponse<Relacion | Relacion[]>> {
+  /**
+   * Sin distribuidoraId, dispara el corte del día para todas las sucursales cuyo día de corte sea hoy.
+   * `errores` trae, por distribuidora que falló, el motivo -- el resto de los cortes sí se generan.
+   */
+  generar(distribuidoraId?: number, fechaCorte?: string): Observable<ApiResponse<{ relaciones: Relacion[]; errores: string[] }>> {
     const body: Record<string, unknown> = {};
     if (distribuidoraId) body['distribuidora_id'] = distribuidoraId;
     if (fechaCorte) body['fecha_corte'] = fechaCorte;
-    return this.http.post<ApiResponse<Relacion | Relacion[]>>(`${this.baseUrl}/generar`, body);
+    return this.http.post<ApiResponse<{ relaciones: Relacion[]; errores: string[] }>>(`${this.baseUrl}/generar`, body);
   }
 
   perdonar(id: number, motivo?: string): Observable<ApiResponse<Relacion>> {

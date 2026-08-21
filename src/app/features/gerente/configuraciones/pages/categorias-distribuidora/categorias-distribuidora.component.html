@@ -1,0 +1,86 @@
+<div class="dash-card">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-base font-black text-slate-100">Categorías de Distribuidora</h2>
+      <p class="text-xs text-slate-400 font-medium">Cobre, Plata, Oro... el % de descuento por categoría se aplica en cada corte si la cuota se paga a tiempo.</p>
+    </div>
+    <button *ngIf="!mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nueva categoría</button>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando categorías...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <form *ngIf="mostrandoNueva()" [formGroup]="nuevaForm" (ngSubmit)="crear()" class="bg-slate-900/40 rounded-2xl p-4 flex flex-wrap items-end gap-3">
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">Nombre</label>
+      <input type="text" formControlName="nombre" class="form-input py-1.5 px-2 text-xs w-32">
+    </div>
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">% Comisión</label>
+      <input type="number" step="0.01" formControlName="porcentaje_comision" class="form-input py-1.5 px-2 text-xs w-24">
+    </div>
+    <div class="flex-1 min-w-[10rem]">
+      <label class="block text-xs text-slate-400 mb-1">Descripción</label>
+      <input type="text" formControlName="descripcion" class="form-input py-1.5 px-2 text-xs w-full">
+    </div>
+    <button type="submit" [disabled]="nuevaForm.invalid || guardando()" class="btn-link-primary">Crear</button>
+    <button type="button" (click)="cancelarNueva()" class="btn-link-danger">Cancelar</button>
+    <p *ngIf="errorForm()" class="w-full text-red-400 text-xs">{{ errorForm() }}</p>
+  </form>
+
+  <div *ngIf="!cargando() && !error()" class="table-container">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr>
+          <th class="table-head-cell">Nombre</th>
+          <th class="table-head-cell">% Comisión</th>
+          <th class="table-head-cell">Descripción</th>
+          <th class="table-head-cell">Estado</th>
+          <th class="table-head-cell"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of categorias()" class="table-row">
+          <td class="p-3.5 font-semibold text-slate-100">
+            <span *ngIf="editando() !== c.id">{{ c.nombre }}</span>
+            <form *ngIf="editando() === c.id" [formGroup]="editForm">
+              <input type="text" formControlName="nombre" class="form-input py-1.5 px-2 text-xs w-28">
+            </form>
+          </td>
+          <td class="p-3.5">
+            <span *ngIf="editando() !== c.id" class="font-bold text-blue-400">{{ c.porcentaje_comision }}%</span>
+            <form *ngIf="editando() === c.id" [formGroup]="editForm">
+              <input type="number" step="0.01" formControlName="porcentaje_comision" class="form-input py-1.5 px-2 text-xs w-20">
+            </form>
+          </td>
+          <td class="p-3.5 text-slate-400">
+            <span *ngIf="editando() !== c.id">{{ c.descripcion || '—' }}</span>
+            <form *ngIf="editando() === c.id" [formGroup]="editForm">
+              <input type="text" formControlName="descripcion" class="form-input py-1.5 px-2 text-xs w-32">
+            </form>
+          </td>
+          <td class="p-3.5">
+            <span class="status-badge" [class.bg-emerald-500/15]="c.activo" [class.text-emerald-300]="c.activo" [class.border-emerald-500/30]="c.activo"
+                  [class.bg-slate-500/15]="!c.activo" [class.text-slate-400]="!c.activo" [class.border-slate-500/30]="!c.activo">
+              {{ c.activo ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+          <td class="p-3.5 whitespace-nowrap">
+            <ng-container *ngIf="editando() !== c.id">
+              <button type="button" (click)="iniciarEdicion(c)" class="btn-link-primary mr-3">Editar</button>
+              <button *ngIf="c.activo" type="button" (click)="desactivar(c)" class="btn-link-danger">Desactivar</button>
+            </ng-container>
+            <ng-container *ngIf="editando() === c.id">
+              <button type="button" (click)="guardar(c)" [disabled]="editForm.invalid || guardando()" class="btn-link-primary mr-3">Guardar</button>
+              <button type="button" (click)="cancelarEdicion()" class="btn-link-danger">Cancelar</button>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="errorForm() && editando() !== null" class="text-red-400 text-xs mt-2">{{ errorForm() }}</p>
+  </div>
+</div>

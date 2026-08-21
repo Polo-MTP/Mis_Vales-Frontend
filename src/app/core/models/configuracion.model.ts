@@ -42,3 +42,18 @@ export interface CambiarConfiguracionFechasPayload {
   dia_limite_pago: number;
   dias_pago_anticipado: number;
 }
+
+export interface SeguroTabla {
+  id: number;
+  monto_desde: string;
+  monto_hasta: string | null;
+  seguro_monto: string;
+  activo: boolean;
+}
+
+export interface SeguroTablaPayload {
+  monto_desde: number;
+  monto_hasta: number | null;
+  seguro_monto: number;
+  activo?: boolean;
+}

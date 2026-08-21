@@ -54,6 +54,7 @@
         <p><span class="block text-slate-500 text-xs">Comisión</span><span class="font-bold text-slate-100">${{ r.totales.comision }}</span></p>
         <p><span class="block text-slate-500 text-xs">Interés</span><span class="font-bold text-slate-100">${{ r.totales.interes }}</span></p>
         <p><span class="block text-slate-500 text-xs">Seguro</span><span class="font-bold text-slate-100">${{ r.totales.seguro }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Descuento Categoría</span><span class="font-bold text-emerald-400">-${{ r.totales.categoria || '0.00' }}</span></p>
         <p><span class="block text-slate-500 text-xs">Recargos</span><span class="font-bold text-red-400">${{ r.totales.recargos }}</span></p>
         <p><span class="block text-slate-500 text-xs">Abonado</span><span class="font-bold text-emerald-400">${{ r.totales.abonado }}</span></p>
         <p><span class="block text-slate-500 text-xs">A Pagar</span><span class="font-bold text-blue-400">${{ r.totales.a_pagar }}</span></p>
@@ -77,6 +78,7 @@
               <th class="table-head-cell">Capital</th>
               <th class="table-head-cell">Comisión</th>
               <th class="table-head-cell">Interés</th>
+              <th class="table-head-cell">Categoría</th>
               <th class="table-head-cell">Recargo</th>
               <th class="table-head-cell">Total</th>
             </tr>
@@ -89,6 +91,7 @@
               <td class="p-3.5">${{ d.capital }}</td>
               <td class="p-3.5">${{ d.comision }}</td>
               <td class="p-3.5">${{ d.interes }}</td>
+              <td class="p-3.5" [class.text-emerald-400]="d.categoria && d.categoria !== '0.00'">-${{ d.categoria || '0.00' }}</td>
               <td class="p-3.5" [class.text-red-400]="d.recargo !== '0.00'">${{ d.recargo }}</td>
               <td class="p-3.5 font-bold text-slate-100">${{ d.total }}</td>
             </tr>

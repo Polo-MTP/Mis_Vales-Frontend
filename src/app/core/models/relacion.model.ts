@@ -10,6 +10,10 @@ export interface RelacionDetalle {
   comision: string;
   interes: string;
   seguro: string;
+  /** Descuento por la categoría (Cobre/Plata/Oro) de la distribuidora; solo se reconoce si esta
+   *  cuota se paga a tiempo -- con recargo queda en 0. Ya viene restado del `total`. `null` en
+   *  cortes generados antes de que este campo existiera en el backend. */
+  categoria: string | null;
   recargo: string;
   pago: string;
   total: string;
@@ -34,6 +38,7 @@ export interface Relacion {
     comision: string;
     interes: string;
     seguro: string;
+    categoria: string | null;
     recargos: string;
     a_pagar: string;
     abonado: string;
