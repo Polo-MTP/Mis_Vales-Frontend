@@ -4,6 +4,7 @@ import { PaginationComponent } from '../../../../../shared/components/pagination
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ValeService } from '../../services/vale.service';
+import { DistribuidoraService } from '../../../../gerente/distribuidoras/services/distribuidora.service';
 import { Vale, EstadoVale } from '../../../../../core/models/vale.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
 import { estadoValeLabel } from '../../../../../shared/utils/labels';
@@ -19,6 +20,9 @@ import { SoloNumerosDirective } from '../../../../../shared/directives/solo-nume
 })
 export class ListaValesComponent implements OnInit {
   private valeService = inject(ValeService);
+  private distribuidoraService = inject(DistribuidoraService);
+
+  saldoPorDistribuidora = signal<Record<number, number | 'cargando' | 'error'>>({});
 
   vales = signal<Vale[]>([]);
   paginacion = signal<PaginatedResponse<Vale> | null>(null);
@@ -114,6 +118,15 @@ export class ListaValesComponent implements OnInit {
         this.validandoId.set(null);
         this.errorAutorizar.set(err.error?.message || 'No se pudo validar el vale.');
       }
+    });
+  }
+
+  verSaldoDisponible(distribuidoraId: number): void {
+    this.saldoPorDistribuidora.update((mapa) => ({ ...mapa, [distribuidoraId]: 'cargando' }));
+
+    this.distribuidoraService.saldoDisponible(distribuidoraId).subscribe({
+      next: (saldo) => this.saldoPorDistribuidora.update((mapa) => ({ ...mapa, [distribuidoraId]: saldo })),
+      error: () => this.saldoPorDistribuidora.update((mapa) => ({ ...mapa, [distribuidoraId]: 'error' }))
     });
   }
 

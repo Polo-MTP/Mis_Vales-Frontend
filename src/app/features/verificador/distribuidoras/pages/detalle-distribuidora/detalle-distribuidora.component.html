@@ -1,0 +1,64 @@
+<div class="layout-container">
+
+  <button type="button" (click)="volver()" class="text-sm font-bold text-slate-400 hover:text-slate-200">
+    ← Volver a distribuidoras
+  </button>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando distribuidora...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <ng-container *ngIf="!cargando() && !error() && distribuidora() as d">
+
+    <div class="dash-card">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ d.razon_social }}</h1>
+          <p class="text-xs text-slate-400 font-medium mt-1">{{ d.numero_distribuidora }} · RFC: {{ d.rfc }}</p>
+        </div>
+        <span class="status-badge"
+              [class.bg-emerald-500/15]="d.estado === 'ACTIVO'" [class.text-emerald-300]="d.estado === 'ACTIVO'" [class.border-emerald-500/30]="d.estado === 'ACTIVO'"
+              [class.bg-amber-500/15]="d.estado === 'MOROSO'" [class.text-amber-300]="d.estado === 'MOROSO'" [class.border-amber-500/30]="d.estado === 'MOROSO'"
+              [class.bg-red-500/15]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'" [class.text-red-300]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'" [class.border-red-500/30]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'">
+          {{ d.estado }}
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+      <div class="stat-card">
+        <p class="text-xs text-slate-400 uppercase font-bold">Límite de Crédito</p>
+        <p class="font-bold text-slate-100 mt-1">${{ d.limite_credito }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-xs text-slate-400 uppercase font-bold">Crédito Disponible</p>
+        <p class="font-bold text-slate-100 mt-1">${{ d.credito_disponible }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-xs text-slate-400 uppercase font-bold">Categoría</p>
+        <p class="font-bold text-slate-100 mt-1">{{ d.categoria?.nombre || 'Sin categoría' }}</p>
+      </div>
+    </div>
+
+    <div class="dash-card space-y-2">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Titular</h2>
+      <p class="text-sm text-slate-300">{{ d.datos_personales.nombre }} {{ d.datos_personales.apellido_paterno }} {{ d.datos_personales.apellido_materno }}</p>
+      <p class="text-xs text-slate-500">CURP: {{ d.datos_personales.curp || 'N/D' }}</p>
+      <p class="text-xs text-slate-500" *ngIf="d.datos_personales.direccion as dir">
+        {{ dir.calle }} {{ dir.numero_ext }}, {{ dir.colonia }}, CP {{ dir.codigo_postal }}, {{ dir.ciudad }}, {{ dir.estado }}
+      </p>
+    </div>
+
+    <div class="dash-card space-y-2">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Sucursal y Cartera</h2>
+      <p class="text-sm text-slate-300">Sucursal: {{ d.sucursal.nombre || 'Sin asignar' }}</p>
+      <p class="text-sm text-slate-300">Coordinador: {{ d.coordinador?.name || 'Sin asignar' }}</p>
+      <p class="text-sm text-slate-300">Verificador: {{ d.verificador?.name || 'Sin asignar' }}</p>
+      <p class="text-xs text-slate-500" *ngIf="d.comentarios_verificador">Comentarios de verificación: {{ d.comentarios_verificador }}</p>
+    </div>
+
+  </ng-container>
+
+</div>

@@ -1,0 +1,32 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Aumento de Crédito</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Solicitudes pendientes de tu cartera. La decisión final la toma gerencia.</p>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando solicitudes...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && solicitudes().length === 0" class="state-empty">
+    No hay solicitudes de aumento de crédito pendientes.
+  </div>
+
+  <div *ngIf="!cargando() && !error() && solicitudes().length > 0" class="space-y-3">
+    <div *ngFor="let s of solicitudes()" class="list-card-item cursor-default">
+      <div>
+        <p class="font-bold text-slate-100">{{ s.distribuidora || ('Distribuidora #' + s.distribuidora_id) }}</p>
+        <p class="text-xs text-slate-400 mt-0.5">
+          Límite actual ${{ s.limite_credito_anterior }} · Solicita ${{ s.monto_solicitado }}
+        </p>
+        <p class="text-xs text-slate-500 mt-0.5">{{ s.motivo }}</p>
+        <p class="text-xs text-slate-500 mt-0.5">Pedido por {{ s.solicitante || ('Usuario #' + s.solicitado_por) }} · {{ s.created_at | date:'short' }}</p>
+      </div>
+      <span class="status-badge">{{ s.estado }}</span>
+    </div>
+  </div>
+
+</div>

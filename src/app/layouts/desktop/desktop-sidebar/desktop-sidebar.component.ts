@@ -78,7 +78,8 @@ export class DesktopSidebarComponent {
       { label: 'Mis Solicitudes', route: '/cajera/conciliaciones/mis-solicitudes' },
       { label: 'Corregir Datos de Cliente', route: '/cajera/clientes/solicitar-edicion' },
       { label: 'Canjear Puntos', route: '/cajera/puntos/canjear' },
-      { label: 'Consultar Vales', route: '/cajera/vales' }
+      { label: 'Consultar Vales', route: '/cajera/vales' },
+      { label: 'Reporte de Morosos', route: '/cajera/reportes/morosos' }
     ]
   };
 

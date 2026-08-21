@@ -31,5 +31,21 @@ export const VERIFICADOR_ROUTES: Routes = [
         title: 'Verificador - Inspección en Campo'
       }
     ]
+  },
+  {
+    path: 'distribuidoras',
+    loadComponent: () =>
+      import('./distribuidoras/pages/lista-distribuidoras/lista-distribuidoras.component').then(
+        (m) => m.ListaDistribuidorasComponent
+      ),
+    title: 'Verificador - Distribuidoras'
+  },
+  {
+    path: 'distribuidoras/:id',
+    loadComponent: () =>
+      import('./distribuidoras/pages/detalle-distribuidora/detalle-distribuidora.component').then(
+        (m) => m.DetalleDistribuidoraComponent
+      ),
+    title: 'Verificador - Detalle de Distribuidora'
   }
 ];

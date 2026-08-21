@@ -14,6 +14,9 @@ export interface HistorialAsignacionCliente {
 export interface Cliente {
   id: number;
   estado: boolean;
+  /** Últimos 4 dígitos de la CLABE ya registrada, o null si todavía no tiene una. Nunca se
+   *  expone la CLABE completa (dato bancario sensible, cifrado en BD). */
+  clabe_ultimos4: string | null;
   created_at: string;
   updated_at: string;
   datos_personales: DatosPersonales;

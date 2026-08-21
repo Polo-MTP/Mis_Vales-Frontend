@@ -59,7 +59,8 @@ export class SharedSidebarComponent {
       { label: 'Mis Solicitudes', route: '/cajera/conciliaciones/mis-solicitudes' },
       { label: 'Corregir Datos de Cliente', route: '/cajera/clientes/solicitar-edicion' },
       { label: 'Canjear Puntos', route: '/cajera/puntos/canjear' },
-      { label: 'Consultar Vales', route: '/cajera/vales' }
+      { label: 'Consultar Vales', route: '/cajera/vales' },
+      { label: 'Reporte de Morosos', route: '/cajera/reportes/morosos' }
     ],
     Coordinador: [
       { label: 'Dashboard', route: '/coordinador' },
@@ -72,10 +73,12 @@ export class SharedSidebarComponent {
       { label: 'Transferencias Pendientes', route: '/coordinador/clientes/transferencias' },
       { label: 'Reasignar Clientes', route: '/coordinador/distribuidoras/reasignar-clientes' },
       { label: 'Vales', route: '/coordinador/vales' },
+      { label: 'Aumento de Crédito', route: '/coordinador/creditos/aumento' },
       { label: 'Mis Autorizaciones', route: '/coordinador/autorizaciones' }
     ],
     Verificador: [
-      { label: 'Solicitudes Pendientes', route: '/verificador/alta-proveedor/pendientes' }
+      { label: 'Solicitudes Pendientes', route: '/verificador/alta-proveedor/pendientes' },
+      { label: 'Distribuidoras', route: '/verificador/distribuidoras' }
     ],
     Distribuidora: [
       { label: 'Dashboard', route: '/distribuidora' },

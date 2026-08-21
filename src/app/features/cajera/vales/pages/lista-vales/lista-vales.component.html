@@ -37,6 +37,14 @@
           <p class="text-xs text-slate-400 mt-0.5">
             {{ v.distribuidora?.razon_social || ('Distribuidora #' + v.distribuidora_id) }}
             <span *ngIf="v.distribuidora?.numero_distribuidora"> ({{ v.distribuidora?.numero_distribuidora }})</span>
+            <ng-container *ngIf="saldoPorDistribuidora()[v.distribuidora_id] === undefined">
+              · <button type="button" (click)="verSaldoDisponible(v.distribuidora_id)" class="text-blue-400 hover:underline">ver saldo disponible</button>
+            </ng-container>
+            <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] === 'cargando'"> · cargando saldo...</span>
+            <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] === 'error'" class="text-red-400"> · no se pudo cargar el saldo</span>
+            <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] !== undefined && saldoPorDistribuidora()[v.distribuidora_id] !== 'cargando' && saldoPorDistribuidora()[v.distribuidora_id] !== 'error'" class="font-bold text-emerald-400">
+              · Saldo disponible: ${{ saldoPorDistribuidora()[v.distribuidora_id] }}
+            </span>
           </p>
           <p class="text-xs text-slate-500 mt-0.5">
             {{ v.producto?.descripcion || (v.quincenas + ' quincenas') }} · Solicitado {{ v.fecha_solicitud | date:'short' }}
@@ -114,6 +122,9 @@
 
         <div>
           <label class="form-label">CLABE interbancaria del cliente (solo si es la primera vez, si no la tiene aún)</label>
+          <p *ngIf="v.cliente?.clabe_ultimos4" class="text-xs text-emerald-400 mb-1">
+            Ya tiene una CLABE registrada terminada en {{ v.cliente!.clabe_ultimos4 }} — no hace falta capturar otra.
+          </p>
           <input type="text" [ngModel]="clabeValor()" (ngModelChange)="clabeValor.set($event)"
                  appSoloNumeros maxlength="18" placeholder="18 dígitos" class="form-input">
         </div>
