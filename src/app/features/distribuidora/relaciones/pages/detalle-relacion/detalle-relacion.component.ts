@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RelacionService } from '../../services/relacion.service';
 import { Relacion } from '../../../../../core/models/relacion.model';
+import { CopyButtonComponent } from '../../../../../shared/components/copy-button/copy-button.component';
 
 @Component({
   selector: 'app-detalle-relacion',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CopyButtonComponent],
   templateUrl: './detalle-relacion.component.html',
   styleUrl: './detalle-relacion.component.css'
 })

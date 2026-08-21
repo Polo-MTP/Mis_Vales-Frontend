@@ -21,5 +21,8 @@ export interface ResumenImportacionConciliacion {
   procesadas: number;
   conciliadas: number;
   sin_coincidencia: number;
+  /** Filas que ya se habían procesado antes (ej. se volvió a subir el mismo Excel) --
+   *  no generaron un abono nuevo, ya estaban contempladas de una importación previa. */
+  duplicados: number;
   errores: string[];
 }

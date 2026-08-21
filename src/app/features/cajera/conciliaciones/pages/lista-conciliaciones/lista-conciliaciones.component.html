@@ -25,7 +25,7 @@
     </div>
 
     <div *ngIf="resumenImportar() as resumen" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm space-y-1">
-      <p>{{ resumen.procesadas }} fila(s) procesada(s) · {{ resumen.conciliadas }} conciliada(s) · {{ resumen.sin_coincidencia }} sin coincidencia.</p>
+      <p>{{ resumen.procesadas }} fila(s) procesada(s) · {{ resumen.conciliadas }} conciliada(s) · {{ resumen.sin_coincidencia }} sin coincidencia<span *ngIf="resumen.duplicados > 0"> · {{ resumen.duplicados }} duplicada(s) (ya se habían procesado antes)</span>.</p>
       <p *ngFor="let e of resumen.errores" class="text-amber-300 text-xs">{{ e }}</p>
     </div>
   </div>

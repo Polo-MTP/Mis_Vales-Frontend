@@ -13,8 +13,6 @@ export class NotificationBellComponent implements OnInit {
   private notificationService = inject(NotificationService);
 
   readonly panelAbierto = signal(false);
-  /** Aproximado: cuenta solo lo no leído dentro de la primera página, no el total real --
-   *  suficiente para el puntito rojo, no hace falta el número exacto. */
   readonly unreadCount = signal(0);
 
   ngOnInit(): void {
@@ -22,11 +20,10 @@ export class NotificationBellComponent implements OnInit {
   }
 
   private actualizarConteo(): void {
-    this.notificationService.listar(1).subscribe({
-      next: (res) => {
-        const notificaciones = res.data?.data ?? [];
-        this.unreadCount.set(notificaciones.filter((n) => n.destinatario_id !== null && !n.leida).length);
-      },
+    // per_page=1 solo para no traer datos de más -- lo que importa es 'total' de la
+    // paginación (el conteo real de no leídas), no el arreglo en sí.
+    this.notificationService.listar(1, false, 1).subscribe({
+      next: (res) => this.unreadCount.set(res.data?.meta?.total ?? 0),
       error: () => this.unreadCount.set(0)
     });
   }

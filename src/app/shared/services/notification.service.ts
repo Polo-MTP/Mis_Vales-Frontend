@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../../core/models/auth-response.model';
-import { PaginatedResponse } from '../../core/models/user.model';
+import { PaginacionAnidada } from '../../core/models/paginacion-anidada.model';
 import { Notificacion } from '../../core/models/notificacion.model';
 
 @Injectable({
@@ -16,15 +16,24 @@ export class NotificationService {
 
   private baseUrl = `${environment.apiUrl}/notificaciones`;
 
+  /** El backend regresa el formato anidado (ResourceCollection::response()->getData(true)):
+   *  data.data[] + data.meta.{current_page,total,...} -- no el plano de PaginatedResponse. */
   listar(
-    page = 1
-  ): Observable<ApiResponse<PaginatedResponse<Notificacion>>> {
+    page = 1,
+    leidas?: boolean,
+    perPage = 20
+  ): Observable<ApiResponse<PaginacionAnidada<Notificacion>>> {
 
-    const params = new HttpParams()
-      .set('page', String(page));
+    let params = new HttpParams()
+      .set('page', String(page))
+      .set('per_page', String(perPage));
+
+    if (leidas !== undefined) {
+      params = params.set('leidas', String(leidas));
+    }
 
     return this.http.get<
-      ApiResponse<PaginatedResponse<Notificacion>>
+      ApiResponse<PaginacionAnidada<Notificacion>>
     >(this.baseUrl, { params });
   }
 

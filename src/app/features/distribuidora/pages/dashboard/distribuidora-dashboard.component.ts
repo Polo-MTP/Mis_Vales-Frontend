@@ -6,11 +6,12 @@ import { ClienteService } from '../../clientes/services/cliente.service';
 import { RelacionService } from '../../relaciones/services/relacion.service';
 import { DistribuidoraPerfil } from '../../../../core/models/cliente.model';
 import { ProximoPago } from '../../../../core/models/relacion.model';
+import { CopyButtonComponent } from '../../../../shared/components/copy-button/copy-button.component';
 
 @Component({
   selector: 'app-distribuidora-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CopyButtonComponent],
   templateUrl: './distribuidora-dashboard.component.html',
   styleUrl: './distribuidora-dashboard.component.css'
 })

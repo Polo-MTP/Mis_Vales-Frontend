@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { NotificationService } from '../../../services/notification.service';
 import { Notificacion } from '../../../../core/models/notificacion.model';
-import { PaginatedResponse } from '../../../../core/models/user.model';
+import { PaginacionAnidada } from '../../../../core/models/paginacion-anidada.model';
 import { PaginationComponent } from '../../pagination/pagination.component';
 import {
   notificacionAccionLabel,
@@ -21,7 +21,7 @@ export class NotificationListComponent implements OnInit {
   private notificationService = inject(NotificationService);
 
   notificaciones = signal<Notificacion[]>([]);
-  paginacion = signal<PaginatedResponse<Notificacion> | null>(null);
+  paginacion = signal<PaginacionAnidada<Notificacion>['meta'] | null>(null);
 
   cargando = signal(true);
   error = signal<string | null>(null);
@@ -42,9 +42,9 @@ export class NotificationListComponent implements OnInit {
 
     this.notificationService.listar(this.pagina()).subscribe({
 
-      next: (res: any) => {
+      next: (res) => {
 
-        this.paginacion.set(res.data ?? null);
+        this.paginacion.set(res.data?.meta ?? null);
         this.notificaciones.set(res.data?.data ?? []);
 
         this.cargando.set(false);

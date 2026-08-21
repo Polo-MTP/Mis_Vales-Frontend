@@ -16,9 +16,12 @@
       <div class="flex items-start justify-between">
         <div>
           <h1 class="text-2xl font-black text-slate-100 tracking-tight">Corte del {{ r.fecha_corte }}</h1>
-          <p class="text-xs text-slate-400 font-medium mt-1">
-            Ref. {{ r.referencia_pago }}<span *ngIf="r.categoria_snapshot"> · Categoría {{ r.categoria_snapshot }}</span>
-          </p>
+          <div class="flex items-center gap-2 mt-1">
+            <p class="text-xs text-slate-400 font-medium">
+              Ref. <span class="font-mono tracking-wider">{{ r.referencia_pago }}</span><span *ngIf="r.categoria_snapshot"> · Categoría {{ r.categoria_snapshot }}</span>
+            </p>
+            <app-copy-button [valor]="r.referencia_pago"></app-copy-button>
+          </div>
         </div>
         <span class="status-badge"
               [class.bg-amber-500/15]="r.estado === 'pendiente' || r.estado === 'parcial'" [class.text-amber-300]="r.estado === 'pendiente' || r.estado === 'parcial'" [class.border-amber-500/30]="r.estado === 'pendiente' || r.estado === 'parcial'"

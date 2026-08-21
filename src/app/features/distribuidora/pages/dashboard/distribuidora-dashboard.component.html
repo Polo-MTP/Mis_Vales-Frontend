@@ -53,9 +53,10 @@
       <p><span class="block text-slate-500 text-xs">Fecha límite de pago</span><span class="font-bold text-slate-100">{{ p.fecha_limite_pago }}</span></p>
       <p><span class="block text-slate-500 text-xs">Monto estimado</span><span class="font-black text-blue-400">${{ p.monto_estimado }}</span></p>
     </div>
-    <p class="text-xs text-slate-400">
-      Referencia de pago: <span class="font-mono font-bold text-slate-200">{{ p.referencia_pago }}</span>
-    </p>
+    <div class="flex items-center justify-between gap-2 text-xs text-slate-400">
+      <span>Referencia de pago: <span class="font-mono font-bold text-slate-200 tracking-wider">{{ p.referencia_pago }}</span></span>
+      <app-copy-button [valor]="$any(p.referencia_pago)"></app-copy-button>
+    </div>
     <p class="text-xs text-slate-500">{{ p.nota }}</p>
   </div>
 
