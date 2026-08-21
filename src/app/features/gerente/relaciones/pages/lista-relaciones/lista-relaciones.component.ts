@@ -1,9 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { RelacionService } from '../../services/relacion.service';
 import { EstadoRelacion, Relacion } from '../../../../../core/models/relacion.model';
 import { PaginacionAnidada } from '../../../../../core/models/paginacion-anidada.model';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-lista-relaciones',
@@ -15,6 +16,12 @@ import { PaginacionAnidada } from '../../../../../core/models/paginacion-anidada
 export class ListaRelacionesComponent implements OnInit {
   private relacionService = inject(RelacionService);
   private router = inject(Router);
+  private authService = inject(AuthService);
+
+  /** POST /relaciones/generar solo lo permite el backend a Gerente General; Gerente de
+   * Sucursal comparte este mismo módulo /gerente pero no debe ver el botón, o le sale un
+   * 403 sin explicación al pulsarlo. */
+  puedeGenerarCortes = computed(() => this.authService.userRole() === 'Gerente General');
 
   relaciones = signal<Relacion[]>([]);
   paginacion = signal<PaginacionAnidada<Relacion>['meta'] | null>(null);

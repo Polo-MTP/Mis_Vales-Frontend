@@ -21,7 +21,7 @@
           </p>
         </div>
         <span class="status-badge"
-              [class.bg-amber-500/15]="r.estado === 'pendiente'" [class.text-amber-300]="r.estado === 'pendiente'" [class.border-amber-500/30]="r.estado === 'pendiente'"
+              [class.bg-amber-500/15]="r.estado === 'pendiente' || r.estado === 'parcial'" [class.text-amber-300]="r.estado === 'pendiente' || r.estado === 'parcial'" [class.border-amber-500/30]="r.estado === 'pendiente' || r.estado === 'parcial'"
               [class.bg-red-500/15]="r.estado === 'vencida' || r.estado === 'en_perdida'" [class.text-red-300]="r.estado === 'vencida' || r.estado === 'en_perdida'" [class.border-red-500/30]="r.estado === 'vencida' || r.estado === 'en_perdida'"
               [class.bg-blue-500/15]="r.estado === 'perdonada'" [class.text-blue-300]="r.estado === 'perdonada'" [class.border-blue-500/30]="r.estado === 'perdonada'"
               [class.bg-emerald-500/15]="r.estado === 'liquidada'" [class.text-emerald-300]="r.estado === 'liquidada'" [class.border-emerald-500/30]="r.estado === 'liquidada'">

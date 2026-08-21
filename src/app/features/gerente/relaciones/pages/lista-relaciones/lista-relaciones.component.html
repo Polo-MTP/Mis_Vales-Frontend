@@ -5,7 +5,7 @@
       <h1 class="text-2xl font-black text-slate-100 tracking-tight">Relaciones (Cortes de Crédito)</h1>
       <p class="text-xs text-slate-400 font-medium mt-1">Estado de cuenta por corte de cada distribuidora.</p>
     </div>
-    <button type="button" (click)="generarCortesDelDia()" [disabled]="generando()" class="btn-primary w-auto shrink-0">
+    <button *ngIf="puedeGenerarCortes()" type="button" (click)="generarCortesDelDia()" [disabled]="generando()" class="btn-primary w-auto shrink-0">
       <span *ngIf="!generando()">Generar Cortes del Día</span>
       <span *ngIf="generando()">Generando...</span>
     </button>
@@ -22,6 +22,7 @@
   <div class="flex flex-wrap gap-2">
     <button type="button" (click)="cambiarFiltro('todas')" [class]="filtroEstado() === 'todas' ? 'btn-filter-active' : 'btn-filter'">Todas</button>
     <button type="button" (click)="cambiarFiltro('pendiente')" [class]="filtroEstado() === 'pendiente' ? 'btn-filter-active' : 'btn-filter'">Pendientes</button>
+    <button type="button" (click)="cambiarFiltro('parcial')" [class]="filtroEstado() === 'parcial' ? 'btn-filter-active' : 'btn-filter'">Parciales</button>
     <button type="button" (click)="cambiarFiltro('vencida')" [class]="filtroEstado() === 'vencida' ? 'btn-filter-active' : 'btn-filter'">Vencidas</button>
     <button type="button" (click)="cambiarFiltro('perdonada')" [class]="filtroEstado() === 'perdonada' ? 'btn-filter-active' : 'btn-filter'">Perdonadas</button>
     <button type="button" (click)="cambiarFiltro('liquidada')" [class]="filtroEstado() === 'liquidada' ? 'btn-filter-active' : 'btn-filter'">Liquidadas</button>
@@ -54,7 +55,7 @@
           <span class="block font-bold text-blue-400">${{ r.totales.a_pagar }}</span>
         </span>
         <span class="status-badge"
-              [class.bg-amber-500/15]="r.estado === 'pendiente'" [class.text-amber-300]="r.estado === 'pendiente'" [class.border-amber-500/30]="r.estado === 'pendiente'"
+              [class.bg-amber-500/15]="r.estado === 'pendiente' || r.estado === 'parcial'" [class.text-amber-300]="r.estado === 'pendiente' || r.estado === 'parcial'" [class.border-amber-500/30]="r.estado === 'pendiente' || r.estado === 'parcial'"
               [class.bg-red-500/15]="r.estado === 'vencida' || r.estado === 'en_perdida'" [class.text-red-300]="r.estado === 'vencida' || r.estado === 'en_perdida'" [class.border-red-500/30]="r.estado === 'vencida' || r.estado === 'en_perdida'"
               [class.bg-blue-500/15]="r.estado === 'perdonada'" [class.text-blue-300]="r.estado === 'perdonada'" [class.border-blue-500/30]="r.estado === 'perdonada'"
               [class.bg-emerald-500/15]="r.estado === 'liquidada'" [class.text-emerald-300]="r.estado === 'liquidada'" [class.border-emerald-500/30]="r.estado === 'liquidada'">
