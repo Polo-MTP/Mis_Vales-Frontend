@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ConciliacionService } from '../../services/conciliacion.service';
@@ -10,7 +11,7 @@ import { tipoPagoLabel, estadoAbonoLabel } from '../../../../../shared/utils/lab
 @Component({
   selector: 'app-lista-conciliaciones',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, PaginationComponent],
   templateUrl: './lista-conciliaciones.component.html',
   styleUrl: './lista-conciliaciones.component.css'
 })
@@ -67,10 +68,9 @@ export class ListaConciliacionesComponent implements OnInit {
     this.cargar();
   }
 
-  cambiarPagina(delta: number): void {
+    cambiarPagina(nuevaPagina: number): void {
     const p = this.paginacion();
     if (!p) return;
-    const nuevaPagina = this.pagina() + delta;
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();

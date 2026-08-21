@@ -1,4 +1,4 @@
-<!-- Hoja "Más": cubre lo que no cabe en 5 pestañas fijas -->
+<!-- Hoja "Más": cubre lo que no cabe en las pestañas fijas -->
 <div *ngIf="masAbierto()" class="fixed inset-0 z-40 bg-black/50" (click)="toggleMas()"></div>
 <div
   *ngIf="masAbierto()"
@@ -22,6 +22,16 @@
   class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-800"
 >
   <div class="h-16 flex items-center justify-around">
+
+    <!-- Menú (drawer compartido: notificaciones, etc.) -->
+    <button
+      type="button"
+      (click)="toggleSidebar()"
+      class="flex flex-col items-center justify-center gap-1 text-slate-500"
+    >
+      <span class="text-xl">☰</span>
+      <span class="text-[10px] font-semibold">Menú</span>
+    </button>
 
     <!-- Inicio -->
     <a
@@ -78,3 +88,9 @@
 
   </div>
 </nav>
+
+<!-- Sidebar Compartido -->
+<app-shared-sidebar
+  [isOpen]="sidebarOpen()"
+  (closeSidebar)="sidebarOpen.set(false)">
+</app-shared-sidebar>

@@ -1,36 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../../features/auth/services/auth.service';
+import { UserMenuComponent } from '../../../shared/components/user-menu/user-menu.component';
+import { NotificationBellComponent } from '../../../shared/components/notifications/notification-bell/notification-bell';
 
 @Component({
   selector: 'app-desktop-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    UserMenuComponent,
+    NotificationBellComponent
+  ],
   templateUrl: './desktop-header.component.html',
   styleUrl: './desktop-header.component.css'
 })
-export class DesktopHeaderComponent {
-  readonly authService = inject(AuthService);
-
-  logout(): void {
-    this.authService.logout();
-  }
-
-  get homeRoute(): string {
-    switch (this.authService.userRole()) {
-      case 'Administrador':
-        return '/administrador';
-
-      case 'Gerente General':
-      case 'Gerente de Sucursal':
-        return '/gerente';
-
-      case 'Cajera':
-        return '/cajera';
-
-      default:
-        return '/auth/login';
-    }
-  }
-}
+export class DesktopHeaderComponent {}

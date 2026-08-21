@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 import { RouterModule } from '@angular/router';
 import { ConciliacionService } from '../../services/conciliacion.service';
 import { SolicitudConciliacion } from '../../../../../core/models/solicitud-conciliacion.model';
@@ -9,7 +10,7 @@ import { estadoSolicitudLabel } from '../../../../../shared/utils/labels';
 @Component({
   selector: 'app-mis-solicitudes',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PaginationComponent],
   templateUrl: './mis-solicitudes.component.html',
   styleUrl: './mis-solicitudes.component.css'
 })
@@ -48,10 +49,9 @@ export class MisSolicitudesComponent implements OnInit {
     });
   }
 
-  cambiarPagina(delta: number): void {
+    cambiarPagina(nuevaPagina: number): void {
     const p = this.paginacion();
     if (!p) return;
-    const nuevaPagina = this.pagina() + delta;
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();

@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ValeService } from '../../services/vale.service';
@@ -12,7 +13,7 @@ import { SoloNumerosDirective } from '../../../../../shared/directives/solo-nume
 @Component({
   selector: 'app-lista-vales',
   standalone: true,
-  imports: [CommonModule, RouterModule, AlertComponent, FormsModule, SoloNumerosDirective],
+  imports: [CommonModule, RouterModule, AlertComponent, FormsModule, SoloNumerosDirective, PaginationComponent],
   templateUrl: './lista-vales.component.html',
   styleUrl: './lista-vales.component.css'
 })
@@ -67,10 +68,9 @@ export class ListaValesComponent implements OnInit {
     this.cargar();
   }
 
-  cambiarPagina(delta: number): void {
+    cambiarPagina(nuevaPagina: number): void {
     const p = this.paginacion();
     if (!p) return;
-    const nuevaPagina = this.pagina() + delta;
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();

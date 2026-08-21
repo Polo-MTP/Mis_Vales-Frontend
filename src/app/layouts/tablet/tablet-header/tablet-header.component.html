@@ -1,52 +1,15 @@
-<header class="relative z-40 shrink-0 bg-slate-900 border-b border-slate-800 px-4">
+<header class="h-16 shrink-0 bg-slate-900 border-b border-slate-800 px-4 flex items-center justify-between">
 
-  <div class="h-16 flex items-center justify-between">
+  <a
+    routerLink="/"
+    class="font-black text-lg text-slate-100 tracking-tight"
+  >
+    Mis Vales
+  </a>
 
-    <a
-      [routerLink]="homeRoute"
-      (click)="cerrarMenu()"
-      class="font-black text-lg text-slate-100 tracking-tight"
-    >
-      Mis Vales
-    </a>
-
-    <div class="flex items-center gap-3">
-
-      <div class="text-right">
-        <p class="text-sm font-semibold text-slate-100">
-          {{ authService.currentUser()?.name }}
-        </p>
-
-        <p class="text-xs text-slate-400">
-          {{ authService.userRole() }}
-        </p>
-      </div>
-
-      <button
-        type="button"
-        (click)="toggleMenu()"
-        class="btn-outline !px-3"
-        aria-label="Abrir menú"
-      >
-        {{ menuAbierto() ? '✕' : '☰' }}
-      </button>
-
-    </div>
-
-  </div>
-
-  <!-- Panel de navegación: se abre debajo del header, no es una barra fija -->
-  <div *ngIf="menuAbierto()" class="absolute inset-x-0 top-full bg-slate-900 border-b border-slate-800 shadow-xl shadow-black/40 p-3 grid grid-cols-2 gap-2">
-    <a
-      *ngFor="let item of menuItems"
-      [routerLink]="item.route"
-      (click)="cerrarMenu()"
-      routerLinkActive="bg-slate-800 text-white"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="px-4 py-3 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
-    >
-      {{ item.label }}
-    </a>
+  <div class="flex items-center gap-3">
+    <app-notification-bell></app-notification-bell>
+    <app-user-menu></app-user-menu>
   </div>
 
 </header>

@@ -23,11 +23,15 @@
     <button type="button" (click)="limpiarFiltros()" class="btn-outline w-auto shrink-0">Limpiar</button>
   </div>
 
-  <div *ngIf="cargando()" class="py-8 text-center text-xs text-slate-400">
-    Cargando bitácora...
-  </div>
+ <div
+  *ngIf="!cargando() && error()"
+  class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm mt-4"
+>
 
-  <div *ngIf="!cargando()" class="table-container mt-2">
+<div
+  *ngIf="!cargando() && !error()"
+  class="table-container mt-2"
+>
     <table class="w-full text-left text-xs">
       <thead>
         <tr>
@@ -57,19 +61,16 @@
         </tr>
       </tbody>
     </table>
+      {{ error() }}
   </div>
 
   <!-- Paginación -->
-  <div *ngIf="paginacion()" class="flex items-center justify-between pt-2 text-xs text-slate-400">
-    <span>Mostrando {{ paginacion()?.from || 0 }} a {{ paginacion()?.to || 0 }} de {{ paginacion()?.total || 0 }} registros</span>
-    <div class="flex items-center space-x-2">
-      <button (click)="cambiarPagina(-1)" [disabled]="pagina() === 1 || cargando()" class="btn-pagination">
-        Anterior
-      </button>
-      <span class="font-bold text-slate-300">Página {{ pagina() }}</span>
-      <button (click)="cambiarPagina(1)" [disabled]="pagina() >= (paginacion()?.last_page || 1) || cargando()" class="btn-pagination">
-        Siguiente
-      </button>
-    </div>
-  </div>
+  <app-pagination 
+     *ngIf="!cargando() && error()"
+  class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm mt-4"
+    [currentPage]="paginacion()?.current_page || 1"
+    [lastPage]="paginacion()?.last_page || 1"
+    [loading]="cargando()"
+    (pageChange)="cambiarPagina($event)">
+  </app-pagination>
 </div>

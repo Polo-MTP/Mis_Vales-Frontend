@@ -2,17 +2,19 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../features/auth/services/auth.service';
+import { SharedSidebarComponent } from '../../../shared/components/shared-sidebar/shared-sidebar.component';
 
 @Component({
   selector: 'app-mobile-navigation',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SharedSidebarComponent],
   templateUrl: './mobile-navigation.component.html'
 })
 export class MobileNavigationComponent {
   readonly authService = inject(AuthService);
 
   masAbierto = signal(false);
+  sidebarOpen = signal(false);
 
   constructor(private router: Router) {
     // Cierra la hoja "Más" sola al navegar, para que no se quede abierta tapando la página.
@@ -25,5 +27,9 @@ export class MobileNavigationComponent {
 
   toggleMas(): void {
     this.masAbierto.update((abierto) => !abierto);
+  }
+
+  toggleSidebar(): void {
+    this.sidebarOpen.update((v) => !v);
   }
 }

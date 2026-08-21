@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 import { Router, RouterModule } from '@angular/router';
 import { RelacionService } from '../../services/relacion.service';
 import { EstadoRelacion, Relacion } from '../../../../../core/models/relacion.model';
@@ -8,7 +9,7 @@ import { PaginacionAnidada } from '../../../../../core/models/paginacion-anidada
 @Component({
   selector: 'app-lista-relaciones',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PaginationComponent],
   templateUrl: './lista-relaciones.component.html',
   styleUrl: './lista-relaciones.component.css'
 })
@@ -53,10 +54,9 @@ export class ListaRelacionesComponent implements OnInit {
     this.cargar();
   }
 
-  cambiarPagina(delta: number): void {
+    cambiarPagina(nuevaPagina: number): void {
     const p = this.paginacion();
     if (!p) return;
-    const nuevaPagina = this.pagina() + delta;
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();

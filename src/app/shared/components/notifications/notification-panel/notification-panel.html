@@ -1,0 +1,20 @@
+<div class="absolute right-0 mt-2 w-80 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden">
+  
+  <!-- Header del Panel -->
+  <div class="px-4 py-3 border-b border-slate-700 flex items-center justify-between">
+    <h3 class="text-sm font-bold text-slate-100">Notificaciones</h3>
+    <a 
+      routerLink="/administrador/notificaciones" 
+      (click)="onClose()"
+      class="text-xs text-blue-400 hover:text-blue-300 font-medium"
+    >
+      Ver todas
+    </a>
+  </div>
+
+  <!-- Contenedor de la lista -->
+  <div class="p-2 max-h-96 overflow-y-auto custom-scrollbar">
+    <app-notification-list></app-notification-list>
+  </div>
+
+</div>

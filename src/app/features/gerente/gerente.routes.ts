@@ -12,7 +12,6 @@ import { ListaConciliacionesComponent } from './conciliaciones/pages/lista-conci
 import { AutorizacionesPendientesComponent } from './conciliaciones/pages/autorizaciones-pendientes/autorizaciones-pendientes.component';
 import { ConfiguracionesComponent } from './configuraciones/pages/configuraciones/configuraciones.component';
 import { EdicionesPendientesComponent } from './clientes/pages/ediciones-pendientes/ediciones-pendientes.component';
-import { ListaNotificacionesComponent } from './notificaciones/pages/lista-notificaciones/lista-notificaciones.component';
 import { ReasignarCoordinadorComponent } from './distribuidoras/pages/reasignar-coordinador/reasignar-coordinador.component';
 import { TransferenciasPendientesComponent } from './clientes/pages/transferencias-pendientes/transferencias-pendientes.component';
 import { AumentoCreditoPendientesComponent } from './distribuidoras/pages/aumento-credito-pendientes/aumento-credito-pendientes.component';
@@ -33,6 +32,5 @@ export const GERENTE_ROUTES: Routes = [
   { path: 'conciliaciones/autorizaciones', component: AutorizacionesPendientesComponent },
   { path: 'configuraciones', component: ConfiguracionesComponent },
   { path: 'clientes/ediciones', component: EdicionesPendientesComponent },
-  { path: 'clientes/transferencias', component: TransferenciasPendientesComponent },
-  { path: 'notificaciones', component: ListaNotificacionesComponent }
+  { path: 'clientes/transferencias', component: TransferenciasPendientesComponent }
 ];

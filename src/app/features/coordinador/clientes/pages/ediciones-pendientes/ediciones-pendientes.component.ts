@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 import { SolicitudEdicionClienteService } from '../../services/solicitud-edicion-cliente.service';
 import { SolicitudEdicionCliente } from '../../../../../core/models/solicitud-edicion-cliente.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
@@ -7,7 +8,7 @@ import { PaginatedResponse } from '../../../../../core/models/user.model';
 @Component({
   selector: 'app-ediciones-pendientes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PaginationComponent],
   templateUrl: './ediciones-pendientes.component.html',
   styleUrl: './ediciones-pendientes.component.css'
 })
@@ -44,10 +45,9 @@ export class EdicionesPendientesComponent implements OnInit {
     });
   }
 
-  cambiarPagina(delta: number): void {
+    cambiarPagina(nuevaPagina: number): void {
     const p = this.paginacion();
     if (!p) return;
-    const nuevaPagina = this.pagina() + delta;
     if (nuevaPagina < 1 || nuevaPagina > p.last_page) return;
     this.pagina.set(nuevaPagina);
     this.cargar();
