@@ -47,7 +47,7 @@
               <div class="font-bold text-slate-200">{{ c.modificado_por.name || 'N/D' }}</div>
             </td>
             <td class="p-3.5 whitespace-nowrap">
-              <button *ngIf="editando() !== c.clave" type="button" (click)="iniciarEdicion(c)" class="btn-link-primary mr-3">Editar</button>
+              <button *ngIf="puedeEditar() && editando() !== c.clave" type="button" (click)="iniciarEdicion(c)" class="btn-link-primary mr-3">Editar</button>
               <button type="button" (click)="toggleHistorial(c.clave)" class="btn-link-primary">
                 {{ historialAbierto() === c.clave ? 'Ocultar historial' : 'Ver historial' }}
               </button>

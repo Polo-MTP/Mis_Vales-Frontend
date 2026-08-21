@@ -4,7 +4,7 @@
       <h2 class="text-base font-black text-slate-100">Tabla de Seguros</h2>
       <p class="text-xs text-slate-400 font-medium">Monto de seguro por rango de vale, usado en el cálculo de cada cuota.</p>
     </div>
-    <button *ngIf="!mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nuevo rango</button>
+    <button *ngIf="puedeEditar() && !mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nuevo rango</button>
   </div>
 
   <div *ngIf="cargando()" class="state-loading">Cargando tabla de seguros...</div>
@@ -69,7 +69,7 @@
             </span>
           </td>
           <td class="p-3.5 whitespace-nowrap">
-            <ng-container *ngIf="editando() !== s.id">
+            <ng-container *ngIf="puedeEditar() && editando() !== s.id">
               <button type="button" (click)="iniciarEdicion(s)" class="btn-link-primary mr-3">Editar</button>
               <button *ngIf="s.activo" type="button" (click)="desactivar(s)" class="btn-link-danger">Desactivar</button>
             </ng-container>

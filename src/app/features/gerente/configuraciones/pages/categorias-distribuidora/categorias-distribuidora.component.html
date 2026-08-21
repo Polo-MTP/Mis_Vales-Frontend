@@ -4,7 +4,7 @@
       <h2 class="text-base font-black text-slate-100">Categorías de Distribuidora</h2>
       <p class="text-xs text-slate-400 font-medium">Cobre, Plata, Oro... el % de descuento por categoría se aplica en cada corte si la cuota se paga a tiempo.</p>
     </div>
-    <button *ngIf="!mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nueva categoría</button>
+    <button *ngIf="puedeEditar() && !mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nueva categoría</button>
   </div>
 
   <div *ngIf="cargando()" class="state-loading">Cargando categorías...</div>
@@ -69,7 +69,7 @@
             </span>
           </td>
           <td class="p-3.5 whitespace-nowrap">
-            <ng-container *ngIf="editando() !== c.id">
+            <ng-container *ngIf="puedeEditar() && editando() !== c.id">
               <button type="button" (click)="iniciarEdicion(c)" class="btn-link-primary mr-3">Editar</button>
               <button *ngIf="c.activo" type="button" (click)="desactivar(c)" class="btn-link-danger">Desactivar</button>
             </ng-container>

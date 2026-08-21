@@ -16,7 +16,7 @@
         <span class="font-bold text-slate-100">
           {{ f.es_default_global ? 'Default Global (todas las sucursales sin regla propia)' : (f.sucursal?.nombre || 'Sucursal ' + f.sucursal_id) }}
         </span>
-        <button *ngIf="editando() !== f.id" type="button" (click)="iniciarEdicion(f)" class="btn-link-primary">Editar</button>
+        <button *ngIf="puedeEditar() && editando() !== f.id" type="button" (click)="iniciarEdicion(f)" class="btn-link-primary">Editar</button>
       </div>
 
       <div *ngIf="editando() !== f.id" class="grid grid-cols-3 gap-4 text-sm">

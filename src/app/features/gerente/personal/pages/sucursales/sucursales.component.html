@@ -4,7 +4,7 @@
       <h2 class="text-base font-black text-slate-100">Sucursales</h2>
       <p class="text-xs text-slate-400 font-medium">Alta y edición de sucursales de la empresa.</p>
     </div>
-    <button *ngIf="!mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nueva sucursal</button>
+    <button *ngIf="puedeEditar() && !mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nueva sucursal</button>
   </div>
 
   <div *ngIf="cargando()" class="state-loading">Cargando sucursales...</div>
@@ -73,7 +73,7 @@
             </form>
           </td>
           <td class="p-3.5 whitespace-nowrap">
-            <ng-container *ngIf="editando() !== s.id">
+            <ng-container *ngIf="puedeEditar() && editando() !== s.id">
               <button type="button" (click)="iniciarEdicion(s)" class="btn-link-primary">Editar</button>
             </ng-container>
             <ng-container *ngIf="editando() === s.id">

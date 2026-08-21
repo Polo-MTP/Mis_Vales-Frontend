@@ -68,7 +68,8 @@ export class SharedSidebarComponent {
       { label: 'Autorizaciones Pendientes', route: '/coordinador/conciliaciones/autorizaciones' },
       { label: 'Ediciones de Cliente', route: '/coordinador/clientes/ediciones' },
       { label: 'Transferencias Pendientes', route: '/coordinador/clientes/transferencias' },
-      { label: 'Reasignar Clientes', route: '/coordinador/distribuidoras/reasignar-clientes' }
+      { label: 'Reasignar Clientes', route: '/coordinador/distribuidoras/reasignar-clientes' },
+      { label: 'Mis Autorizaciones', route: '/coordinador/autorizaciones' }
     ],
     Verificador: [
       { label: 'Solicitudes Pendientes', route: '/verificador/alta-proveedor/pendientes' }

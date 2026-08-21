@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SeguroTablaService } from '../../services/seguro-tabla.service';
 import { SeguroTabla } from '../../../../../core/models/configuracion.model';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-seguros-tabla',
@@ -13,6 +14,11 @@ import { SeguroTabla } from '../../../../../core/models/configuracion.model';
 export class SegurosTablaComponent implements OnInit {
   private fb = inject(FormBuilder);
   private seguroService = inject(SeguroTablaService);
+  private authService = inject(AuthService);
+
+  /** El backend solo deja escribir a Gerente General -- Gerente de Sucursal comparte esta
+   *  misma pantalla, pero solo para consulta. */
+  puedeEditar = computed(() => this.authService.userRole() === 'Gerente General');
 
   seguros = signal<SeguroTabla[]>([]);
   cargando = signal(true);

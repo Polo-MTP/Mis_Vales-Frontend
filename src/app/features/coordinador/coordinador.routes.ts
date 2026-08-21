@@ -9,6 +9,7 @@ import { AutorizacionesPendientesComponent } from './conciliaciones/pages/autori
 import { EdicionesPendientesComponent } from './clientes/pages/ediciones-pendientes/ediciones-pendientes.component';
 import { ReasignarClientesComponent } from './distribuidoras/pages/reasignar-clientes/reasignar-clientes.component';
 import { TransferenciasPendientesComponent } from './clientes/pages/transferencias-pendientes/transferencias-pendientes.component';
+import { MisAutorizacionesComponent } from '../gerente/autorizaciones/pages/mis-autorizaciones/mis-autorizaciones.component';
 
 export const COORDINADOR_ROUTES: Routes = [
   { path: '', component: CoordinadorDashboardComponent },
@@ -20,5 +21,6 @@ export const COORDINADOR_ROUTES: Routes = [
   { path: 'conciliaciones/autorizaciones', component: AutorizacionesPendientesComponent },
   { path: 'clientes/ediciones', component: EdicionesPendientesComponent },
   { path: 'clientes/transferencias', component: TransferenciasPendientesComponent },
-  { path: 'distribuidoras/reasignar-clientes', component: ReasignarClientesComponent }
+  { path: 'distribuidoras/reasignar-clientes', component: ReasignarClientesComponent },
+  { path: 'autorizaciones', component: MisAutorizacionesComponent }
 ];

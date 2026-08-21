@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SucursalService } from '../../services/sucursal.service';
 import { Sucursal } from '../../../../../core/models/sucursal.model';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-sucursales',
@@ -13,6 +14,10 @@ import { Sucursal } from '../../../../../core/models/sucursal.model';
 export class SucursalesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private sucursalService = inject(SucursalService);
+  private authService = inject(AuthService);
+
+  /** El backend solo deja crear/editar sucursales a Gerente General. */
+  puedeEditar = computed(() => this.authService.userRole() === 'Gerente General');
 
   sucursales = signal<Sucursal[]>([]);
   cargando = signal(true);

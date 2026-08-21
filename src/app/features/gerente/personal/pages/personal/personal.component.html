@@ -5,7 +5,7 @@
     <p class="text-xs text-slate-400 font-medium">Alta de Gerentes de Sucursal y administración de sucursales.</p>
   </div>
 
-  <app-crear-gerente-sucursal></app-crear-gerente-sucursal>
+  <app-crear-gerente-sucursal *ngIf="esGerenteGeneral()"></app-crear-gerente-sucursal>
   <app-sucursales></app-sucursales>
 
 </div>

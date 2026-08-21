@@ -1,9 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConfiguracionService } from '../../services/configuracion.service';
 import { Configuracion } from '../../../../../core/models/configuracion.model';
 import { configuracionClaveLabel } from '../../../../../shared/utils/labels';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-lista-configuraciones',
@@ -15,6 +16,11 @@ import { configuracionClaveLabel } from '../../../../../shared/utils/labels';
 export class ListaConfiguracionesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private configuracionService = inject(ConfiguracionService);
+  private authService = inject(AuthService);
+
+  /** El backend solo deja escribir a Gerente General -- Gerente de Sucursal comparte esta
+   *  misma pantalla, pero solo para consulta. */
+  puedeEditar = computed(() => this.authService.userRole() === 'Gerente General');
 
   configuraciones = signal<Configuracion[]>([]);
   cargando = signal(true);

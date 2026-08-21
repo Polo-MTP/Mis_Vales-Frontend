@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoriaDistribuidoraService } from '../../../distribuidoras/services/categoria-distribuidora.service';
 import { CategoriaDistribuidora } from '../../../../../core/models/distribuidora.model';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-categorias-distribuidora',
@@ -13,6 +14,11 @@ import { CategoriaDistribuidora } from '../../../../../core/models/distribuidora
 export class CategoriasDistribuidoraComponent implements OnInit {
   private fb = inject(FormBuilder);
   private categoriaService = inject(CategoriaDistribuidoraService);
+  private authService = inject(AuthService);
+
+  /** El backend solo deja escribir a Gerente General -- Gerente de Sucursal comparte esta
+   *  misma pantalla, pero solo para consulta. */
+  puedeEditar = computed(() => this.authService.userRole() === 'Gerente General');
 
   categorias = signal<CategoriaDistribuidora[]>([]);
   cargando = signal(true);
