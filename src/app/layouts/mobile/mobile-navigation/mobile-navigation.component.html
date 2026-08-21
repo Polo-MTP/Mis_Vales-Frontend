@@ -1,48 +1,80 @@
+<!-- Hoja "Más": cubre lo que no cabe en 5 pestañas fijas -->
+<div *ngIf="masAbierto()" class="fixed inset-0 z-40 bg-black/50" (click)="toggleMas()"></div>
+<div
+  *ngIf="masAbierto()"
+  class="fixed bottom-16 left-0 right-0 z-40 bg-slate-900 border-t border-slate-800 rounded-t-2xl p-3 space-y-1 shadow-xl shadow-black/40"
+>
+  <a routerLink="/distribuidora/puntos/historial" (click)="toggleMas()" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white">
+    Historial de Puntos
+  </a>
+  <a routerLink="/distribuidora/conciliaciones" (click)="toggleMas()" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white">
+    Mis Pagos y Abonos
+  </a>
+  <a routerLink="/distribuidora/creditos/aumento" (click)="toggleMas()" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white">
+    Aumento de Crédito
+  </a>
+  <a routerLink="/distribuidora/clientes/transferencias" (click)="toggleMas()" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white">
+    Transferencia de Clientes
+  </a>
+</div>
+
 <nav
-  class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200"
+  class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-800"
 >
   <div class="h-16 flex items-center justify-around">
 
     <!-- Inicio -->
     <a
       routerLink="/distribuidora"
-      routerLinkActive="text-blue-600"
+      routerLinkActive="text-blue-400"
       [routerLinkActiveOptions]="{ exact: true }"
       class="flex flex-col items-center justify-center gap-1 text-slate-500"
     >
       <span class="text-xl">⌂</span>
-      <span class="text-[10px]">Inicio</span>
+      <span class="text-[10px] font-semibold">Inicio</span>
     </a>
 
     <!-- Clientes -->
     <a
       routerLink="/distribuidora/clientes"
-      routerLinkActive="text-blue-600"
+      routerLinkActive="text-blue-400"
       class="flex flex-col items-center justify-center gap-1 text-slate-500"
     >
       <span class="text-xl">♙</span>
-      <span class="text-[10px]">Clientes</span>
+      <span class="text-[10px] font-semibold">Clientes</span>
     </a>
 
     <!-- Vales -->
     <a
       routerLink="/distribuidora/vales"
-      routerLinkActive="text-blue-600"
+      routerLinkActive="text-blue-400"
       class="flex flex-col items-center justify-center gap-1 text-slate-500"
     >
       <span class="text-xl">▣</span>
-      <span class="text-[10px]">Vales</span>
+      <span class="text-[10px] font-semibold">Vales</span>
     </a>
 
-    <!-- Puntos -->
+    <!-- Cortes (Relaciones) -->
     <a
-      routerLink="/distribuidora/puntos/historial"
-      routerLinkActive="text-blue-600"
+      routerLink="/distribuidora/relaciones"
+      routerLinkActive="text-blue-400"
       class="flex flex-col items-center justify-center gap-1 text-slate-500"
     >
-      <span class="text-xl">★</span>
-      <span class="text-[10px]">Puntos</span>
+      <span class="text-xl">$</span>
+      <span class="text-[10px] font-semibold">Cortes</span>
     </a>
+
+    <!-- Más -->
+    <button
+      type="button"
+      (click)="toggleMas()"
+      class="flex flex-col items-center justify-center gap-1"
+      [class.text-blue-400]="masAbierto()"
+      [class.text-slate-500]="!masAbierto()"
+    >
+      <span class="text-xl">{{ masAbierto() ? '✕' : '⋯' }}</span>
+      <span class="text-[10px] font-semibold">Más</span>
+    </button>
 
   </div>
 </nav>

@@ -25,22 +25,57 @@ export class DesktopSidebarComponent {
 
   readonly submenuAbierto = signal<string | null>(null);
 
+  private readonly menuGerente: SidebarItem[] = [
+    { label: 'Dashboard', route: '/gerente' },
+    { label: 'Solicitudes', route: '/gerente/solicitudes' },
+    {
+      label: 'Distribuidoras',
+      children: [
+        { label: 'Catálogo', route: '/gerente/distribuidoras' },
+        { label: 'Reasignar Coordinador', route: '/gerente/distribuidoras/reasignar-coordinador' },
+        { label: 'Aumento de Crédito', route: '/gerente/distribuidoras/aumento-credito' }
+      ]
+    },
+    { label: 'Productos', route: '/gerente/productos' },
+    { label: 'Relaciones (Cortes)', route: '/gerente/relaciones' },
+    { label: 'Reporte de Morosos', route: '/gerente/reportes/morosos' },
+    {
+      label: 'Conciliaciones',
+      children: [
+        { label: 'Conciliación Bancaria', route: '/gerente/conciliaciones' },
+        { label: 'Autorizaciones Pendientes', route: '/gerente/conciliaciones/autorizaciones' }
+      ]
+    },
+    {
+      label: 'Clientes',
+      children: [
+        { label: 'Ediciones Pendientes', route: '/gerente/clientes/ediciones' },
+        { label: 'Transferencias Pendientes', route: '/gerente/clientes/transferencias' }
+      ]
+    },
+    { label: 'Configuraciones', route: '/gerente/configuraciones' },
+    { label: 'Notificaciones', route: '/gerente/notificaciones' }
+  ];
+
   readonly menusPorRol: Record<string, SidebarItem[]> = {
 
     Administrador: [
-      {
-        label: 'Dashboard',
-        route: '/administrador'
-      },
-      {
-        label: 'Auditoría',
-        route: '/administrador/logs'
-      }
+      { label: 'Dashboard', route: '/administrador' },
+      { label: 'Auditoría', route: '/administrador/logs' },
+      { label: 'Notificaciones', route: '/administrador/notificaciones' }
     ],
 
-    Gerente: [],
+    'Gerente General': this.menuGerente,
+    'Gerente de Sucursal': this.menuGerente,
 
-    Cajera: []
+    Cajera: [
+      { label: 'Dashboard', route: '/cajera' },
+      { label: 'Conciliación Bancaria', route: '/cajera/conciliaciones' },
+      { label: 'Mis Solicitudes', route: '/cajera/conciliaciones/mis-solicitudes' },
+      { label: 'Corregir Datos de Cliente', route: '/cajera/clientes/solicitar-edicion' },
+      { label: 'Canjear Puntos', route: '/cajera/puntos/canjear' },
+      { label: 'Consultar Vales', route: '/cajera/vales' }
+    ]
   };
 
   get menuItems(): SidebarItem[] {

@@ -1,10 +1,10 @@
-<div class="layout-container">
-  <div class="dash-card space-y-2">
-    <h1 class="text-2xl font-black text-slate-100 uppercase tracking-tight">
-      DASHBOARD DISTRIBUIDORA
+<div class="layout-view-mobile">
+  <div class="dash-card space-y-1">
+    <h1 class="text-lg font-black text-slate-100 uppercase tracking-tight">
+      Hola, {{ authService.currentUser()?.name }}
     </h1>
     <p class="text-xs text-slate-400 font-medium">
-      Bienvenido, {{ authService.currentUser()?.name }} ({{ authService.currentUser()?.email }})
+      {{ authService.currentUser()?.email }}
     </p>
   </div>
 
@@ -15,7 +15,7 @@
     <div class="dash-card">
       <div class="flex items-start justify-between">
         <div>
-          <h2 class="text-lg font-black text-slate-100">{{ p.razon_social || 'Distribuidora' }}</h2>
+          <h2 class="text-base font-black text-slate-100">{{ p.razon_social || 'Distribuidora' }}</h2>
           <p class="text-xs text-slate-400 mt-1">
             {{ p.numero_distribuidora }} <span *ngIf="p.rfc">· RFC: {{ p.rfc }}</span>
           </p>
@@ -26,47 +26,25 @@
       </div>
     </div>
 
-    <!-- Estadísticas -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="stat-card">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Límite de Crédito</p>
-        <p class="text-3xl font-black text-blue-500 mt-1">${{ p.limite_credito || 0 }}</p>
-      </div>
-
-      <div class="stat-card">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Crédito Disponible</p>
-        <p class="text-3xl font-black text-emerald-500 mt-1">${{ p.credito_disponible || 0 }}</p>
-      </div>
-
-      <div class="stat-card">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Puntos Acumulados</p>
-        <p class="text-3xl font-black text-indigo-400 mt-1">{{ p.puntos_acumulados || 0 }}</p>
-      </div>
+    <!-- Estadísticas: apiladas en una columna, no en grilla, para que se lean bien en un
+         celular en vez de apretar 3 números en una fila angosta. -->
+    <div class="stat-card flex items-center justify-between">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Crédito Disponible</p>
+      <p class="text-2xl font-black text-emerald-500">${{ p.credito_disponible || 0 }}</p>
+    </div>
+    <div class="stat-card flex items-center justify-between">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Límite de Crédito</p>
+      <p class="text-2xl font-black text-blue-500">${{ p.limite_credito || 0 }}</p>
+    </div>
+    <div class="stat-card flex items-center justify-between">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Puntos Acumulados</p>
+      <p class="text-2xl font-black text-indigo-400">{{ p.puntos_acumulados || 0 }}</p>
     </div>
   </ng-container>
 
-  <!-- Acciones -->
-  <div class="dash-card flex flex-col sm:flex-row gap-3">
-    <a routerLink="/distribuidora/clientes" class="btn-primary">
-      Ver Mis Clientes
-    </a>
-    <a routerLink="/distribuidora/vales" class="btn-outline">
-      Mis Vales
-    </a>
-    <a routerLink="/distribuidora/puntos/historial" class="btn-outline">
-      Historial de Puntos
-    </a>
-    <a routerLink="/distribuidora/conciliaciones" class="btn-outline">
-      Mis Pagos y Abonos
-    </a>
-    <a routerLink="/distribuidora/clientes/transferencias" class="btn-outline">
-      Transferencia de Clientes
-    </a>
-    <a routerLink="/distribuidora/creditos/aumento" class="btn-outline">
-      Aumento de Crédito
-    </a>
-    <a routerLink="/distribuidora/relaciones" class="btn-outline">
-      Mis Cortes
-    </a>
-  </div>
+  <!-- Un solo acceso rápido: el resto de las secciones ya viven en la barra de abajo
+       (Inicio/Clientes/Vales/Cortes/Más), repetirlas aquí solo era ruido. -->
+  <a routerLink="/distribuidora/vales/solicitar" class="btn-primary">
+    + Solicitar Vale
+  </a>
 </div>

@@ -5,8 +5,8 @@
     <p class="text-xs text-slate-400 font-medium mt-1">Montos de vale disponibles, con su plazo (quincenas) y variante.</p>
   </div>
 
-  <!-- Crear producto -->
-  <div class="dash-card">
+  <!-- Crear producto: solo Gerente General escribe, Gerente de Sucursal solo consulta -->
+  <div class="dash-card" *ngIf="puedeEditar()">
     <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Nuevo Producto</h2>
 
     <div *ngIf="errorCrear()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-sm">
@@ -83,14 +83,16 @@
                 </span>
               </td>
               <td class="p-3.5 whitespace-nowrap">
-                <button type="button" (click)="iniciarEdicion(p)" class="btn-link-primary mr-3">Editar</button>
-                <button type="button" (click)="toggleActivo(p)" [class]="p.activo ? 'btn-link-danger' : 'btn-link-primary'">
-                  {{ p.activo ? 'Desactivar' : 'Activar' }}
-                </button>
+                <ng-container *ngIf="puedeEditar()">
+                  <button type="button" (click)="iniciarEdicion(p)" class="btn-link-primary mr-3">Editar</button>
+                  <button type="button" (click)="toggleActivo(p)" [class]="p.activo ? 'btn-link-danger' : 'btn-link-primary'">
+                    {{ p.activo ? 'Desactivar' : 'Activar' }}
+                  </button>
+                </ng-container>
               </td>
             </tr>
 
-            <tr *ngIf="editando() === p.id">
+            <tr *ngIf="puedeEditar() && editando() === p.id">
               <td colspan="6" class="p-3.5 bg-slate-900/40">
                 <form [formGroup]="editForm" (ngSubmit)="guardarEdicion(p)" class="space-y-3">
                   <div *ngIf="errorEditar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-xl p-2 text-xs">

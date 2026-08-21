@@ -11,7 +11,7 @@
   </div>
 
   <!-- Estadísticas -->
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div class="grid grid-cols-3 gap-4">
     <a routerLink="/coordinador/solicitudes" [queryParams]="{ filtro: 'en_proceso' }" class="stat-card-clickable">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">En Proceso</p>
       <p class="text-3xl font-black text-blue-500 mt-1">{{ cargandoStats() ? '—' : formato(enProceso()) }}</p>
@@ -31,29 +31,18 @@
     </a>
   </div>
 
-  <!-- Acciones Rápidas -->
-  <div class="dash-card flex gap-3">
-    <a routerLink="/coordinador/solicitudes/nueva" class="btn-primary">
-      + Nueva Solicitud de Distribuidor
-    </a>
-    <a routerLink="/coordinador/solicitudes" class="btn-outline">
-      Mis Solicitudes
-    </a>
-    <a routerLink="/coordinador/reportes/morosos" class="btn-outline">
-      Reporte de Morosos
-    </a>
-    <a routerLink="/coordinador/conciliaciones" class="btn-outline">
-      Conciliación Bancaria
-    </a>
-    <a routerLink="/coordinador/clientes/ediciones" class="btn-outline">
-      Ediciones de Cliente
-    </a>
-    <a routerLink="/coordinador/distribuidoras/reasignar-clientes" class="btn-outline">
-      Reasignar Clientes
-    </a>
-    <a routerLink="/coordinador/clientes/transferencias" class="btn-outline">
-      Transferencias Pendientes
-    </a>
+  <!-- El resto de las secciones ya vive en el menú (☰) del header; aquí solo queda la
+       tarea del día a día para no duplicar toda la navegación. -->
+  <div class="dash-card">
+    <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight mb-1">Accesos Rápidos</h2>
+    <div class="flex gap-3">
+      <a routerLink="/coordinador/solicitudes/nueva" class="btn-primary w-auto">
+        + Nueva Solicitud de Distribuidor
+      </a>
+      <a routerLink="/coordinador/solicitudes" class="btn-outline">
+        Mis Solicitudes
+      </a>
+    </div>
   </div>
 
 </div>

@@ -1,9 +1,9 @@
-<header class="h-16 border-b border-slate-800 px-6 flex items-center justify-between">
+<header class="h-16 shrink-0 bg-slate-900 border-b border-slate-800 px-6 flex items-center justify-between">
 
   <div>
     <a
       [routerLink]="['/']"
-      class="text-xl font-bold"
+      class="text-xl font-black text-slate-100 tracking-tight"
     >
       Mis Vales
     </a>
@@ -11,18 +11,19 @@
 
   <div class="flex items-center gap-4">
 
-    <span class="text-sm text-slate-300">
-      {{ authService.currentUser()?.name }}
-    </span>
-
-    <span class="text-sm text-slate-400">
-      {{ authService.userRole() }}
-    </span>
+    <div class="text-right">
+      <p class="text-sm font-semibold text-slate-100">
+        {{ authService.currentUser()?.name }}
+      </p>
+      <p class="text-xs text-slate-400">
+        {{ authService.userRole() }}
+      </p>
+    </div>
 
     <button
       type="button"
       (click)="logout()"
-      class="px-3 py-2 rounded"
+      class="btn-outline"
     >
       Cerrar sesión
     </button>

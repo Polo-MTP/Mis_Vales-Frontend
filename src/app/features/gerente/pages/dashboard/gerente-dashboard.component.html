@@ -1,4 +1,4 @@
-<div class="layout-container">
+<div class="layout-view-desktop">
 
   <div class="dash-card space-y-2">
     <h1 class="text-2xl font-black text-slate-100 uppercase tracking-tight">
@@ -9,64 +9,35 @@
     </p>
   </div>
 
-  <!-- Estadísticas -->
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <a routerLink="/gerente/solicitudes" class="stat-card-clickable">
+  <!-- Solicitudes de alta: las 3 cifras son distintos cortes de la misma lista, agrupadas en
+       una sola tarjeta en vez de 3 botones separados que llevan al mismo lugar. -->
+  <a routerLink="/gerente/solicitudes" class="stat-card-clickable grid grid-cols-3 divide-x divide-slate-700/60 gap-0 !p-0">
+    <div class="p-6 text-center">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Por Aprobar</p>
       <p class="text-3xl font-black text-blue-500 mt-1">{{ cargandoStats() ? '—' : formato(porAprobar()) }}</p>
-      <p class="text-xs text-slate-400 mt-1">Verificadas, esperando tu decisión</p>
-    </a>
-
-    <a routerLink="/gerente/solicitudes" class="stat-card-clickable">
+      <p class="text-xs text-slate-400 mt-1">Esperando tu decisión</p>
+    </div>
+    <div class="p-6 text-center">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Aprobadas</p>
       <p class="text-3xl font-black text-emerald-500 mt-1">{{ cargandoStats() ? '—' : formato(aprobadas()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Distribuidores dados de alta</p>
-    </a>
-
-    <a routerLink="/gerente/solicitudes" class="stat-card-clickable">
+    </div>
+    <div class="p-6 text-center">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Rechazadas</p>
       <p class="text-3xl font-black text-red-400 mt-1">{{ cargandoStats() ? '—' : formato(rechazadas()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Solicitudes no aprobadas</p>
-    </a>
-  </div>
+    </div>
+  </a>
 
-  <div class="dash-card flex flex-col sm:flex-row gap-3">
-    <a routerLink="/gerente/solicitudes" class="btn-primary">
-      Solicitudes de Nuevo Distribuidor
-    </a>
-    <a routerLink="/gerente/distribuidoras" class="btn-outline">
-      Catálogo de Distribuidoras
-    </a>
-    <a routerLink="/gerente/productos" class="btn-outline">
-      Catálogo de Productos
-    </a>
-    <a routerLink="/gerente/relaciones" class="btn-outline">
-      Relaciones (Cortes)
-    </a>
-    <a routerLink="/gerente/reportes/morosos" class="btn-outline">
-      Reporte de Morosos
-    </a>
-    <a routerLink="/gerente/conciliaciones" class="btn-outline">
-      Conciliación Bancaria
-    </a>
-    <a routerLink="/gerente/configuraciones" class="btn-outline">
-      Configuraciones del Sistema
-    </a>
-    <a routerLink="/gerente/clientes/ediciones" class="btn-outline">
-      Ediciones de Cliente Pendientes
-    </a>
-    <a routerLink="/gerente/notificaciones" class="btn-outline">
-      Notificaciones
-    </a>
-    <a routerLink="/gerente/distribuidoras/reasignar-coordinador" class="btn-outline">
-      Reasignar Coordinador
-    </a>
-    <a routerLink="/gerente/clientes/transferencias" class="btn-outline">
-      Transferencias Pendientes
-    </a>
-    <a routerLink="/gerente/distribuidoras/aumento-credito" class="btn-outline">
-      Aumento de Crédito
-    </a>
+  <!-- El resto del catálogo ya vive en el menú lateral; aquí solo quedan las 3 tareas del
+       día a día para no duplicar toda la navegación en el dashboard. -->
+  <div class="dash-card">
+    <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight mb-1">Accesos Rápidos</h2>
+    <div class="flex gap-3">
+      <a routerLink="/gerente/solicitudes" class="btn-primary w-auto">Solicitudes de Nuevo Distribuidor</a>
+      <a routerLink="/gerente/relaciones" class="btn-outline">Relaciones (Cortes)</a>
+      <a routerLink="/gerente/conciliaciones" class="btn-outline">Conciliación Bancaria</a>
+    </div>
   </div>
 
 </div>

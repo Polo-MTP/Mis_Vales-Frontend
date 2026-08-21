@@ -1,34 +1,52 @@
-<header class="h-16 bg-white border-b border-slate-200 px-4 flex items-center justify-between">
+<header class="relative z-40 shrink-0 bg-slate-900 border-b border-slate-800 px-4">
 
-  <a
-    [routerLink]="homeRoute"
-    (click)="cerrarMenu()"
-    class="font-bold text-lg text-slate-800"
-  >
-    Mis Vales
-  </a>
+  <div class="h-16 flex items-center justify-between">
 
-  <div class="flex items-center gap-3">
+    <a
+      [routerLink]="homeRoute"
+      (click)="cerrarMenu()"
+      class="font-black text-lg text-slate-100 tracking-tight"
+    >
+      Mis Vales
+    </a>
 
-    <div class="hidden sm:block text-right">
-      <p class="text-sm font-semibold text-slate-800">
-        {{ authService.currentUser()?.name }}
-      </p>
+    <div class="flex items-center gap-3">
 
-      <p class="text-xs text-slate-500">
-        {{ authService.userRole() }}
-      </p>
+      <div class="text-right">
+        <p class="text-sm font-semibold text-slate-100">
+          {{ authService.currentUser()?.name }}
+        </p>
+
+        <p class="text-xs text-slate-400">
+          {{ authService.userRole() }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        (click)="toggleMenu()"
+        class="btn-outline !px-3"
+        aria-label="Abrir menú"
+      >
+        {{ menuAbierto() ? '✕' : '☰' }}
+      </button>
+
     </div>
 
-    <button
-      type="button"
-      (click)="toggleMenu()"
-      class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200"
-      aria-label="Abrir menú"
-    >
-      ☰
-    </button>
+  </div>
 
+  <!-- Panel de navegación: se abre debajo del header, no es una barra fija -->
+  <div *ngIf="menuAbierto()" class="absolute inset-x-0 top-full bg-slate-900 border-b border-slate-800 shadow-xl shadow-black/40 p-3 grid grid-cols-2 gap-2">
+    <a
+      *ngFor="let item of menuItems"
+      [routerLink]="item.route"
+      (click)="cerrarMenu()"
+      routerLinkActive="bg-slate-800 text-white"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="px-4 py-3 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+    >
+      {{ item.label }}
+    </a>
   </div>
 
 </header>

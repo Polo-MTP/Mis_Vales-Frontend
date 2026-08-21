@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductoService } from '../../services/producto.service';
 import { Producto } from '../../../../../core/models/producto.model';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-lista-productos',
@@ -14,6 +15,12 @@ import { Producto } from '../../../../../core/models/producto.model';
 export class ListaProductosComponent implements OnInit {
   private fb = inject(FormBuilder);
   private productoService = inject(ProductoService);
+  private authService = inject(AuthService);
+
+  /** El backend solo deja escribir (crear/editar/desactivar) a Gerente General -- el Gerente
+   *  de Sucursal comparte esta misma pantalla, pero solo para consulta. Sin esto, al Gerente
+   *  de Sucursal se le mostraban botones que solo le tronaban con un 403 al usarlos. */
+  puedeEditar = computed(() => this.authService.userRole() === 'Gerente General');
 
   productos = signal<Producto[]>([]);
   cargando = signal(true);
