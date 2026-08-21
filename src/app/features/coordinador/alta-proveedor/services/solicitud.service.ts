@@ -25,4 +25,22 @@ export class SolicitudService {
 
     return this.http.get<ApiResponse<SolicitudProveedor[]>>(this.baseUrl, { params });
   }
+
+  /** Lista SOLO las solicitudes que este coordinador registró, opcionalmente filtradas por estado. */
+  listar(coordinadorId: number, estado?: string, page = 1): Observable<ApiResponse<SolicitudProveedor[]>> {
+    let params = new HttpParams()
+      .set('include', 'datosPersonales.direccion,sucursal,coordinador,verificador')
+      .set('filter[coordinador_id]', String(coordinadorId))
+      .set('page', String(page));
+
+    if (estado) {
+      params = params.set('filter[estado]', estado);
+    }
+
+    return this.http.get<ApiResponse<SolicitudProveedor[]>>(this.baseUrl, { params });
+  }
+
+  detalle(id: number): Observable<ApiResponse<SolicitudProveedor>> {
+    return this.http.get<ApiResponse<SolicitudProveedor>>(`${this.baseUrl}/${id}`);
+  }
 }

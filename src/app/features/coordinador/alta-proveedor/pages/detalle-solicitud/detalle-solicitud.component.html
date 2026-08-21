@@ -1,0 +1,90 @@
+<div class="layout-container-narrow">
+
+  <button type="button" (click)="volver()" class="text-sm font-bold text-slate-400 hover:text-slate-200">
+    ← Volver a mis solicitudes
+  </button>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando expediente...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <ng-container *ngIf="!cargando() && !error() && solicitud() as s">
+
+    <!-- Resumen -->
+    <div class="dash-card">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ s.razon_social }}</h1>
+          <p class="text-xs text-slate-400 font-medium mt-1">
+            RFC: {{ s.rfc }} · {{ s.sucursal.nombre }}
+          </p>
+        </div>
+        <span class="status-badge"
+              [class.bg-amber-500/15]="s.estado !== 'aprobado' && s.estado !== 'rechazado'" [class.text-amber-300]="s.estado !== 'aprobado' && s.estado !== 'rechazado'" [class.border-amber-500/30]="s.estado !== 'aprobado' && s.estado !== 'rechazado'"
+              [class.bg-emerald-500/15]="s.estado === 'aprobado'" [class.text-emerald-300]="s.estado === 'aprobado'" [class.border-emerald-500/30]="s.estado === 'aprobado'"
+              [class.bg-red-500/15]="s.estado === 'rechazado'" [class.text-red-300]="s.estado === 'rechazado'" [class.border-red-500/30]="s.estado === 'rechazado'">
+          {{ s.estado }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Datos Personales -->
+    <div class="dash-card">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos Personales</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <p><span class="text-slate-400">Nombre:</span> {{ s.datos_personales.nombre }} {{ s.datos_personales.apellido_paterno }} {{ s.datos_personales.apellido_materno }}</p>
+        <p><span class="text-slate-400">CURP:</span> {{ s.datos_personales.curp }}</p>
+        <p><span class="text-slate-400">Fecha de nacimiento:</span> {{ s.datos_personales.fecha_nacimiento || 'N/D' }}</p>
+        <p><span class="text-slate-400">Lugar de nacimiento:</span> {{ s.datos_personales.lugar_nacimiento || 'N/D' }}</p>
+        <p class="sm:col-span-2"><span class="text-slate-400">Dirección:</span>
+          {{ s.datos_personales.direccion.calle }} #{{ s.datos_personales.direccion.numero_ext }}, {{ s.datos_personales.direccion.colonia }},
+          CP {{ s.datos_personales.direccion.codigo_postal }}, {{ s.datos_personales.direccion.ciudad }}, {{ s.datos_personales.direccion.estado }}
+        </p>
+        <p *ngIf="s.referencia_laboral"><span class="text-slate-400">Referencia laboral:</span> {{ s.referencia_laboral }}</p>
+      </div>
+    </div>
+
+    <!-- Captura y verificación -->
+    <div class="dash-card">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Captura y Verificación</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <p><span class="text-slate-400">Verificador:</span> {{ s.verificador.name || 'Sin asignar' }}</p>
+        <p><span class="text-slate-400">¿Cumple?</span> {{ s.cumple === null ? 'Pendiente' : (s.cumple ? 'Sí' : 'No') }}</p>
+        <p><span class="text-slate-400">Fecha de verificación:</span> {{ s.fecha_verificacion || 'N/D' }}</p>
+        <p class="sm:col-span-2" *ngIf="s.comentario_verificador">
+          <span class="text-slate-400">Comentario del verificador:</span> {{ s.comentario_verificador }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Evidencias -->
+    <div class="dash-card" *ngIf="s.evidencias.length > 0">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Evidencias</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <a *ngFor="let ev of s.evidencias" [href]="ev.url_archivo" target="_blank" rel="noopener"
+           class="flex items-center justify-between bg-slate-900/40 rounded-xl p-3 text-sm hover:bg-slate-900/70 transition-colors">
+          <span class="font-semibold text-slate-200">{{ ev.tipo_documento }}</span>
+          <span class="text-xs text-slate-400">{{ ev.subido_por || 'N/D' }}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Decisión ya tomada -->
+    <div *ngIf="s.estado === 'aprobado' || s.estado === 'rechazado'"
+         class="rounded-2xl p-6 border space-y-2"
+         [class.bg-emerald-500/10]="s.estado === 'aprobado'" [class.border-emerald-500/30]="s.estado === 'aprobado'"
+         [class.bg-red-500/10]="s.estado === 'rechazado'" [class.border-red-500/30]="s.estado === 'rechazado'">
+      <h2 class="text-sm font-black uppercase tracking-tight"
+          [class.text-emerald-400]="s.estado === 'aprobado'" [class.text-red-400]="s.estado === 'rechazado'">
+        Solicitud {{ s.estado }}
+      </h2>
+      <p class="text-sm text-slate-300" *ngIf="s.comentario_gerente">{{ s.comentario_gerente }}</p>
+      <p class="text-sm text-slate-300" *ngIf="s.limite_credito_asignado">Límite de crédito asignado: ${{ s.limite_credito_asignado }}</p>
+      <p class="text-xs text-slate-400">Gerente: {{ s.gerente.name || 'N/D' }} · {{ s.fecha_decision }}</p>
+    </div>
+
+  </ng-container>
+
+</div>

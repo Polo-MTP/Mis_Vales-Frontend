@@ -4,6 +4,7 @@ export interface AuditLog {
   session_id: string | null;
   action: string;
   resource: string | null;
+  ip_address: string | null;
   created_at: string;
   updated_at: string;
   user?: {

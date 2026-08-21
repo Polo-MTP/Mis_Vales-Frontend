@@ -89,6 +89,36 @@
       </ng-container>
     </div>
 
+    <!-- Historial de Estado -->
+    <div class="dash-card">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Historial de Estado</h2>
+        <button type="button" (click)="toggleHistorialEstado()" class="btn-outline w-auto shrink-0">
+          {{ mostrarHistorialEstado() ? 'Ocultar' : 'Ver Historial' }}
+        </button>
+      </div>
+
+      <ng-container *ngIf="mostrarHistorialEstado()">
+        <div *ngIf="cargandoHistorialEstado()" class="state-loading">Cargando historial...</div>
+
+        <div *ngIf="!cargandoHistorialEstado() && historialEstado().length === 0" class="state-empty">
+          Sin cambios de estado registrados.
+        </div>
+
+        <div *ngIf="!cargandoHistorialEstado() && historialEstado().length > 0" class="space-y-3">
+          <div *ngFor="let h of historialEstado()" class="list-card-item cursor-default">
+            <div>
+              <p class="font-bold text-slate-100">{{ h.estado_anterior || 'N/D' }} → {{ h.estado_nuevo }}</p>
+              <p class="text-xs text-slate-400 mt-0.5">
+                {{ h.fecha | date:'short' }} · {{ h.cambiado_por.name || 'Sistema (automático)' }}
+              </p>
+              <p class="text-xs text-slate-300 mt-1" *ngIf="h.motivo">{{ h.motivo }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
     <!-- Cambiar estado -->
     <div class="dash-card">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Cambiar Estado</h2>

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DistribuidoraService } from '../../services/distribuidora.service';
 import { CategoriaDistribuidoraService } from '../../services/categoria-distribuidora.service';
-import { CategoriaDistribuidora, DistribuidoraResumen, EstadoDistribuidora } from '../../../../../core/models/distribuidora.model';
+import { CategoriaDistribuidora, DistribuidoraResumen, EstadoDistribuidora, HistorialEstadoDistribuidora } from '../../../../../core/models/distribuidora.model';
 import { PuntoMovimiento } from '../../../../../core/models/punto-movimiento.model';
 
 @Component({
@@ -42,6 +42,10 @@ export class DetalleDistribuidoraComponent implements OnInit {
   archivoContrato = signal<File | null>(null);
   subiendoContrato = signal(false);
   errorContrato = signal<string | null>(null);
+
+  historialEstado = signal<HistorialEstadoDistribuidora[]>([]);
+  cargandoHistorialEstado = signal(false);
+  mostrarHistorialEstado = signal(false);
 
   creditoForm = this.fb.group({
     limite_credito: ['', [Validators.required, Validators.min(0)]],
@@ -147,6 +151,23 @@ export class DetalleDistribuidoraComponent implements OnInit {
           this.cargandoHistorialPuntos.set(false);
         },
         error: () => this.cargandoHistorialPuntos.set(false)
+      });
+    }
+  }
+
+  toggleHistorialEstado(): void {
+    const mostrar = !this.mostrarHistorialEstado();
+    this.mostrarHistorialEstado.set(mostrar);
+
+    const d = this.distribuidora();
+    if (mostrar && d && this.historialEstado().length === 0) {
+      this.cargandoHistorialEstado.set(true);
+      this.distribuidoraService.historialEstado(d.id).subscribe({
+        next: (res) => {
+          this.historialEstado.set(res.data ?? []);
+          this.cargandoHistorialEstado.set(false);
+        },
+        error: () => this.cargandoHistorialEstado.set(false)
       });
     }
   }

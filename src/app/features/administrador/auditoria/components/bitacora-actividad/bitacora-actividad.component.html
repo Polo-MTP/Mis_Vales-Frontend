@@ -1,0 +1,75 @@
+<div class="dash-card">
+  <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
+    <div>
+      <h3 class="text-base font-black text-slate-100">Bitácora de Actividad</h3>
+      <p class="text-xs text-slate-400 font-medium">Creación, edición y borrado de los modelos de negocio (distribuidoras, clientes, vales, relaciones, etc.)</p>
+    </div>
+    <span class="mfa-badge bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
+      Solo Administrador
+    </span>
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex flex-col sm:flex-row gap-3 sm:items-end pt-4">
+    <div class="flex-1">
+      <label class="form-label">Usuario (ID)</label>
+      <input type="number" [(ngModel)]="filtroUsuarioId" class="form-input" placeholder="Ej. 12" />
+    </div>
+    <div class="flex-1">
+      <label class="form-label">Acción</label>
+      <input type="text" [(ngModel)]="filtroAccion" class="form-input" placeholder="Ej. created, updated, deleted..." />
+    </div>
+    <button type="button" (click)="aplicarFiltros()" class="btn-primary w-auto shrink-0">Filtrar</button>
+    <button type="button" (click)="limpiarFiltros()" class="btn-outline w-auto shrink-0">Limpiar</button>
+  </div>
+
+  <div *ngIf="cargando()" class="py-8 text-center text-xs text-slate-400">
+    Cargando bitácora...
+  </div>
+
+  <div *ngIf="!cargando()" class="table-container mt-2">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr>
+          <th class="table-head-cell">Fecha / Hora</th>
+          <th class="table-head-cell">Usuario</th>
+          <th class="table-head-cell">Acción</th>
+          <th class="table-head-cell">Recurso</th>
+          <th class="table-head-cell">Dirección IP</th>
+        </tr>
+      </thead>
+      <tbody class="font-medium">
+        <tr *ngFor="let item of paginacion()?.data" class="table-row">
+          <td class="p-3.5 font-mono text-[11px] text-slate-400">{{ item.created_at | date:'short' }}</td>
+          <td class="p-3.5">
+            <div class="font-bold text-slate-100">{{ item.user?.name || 'Sistema' }}</div>
+            <div class="text-[11px] text-slate-500" *ngIf="item.user?.email">{{ item.user?.email }}</div>
+          </td>
+          <td class="p-3.5">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-700 text-slate-200">{{ item.action }}</span>
+          </td>
+          <td class="p-3.5 text-slate-300">{{ item.resource || '—' }}</td>
+          <td class="p-3.5 font-mono text-slate-300">{{ item.ip_address || '—' }}</td>
+        </tr>
+
+        <tr *ngIf="paginacion()?.data?.length === 0">
+          <td colspan="5" class="p-6 text-center text-slate-400">No hay registros con estos filtros.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  <div *ngIf="paginacion()" class="flex items-center justify-between pt-2 text-xs text-slate-400">
+    <span>Mostrando {{ paginacion()?.from || 0 }} a {{ paginacion()?.to || 0 }} de {{ paginacion()?.total || 0 }} registros</span>
+    <div class="flex items-center space-x-2">
+      <button (click)="cambiarPagina(-1)" [disabled]="pagina() === 1 || cargando()" class="btn-pagination">
+        Anterior
+      </button>
+      <span class="font-bold text-slate-300">Página {{ pagina() }}</span>
+      <button (click)="cambiarPagina(1)" [disabled]="pagina() >= (paginacion()?.last_page || 1) || cargando()" class="btn-pagination">
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>

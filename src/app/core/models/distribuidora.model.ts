@@ -18,6 +18,17 @@ export type EstadoDistribuidora =
   | 'MOROSO'
   | 'INACTIVO';
 
+export interface HistorialEstadoDistribuidora {
+  id: number;
+  distribuidora_id: number;
+  estado_anterior: string | null;
+  estado_nuevo: string;
+  motivo: string | null;
+  cambiado_por: { id: number | null; name: string | null; email: string | null };
+  fecha: string | null;
+  created_at: string;
+}
+
 export interface DistribuidoraResumen {
   id: number;
   usuario_id: number;

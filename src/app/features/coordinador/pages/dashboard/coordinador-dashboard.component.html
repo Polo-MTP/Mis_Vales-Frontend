@@ -12,29 +12,32 @@
 
   <!-- Estadísticas -->
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <div class="stat-card">
+    <a routerLink="/coordinador/solicitudes" [queryParams]="{ filtro: 'en_proceso' }" class="stat-card-clickable">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">En Proceso</p>
       <p class="text-3xl font-black text-blue-500 mt-1">{{ cargandoStats() ? '—' : formato(enProceso()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Pendientes o en verificación</p>
-    </div>
+    </a>
 
-    <div class="stat-card">
+    <a routerLink="/coordinador/solicitudes" [queryParams]="{ filtro: 'aprobado' }" class="stat-card-clickable">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Aprobadas</p>
       <p class="text-3xl font-black text-emerald-500 mt-1">{{ cargandoStats() ? '—' : formato(aprobadas()) }}</p>
       <p class="text-xs text-slate-400 mt-1">Distribuidores dados de alta</p>
-    </div>
+    </a>
 
-    <div class="stat-card">
+    <a routerLink="/coordinador/solicitudes" [queryParams]="{ filtro: 'rechazado' }" class="stat-card-clickable">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Rechazadas</p>
       <p class="text-3xl font-black text-red-400 mt-1">{{ cargandoStats() ? '—' : formato(rechazadas()) }}</p>
       <p class="text-xs text-slate-400 mt-1">No cumplieron la verificación</p>
-    </div>
+    </a>
   </div>
 
   <!-- Acciones Rápidas -->
   <div class="dash-card flex gap-3">
     <a routerLink="/coordinador/solicitudes/nueva" class="btn-primary">
       + Nueva Solicitud de Distribuidor
+    </a>
+    <a routerLink="/coordinador/solicitudes" class="btn-outline">
+      Mis Solicitudes
     </a>
     <a routerLink="/coordinador/reportes/morosos" class="btn-outline">
       Reporte de Morosos
