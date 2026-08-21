@@ -20,8 +20,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       const isAuthChallengeRequest = req.url.includes('/login') || req.url.includes('/mfa/');
       if (error.status === 401 && !isAuthChallengeRequest) {
+        const yaHabiaSesion = authService.isAuthenticated();
         authService.clearSession();
-        router.navigate(['/auth/login']);
+        router.navigate(['/auth/login'], {
+          queryParams: yaHabiaSesion ? { sessionMessage: error.error?.message || 'Tu sesión terminó. Inicia sesión de nuevo.' } : {}
+        });
       }
       return throwError(() => error);
     })

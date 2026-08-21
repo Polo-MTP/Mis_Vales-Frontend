@@ -166,7 +166,14 @@
             </div>
             <div>
               <label class="form-label">Contraseña *</label>
-              <input type="password" formControlName="password" minlength="8" class="form-input">
+              <div class="flex items-center gap-2">
+                <input [type]="mostrarPassword() ? 'text' : 'password'" formControlName="password" class="form-input flex-1">
+                <button type="button" (click)="toggleMostrarPassword()" class="btn-link-primary shrink-0 whitespace-nowrap">
+                  {{ mostrarPassword() ? 'Ocultar' : 'Ver' }}
+                </button>
+                <button type="button" (click)="generarPassword()" class="btn-link-primary shrink-0 whitespace-nowrap">Generar</button>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">{{ mensajePasswordSegura }}</p>
               <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('password')">{{ errorFor('password') }}</p>
             </div>
           </div>
