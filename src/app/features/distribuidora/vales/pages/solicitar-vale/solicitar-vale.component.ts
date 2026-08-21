@@ -6,7 +6,7 @@ import { ValeService } from '../../services/vale.service';
 import { ProductoCatalogoService } from '../../services/producto-catalogo.service';
 import { ClienteService } from '../../../clientes/services/cliente.service';
 import { Cliente } from '../../../../../core/models/cliente.model';
-import { Producto } from '../../../../../core/models/producto.model';
+import { Producto, SimulacionProducto } from '../../../../../core/models/producto.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 
 @Component({
@@ -31,6 +31,9 @@ export class SolicitarValeComponent implements OnInit {
   errorMessage = signal<string | null>(null);
   fieldErrors = signal<Record<string, string[]>>({});
 
+  simulacion = signal<SimulacionProducto | null>(null);
+  simulando = signal(false);
+
   form = this.fb.group({
     cliente_id: ['', [Validators.required]],
     producto_id: ['', [Validators.required]]
@@ -47,6 +50,24 @@ export class SolicitarValeComponent implements OnInit {
         this.cargandoDatos.set(false);
       },
       error: () => this.cargandoDatos.set(false)
+    });
+
+    this.form.controls.producto_id.valueChanges.subscribe((id) => this.onProductoChange(id));
+  }
+
+  private onProductoChange(id: string | null): void {
+    this.simulacion.set(null);
+    if (!id) {
+      return;
+    }
+
+    this.simulando.set(true);
+    this.productoService.simular(Number(id)).subscribe({
+      next: (data) => {
+        this.simulacion.set(data);
+        this.simulando.set(false);
+      },
+      error: () => this.simulando.set(false)
     });
   }
 

@@ -24,3 +24,17 @@ export interface ActualizarProductoPayload {
   descripcion?: string;
   activo?: boolean;
 }
+
+export interface SimulacionProducto {
+  producto_id: number;
+  monto: number;
+  quincenas: number;
+  capital: number;
+  comision: number;
+  interes: number;
+  seguro: number;
+  categoria: number;
+  pago_quincenal: number;
+  total_estimado_plazo: number;
+  nota: string;
+}
