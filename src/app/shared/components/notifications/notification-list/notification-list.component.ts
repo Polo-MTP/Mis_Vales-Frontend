@@ -6,7 +6,7 @@ import { Notificacion } from '../../../../core/models/notificacion.model';
 import { PaginatedResponse } from '../../../../core/models/user.model';
 import { PaginationComponent } from '../../pagination/pagination.component';
 import {
-  auditAccionLabel,
+  notificacionAccionLabel,
   auditRecursoLabel
 } from '../../../utils/labels';
 
@@ -28,7 +28,7 @@ export class NotificationListComponent implements OnInit {
 
   pagina = signal(1);
 
-  readonly auditAccionLabel = auditAccionLabel;
+  readonly notificacionAccionLabel = notificacionAccionLabel;
   readonly auditRecursoLabel = auditRecursoLabel;
 
   ngOnInit(): void {
@@ -77,5 +77,19 @@ export class NotificationListComponent implements OnInit {
   this.pagina.set(nuevaPagina);
   this.cargar();
 }
+
+  marcarComoLeida(n: Notificacion): void {
+    // Las entradas del feed de supervisión (Gerente/Administrador) no tienen destinatario --
+    // son de todos y de nadie a la vez, no se marcan como leídas.
+    if (n.leida || n.destinatario_id === null) return;
+
+    this.notificationService.marcarLeida(n.id).subscribe({
+      next: (res) => {
+        if (res.data) {
+          this.notificaciones.update((lista) => lista.map((item) => (item.id === n.id ? res.data! : item)));
+        }
+      }
+    });
+  }
 
 }

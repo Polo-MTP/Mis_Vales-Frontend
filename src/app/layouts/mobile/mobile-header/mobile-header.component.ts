@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../features/auth/services/auth.service';
+import { NotificationBellComponent } from '../../../shared/components/notifications/notification-bell/notification-bell';
 
 @Component({
   selector: 'app-mobile-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationBellComponent],
   templateUrl: './mobile-header.component.html'
 })
 export class MobileHeaderComponent {

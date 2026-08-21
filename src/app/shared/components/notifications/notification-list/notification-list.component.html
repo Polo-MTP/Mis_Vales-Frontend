@@ -22,24 +22,30 @@
 >
   <div
     *ngFor="let n of notificaciones()"
-    class="list-card-item cursor-default"
+    (click)="marcarComoLeida(n)"
+    class="list-card-item"
+    [class.cursor-default]="n.destinatario_id === null"
+    [class.opacity-60]="n.leida"
   >
-    <div>
-      <p class="font-bold text-slate-100">
-        {{ auditAccionLabel(n.accion) }}
-      </p>
+    <div class="flex items-start gap-2">
+      <span *ngIf="n.destinatario_id !== null && !n.leida" class="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0"></span>
+      <div>
+        <p class="font-bold text-slate-100">
+          {{ notificacionAccionLabel(n.accion) }}
+        </p>
 
-      <p class="text-xs text-slate-400 mt-0.5">
-        {{ auditRecursoLabel(n.recurso) }}
+        <p class="text-xs text-slate-400 mt-0.5">
+          {{ auditRecursoLabel(n.recurso) }}
 
-        <span *ngIf="n.sucursal">
-          · {{ n.sucursal.nombre }}
-        </span>
+          <span *ngIf="n.sucursal">
+            · {{ n.sucursal.nombre }}
+          </span>
 
-        <span *ngIf="n.usuario">
-          · {{ n.usuario.name }}
-        </span>
-      </p>
+          <span *ngIf="n.usuario">
+            · {{ n.usuario.name }}
+          </span>
+        </p>
+      </div>
     </div>
 
     <span class="text-xs text-slate-500 shrink-0">

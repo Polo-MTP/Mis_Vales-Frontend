@@ -3,8 +3,9 @@
   <!-- Header del Panel -->
   <div class="px-4 py-3 border-b border-slate-700 flex items-center justify-between">
     <h3 class="text-sm font-bold text-slate-100">Notificaciones</h3>
-    <a 
-      routerLink="/administrador/notificaciones" 
+    <a
+      *ngIf="tieneVistaCompleta"
+      routerLink="/administrador/notificaciones"
       (click)="onClose()"
       class="text-xs text-blue-400 hover:text-blue-300 font-medium"
     >

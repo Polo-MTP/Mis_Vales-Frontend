@@ -130,6 +130,26 @@ export function auditAccionLabel(accion: string | null | undefined): string {
   return `${info.singular} ${participio[info.genero]}`;
 }
 
+/** Eventos de negocio dirigidos a un destinatario específico (accion sin puntos, a diferencia
+ *  de "Modelo.evento" del feed de auditoría) -- ver NotificacionService::crear() en el backend. */
+const NOTIFICACION_ACCION_LABELS: Record<string, string> = {
+  corte_listo: 'Se generó un nuevo corte',
+  puntos_generados: 'Ganaste puntos por pago anticipado',
+  puntos_penalizados: 'Se te penalizaron puntos por pago fuera de tiempo',
+  credito_asignado: 'Se te asignó tu línea de crédito',
+  credito_incrementado: 'Tu línea de crédito aumentó',
+  distribuidora_morosa: 'Una distribuidora de tu sucursal cayó en morosidad',
+  solicitud_verificada: 'Una solicitud fue verificada en campo (cumple)',
+  solicitud_rechazada_verificador: 'Una solicitud fue rechazada en la verificación de campo',
+};
+
+/** Notificaciones dirigidas a un usuario (accion de negocio) o del feed de auditoría
+ *  ("Modelo.evento") -- unifica ambos formatos en una sola etiqueta legible. */
+export function notificacionAccionLabel(accion: string | null | undefined): string {
+  if (!accion) return '';
+  return NOTIFICACION_ACCION_LABELS[accion] ?? auditAccionLabel(accion);
+}
+
 /** "Distribuidora#4" -> "Distribuidora N.º 4" */
 export function auditRecursoLabel(recurso: string | null | undefined): string {
   if (!recurso) return '';

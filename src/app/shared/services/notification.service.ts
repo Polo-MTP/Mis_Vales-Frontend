@@ -27,4 +27,8 @@ export class NotificationService {
       ApiResponse<PaginatedResponse<Notificacion>>
     >(this.baseUrl, { params });
   }
+
+  marcarLeida(id: number): Observable<ApiResponse<Notificacion>> {
+    return this.http.put<ApiResponse<Notificacion>>(`${this.baseUrl}/${id}/leida`, {});
+  }
 }
