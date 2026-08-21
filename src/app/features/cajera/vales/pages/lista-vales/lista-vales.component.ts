@@ -5,7 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ValeService } from '../../services/vale.service';
 import { DistribuidoraService } from '../../../../gerente/distribuidoras/services/distribuidora.service';
+import { RelacionService } from '../../../../distribuidora/relaciones/services/relacion.service';
 import { Vale, EstadoVale } from '../../../../../core/models/vale.model';
+import { ProximoPago } from '../../../../../core/models/relacion.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
 import { estadoValeLabel } from '../../../../../shared/utils/labels';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
@@ -21,8 +23,13 @@ import { SoloNumerosDirective } from '../../../../../shared/directives/solo-nume
 export class ListaValesComponent implements OnInit {
   private valeService = inject(ValeService);
   private distribuidoraService = inject(DistribuidoraService);
+  private relacionService = inject(RelacionService);
 
   saldoPorDistribuidora = signal<Record<number, number | 'cargando' | 'error'>>({});
+  /** Referencia del próximo corte por distribuidora, para vales ya autorizados que todavía no
+   *  tienen un corte real (v.cortes vacío) -- sin esto la cajera no sabe con qué referencia va
+   *  a llegar el pago hasta que el corte ya se generó. */
+  proximoPagoPorDistribuidora = signal<Record<number, ProximoPago | 'cargando' | 'error'>>({});
 
   vales = signal<Vale[]>([]);
   paginacion = signal<PaginatedResponse<Vale> | null>(null);
@@ -56,14 +63,38 @@ export class ListaValesComponent implements OnInit {
     this.valeService.listar(this.pagina(), estado).subscribe({
       next: (res) => {
         this.paginacion.set(res.data ?? null);
-        this.vales.set(res.data?.data ?? []);
+        const vales = res.data?.data ?? [];
+        this.vales.set(vales);
         this.cargando.set(false);
+        this.cargarProximoPagoDeAutorizadosSinCorte(vales);
       },
       error: () => {
         this.error.set('No se pudieron cargar los vales.');
         this.cargando.set(false);
       }
     });
+  }
+
+  /** Un vale ya autorizado (o parcial/vencido) que todavía no tiene ningún corte real: la
+   *  cajera necesita saber con qué referencia va a llegar el pago sin tener que esperar a que
+   *  el corte se genere. Se carga automáticamente, una vez por distribuidora. */
+  private cargarProximoPagoDeAutorizadosSinCorte(vales: Vale[]): void {
+    const distribuidoraIds = new Set(
+      vales
+        .filter((v) => ['autorizado', 'parcial', 'vencido'].includes(v.estado) && v.cortes.length === 0)
+        .map((v) => v.distribuidora_id)
+    );
+
+    for (const distribuidoraId of distribuidoraIds) {
+      if (this.proximoPagoPorDistribuidora()[distribuidoraId] !== undefined) continue;
+
+      this.proximoPagoPorDistribuidora.update((mapa) => ({ ...mapa, [distribuidoraId]: 'cargando' }));
+
+      this.relacionService.proximoPago(distribuidoraId).subscribe({
+        next: (res) => this.proximoPagoPorDistribuidora.update((mapa) => ({ ...mapa, [distribuidoraId]: res.data ?? 'error' })),
+        error: () => this.proximoPagoPorDistribuidora.update((mapa) => ({ ...mapa, [distribuidoraId]: 'error' }))
+      });
+    }
   }
 
   cambiarFiltro(estado: EstadoVale | 'todos'): void {

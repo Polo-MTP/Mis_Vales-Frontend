@@ -100,6 +100,21 @@
           <span class="font-bold text-slate-200 text-xs">Pago por quincena</span>
           <span class="font-black text-slate-100">${{ e.pago_quincenal }}</span>
         </div>
+
+        <!-- Referencia del próximo corte -- solo tiene sentido una vez que el vale ya fue
+             autorizado (no para solicitado/validado, que todavía se pueden cancelar). -->
+        <ng-container *ngIf="['autorizado','parcial','vencido'].includes(v.estado)">
+          <ng-container [ngSwitch]="proximoPagoPorDistribuidora()[v.distribuidora_id]">
+            <p *ngSwitchCase="'cargando'" class="text-xs text-slate-500 pt-1">Buscando referencia del próximo corte...</p>
+            <p *ngSwitchCase="'error'" class="text-xs text-red-400 pt-1">No se pudo cargar la referencia del próximo corte.</p>
+            <ng-container *ngSwitchDefault>
+              <p *ngIf="proximoPagoPorDistribuidora()[v.distribuidora_id] as p" class="text-xs text-slate-400 pt-1 border-t border-slate-800 mt-1">
+                Referencia del próximo corte ({{ $any(p).fecha_corte }}):
+                <span class="font-mono font-bold text-slate-200">{{ $any(p).referencia_pago }}</span>
+              </p>
+            </ng-container>
+          </ng-container>
+        </ng-container>
       </div>
 
       <!-- Checklist obligatorio antes de validar: la cajera debe confirmar qué revisó en persona. -->
