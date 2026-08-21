@@ -47,8 +47,14 @@
 
     <!-- Titular -->
     <div class="dash-card">
-      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Titular</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-300">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Titular</h2>
+        <button type="button" (click)="toggleEditarInfo()" class="btn-outline w-auto shrink-0">
+          {{ editandoInfo() ? 'Cancelar' : 'Editar' }}
+        </button>
+      </div>
+
+      <div *ngIf="!editandoInfo()" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-300">
         <p><span class="text-slate-500">Nombre:</span> {{ d.datos_personales.nombre }} {{ d.datos_personales.apellido_paterno }} {{ d.datos_personales.apellido_materno }}</p>
         <p><span class="text-slate-500">CURP:</span> {{ d.datos_personales.curp }}</p>
         <p><span class="text-slate-500">Coordinador:</span> {{ d.coordinador.name || 'N/D' }}</p>
@@ -57,6 +63,67 @@
           <span class="text-slate-500">Comentario del verificador:</span> {{ d.comentarios_verificador }}
         </p>
       </div>
+
+      <form *ngIf="editandoInfo()" [formGroup]="infoForm" (ngSubmit)="guardarInfo()" class="space-y-4">
+        <div *ngIf="errorInfo()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-sm">
+          {{ errorInfo() }}
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="form-label">Razón Social</label>
+            <input type="text" formControlName="razon_social" class="form-input">
+          </div>
+          <div>
+            <label class="form-label">RFC</label>
+            <input type="text" formControlName="rfc" class="form-input">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="form-label">Nombre</label>
+            <input type="text" formControlName="nombre" class="form-input">
+          </div>
+          <div>
+            <label class="form-label">Apellido Paterno</label>
+            <input type="text" formControlName="apellido_paterno" class="form-input">
+          </div>
+          <div>
+            <label class="form-label">Apellido Materno</label>
+            <input type="text" formControlName="apellido_materno" class="form-input">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="form-label">Fecha de Nacimiento</label>
+            <input type="date" formControlName="fecha_nacimiento" class="form-input">
+          </div>
+          <div>
+            <label class="form-label">Lugar de Nacimiento</label>
+            <input type="text" formControlName="lugar_nacimiento" class="form-input">
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label">Coordinador</label>
+          <select formControlName="coordinador_id" class="form-select">
+            <option value="" disabled>Selecciona un coordinador</option>
+            <option *ngFor="let c of coordinadores()" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Comentario del Verificador</label>
+          <textarea formControlName="comentarios_verificador" rows="2" class="form-input"></textarea>
+        </div>
+
+        <button type="submit" [disabled]="infoForm.invalid || guardandoInfo()" class="btn-primary w-auto">
+          <span *ngIf="!guardandoInfo()">Guardar Cambios</span>
+          <span *ngIf="guardandoInfo()">Guardando...</span>
+        </button>
+      </form>
     </div>
 
     <!-- Historial de Puntos -->

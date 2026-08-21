@@ -5,6 +5,7 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 import { SolicitudService } from '../../services/solicitud.service';
 import { AprobarSolicitudPayload, LogAuditoria, SolicitudProveedor } from '../../../../../core/models/solicitud-proveedor.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { generarPasswordSegura, MENSAJE_PASSWORD_SEGURA, passwordSeguraValidators } from '../../../../../shared/utils/password.util';
 
 @Component({
   selector: 'app-detalle-solicitud',
@@ -41,8 +42,12 @@ export class DetalleSolicitudComponent implements OnInit {
     comentario_gerente: [''],
     limite_credito_asignado: ['', [DetalleSolicitudComponent.multiploDe(1000)]],
     email: ['', [Validators.email]],
-    password: ['', [Validators.minLength(8)]]
+    password: ['', passwordSeguraValidators]
   });
+
+  mostrarPassword = signal(false);
+
+  readonly mensajePasswordSegura = MENSAJE_PASSWORD_SEGURA;
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -73,9 +78,20 @@ export class DetalleSolicitudComponent implements OnInit {
     const control = this.decisionForm.get(campo);
     if (control?.invalid && (control.touched || control.dirty)) {
       if (control.errors?.['email']) return 'Ingresa un correo válido.';
-      if (control.errors?.['minlength']) return 'La contraseña debe tener al menos 8 caracteres.';
+      if (control.errors?.['pattern'] && campo === 'password') return this.mensajePasswordSegura;
     }
     return this.fieldErrors()[campo]?.[0] ?? null;
+  }
+
+  generarPassword(): void {
+    const nueva = generarPasswordSegura();
+    this.decisionForm.get('password')?.setValue(nueva);
+    this.decisionForm.get('password')?.markAsDirty();
+    this.mostrarPassword.set(true);
+  }
+
+  toggleMostrarPassword(): void {
+    this.mostrarPassword.update((v) => !v);
   }
 
   limiteCreditoInvalido(): boolean {

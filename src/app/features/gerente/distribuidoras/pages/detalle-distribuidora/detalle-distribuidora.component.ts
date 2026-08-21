@@ -4,8 +4,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DistribuidoraService } from '../../services/distribuidora.service';
 import { CategoriaDistribuidoraService } from '../../services/categoria-distribuidora.service';
-import { CategoriaDistribuidora, DistribuidoraResumen, EstadoDistribuidora, HistorialEstadoDistribuidora } from '../../../../../core/models/distribuidora.model';
+import { ActualizarDistribuidoraPayload, CategoriaDistribuidora, DistribuidoraResumen, EstadoDistribuidora, HistorialEstadoDistribuidora } from '../../../../../core/models/distribuidora.model';
 import { PuntoMovimiento } from '../../../../../core/models/punto-movimiento.model';
+import { UsuarioService } from '../../../../../core/services/usuario.service';
+import { User } from '../../../../../core/models/user.model';
 
 @Component({
   selector: 'app-detalle-distribuidora',
@@ -20,6 +22,7 @@ export class DetalleDistribuidoraComponent implements OnInit {
   private router = inject(Router);
   private distribuidoraService = inject(DistribuidoraService);
   private categoriaService = inject(CategoriaDistribuidoraService);
+  private usuarioService = inject(UsuarioService);
 
   distribuidora = signal<DistribuidoraResumen | null>(null);
   cargando = signal(true);
@@ -47,9 +50,34 @@ export class DetalleDistribuidoraComponent implements OnInit {
   cargandoHistorialEstado = signal(false);
   mostrarHistorialEstado = signal(false);
 
+  coordinadores = signal<User[]>([]);
+  editandoInfo = signal(false);
+  guardandoInfo = signal(false);
+  errorInfo = signal<string | null>(null);
+
   creditoForm = this.fb.group({
     limite_credito: ['', [Validators.required, Validators.min(0)]],
     categoria_id: ['', [Validators.required]]
+  });
+
+  /**
+   * rfc solo exige required+maxLength (no el size:13 exacto del backend): hay distribuidoras
+   * sembradas con RFC de 12 caracteres, y forzar el formato aquí bloquearía guardar cualquier
+   * OTRO cambio (ej. coordinador) mientras no "arreglen" ese dato viejo. Igual que en
+   * detalle-verificacion.component.ts, solo se manda al backend lo que realmente cambió
+   * (ver soloCambios en guardarInfo), así que un rfc heredado e inválido que nadie tocó nunca
+   * se reenvía y nunca dispara el error del backend.
+   */
+  infoForm = this.fb.group({
+    razon_social: ['', [Validators.required, Validators.maxLength(255)]],
+    rfc: ['', [Validators.required, Validators.maxLength(13)]],
+    coordinador_id: ['', [Validators.required]],
+    nombre: ['', [Validators.required, Validators.maxLength(255)]],
+    apellido_paterno: ['', [Validators.required, Validators.maxLength(255)]],
+    apellido_materno: ['', [Validators.maxLength(255)]],
+    fecha_nacimiento: [''],
+    lugar_nacimiento: ['', [Validators.maxLength(255)]],
+    comentarios_verificador: ['']
   });
 
   ngOnInit(): void {
@@ -59,6 +87,11 @@ export class DetalleDistribuidoraComponent implements OnInit {
     this.categoriaService.listar().subscribe({
       next: (res) => this.categorias.set(res.data ?? []),
       error: () => this.categorias.set([])
+    });
+
+    this.usuarioService.listar('Coordinador').subscribe({
+      next: (res) => this.coordinadores.set(res.data ?? []),
+      error: () => this.coordinadores.set([])
     });
   }
 
@@ -74,6 +107,18 @@ export class DetalleDistribuidoraComponent implements OnInit {
         this.creditoForm.patchValue({
           limite_credito: String(data.limite_credito ?? ''),
           categoria_id: data.categoria ? String(data.categoria.id) : ''
+        });
+
+        this.infoForm.patchValue({
+          razon_social: data.razon_social ?? '',
+          rfc: data.rfc ?? '',
+          coordinador_id: data.coordinador?.id ? String(data.coordinador.id) : '',
+          nombre: data.datos_personales.nombre ?? '',
+          apellido_paterno: data.datos_personales.apellido_paterno ?? '',
+          apellido_materno: data.datos_personales.apellido_materno ?? '',
+          fecha_nacimiento: data.datos_personales.fecha_nacimiento ?? '',
+          lugar_nacimiento: data.datos_personales.lugar_nacimiento ?? '',
+          comentarios_verificador: data.comentarios_verificador ?? ''
         });
       },
       error: () => {
@@ -136,6 +181,65 @@ export class DetalleDistribuidoraComponent implements OnInit {
         );
       }
     });
+  }
+
+  toggleEditarInfo(): void {
+    this.editandoInfo.update((v) => !v);
+    this.errorInfo.set(null);
+  }
+
+  guardarInfo(): void {
+    const d = this.distribuidora();
+    if (!d || this.infoForm.invalid) {
+      this.infoForm.markAllAsTouched();
+      return;
+    }
+
+    this.guardandoInfo.set(true);
+    this.errorInfo.set(null);
+
+    const val = this.infoForm.value;
+
+    const payload: ActualizarDistribuidoraPayload = {};
+    if (val.razon_social !== d.razon_social) payload.razon_social = val.razon_social!;
+    if (val.rfc !== d.rfc) payload.rfc = val.rfc!;
+    if (Number(val.coordinador_id) !== d.coordinador?.id) payload.coordinador_id = Number(val.coordinador_id);
+    if ((val.comentarios_verificador || null) !== (d.comentarios_verificador || null)) {
+      payload.comentarios_verificador = val.comentarios_verificador || null;
+    }
+
+    const datosPersonales: Record<string, string> = {};
+    if (val.nombre !== d.datos_personales.nombre) datosPersonales['nombre'] = val.nombre!;
+    if (val.apellido_paterno !== d.datos_personales.apellido_paterno) datosPersonales['apellido_paterno'] = val.apellido_paterno!;
+    if (val.apellido_materno !== d.datos_personales.apellido_materno) datosPersonales['apellido_materno'] = val.apellido_materno || '';
+    if (val.fecha_nacimiento !== d.datos_personales.fecha_nacimiento) datosPersonales['fecha_nacimiento'] = val.fecha_nacimiento || '';
+    if (val.lugar_nacimiento !== d.datos_personales.lugar_nacimiento) datosPersonales['lugar_nacimiento'] = val.lugar_nacimiento || '';
+    if (Object.keys(datosPersonales).length > 0) payload.datos_personales = datosPersonales;
+
+    if (Object.keys(payload).length === 0) {
+      this.guardandoInfo.set(false);
+      this.editandoInfo.set(false);
+      return;
+    }
+
+    this.distribuidoraService
+      .actualizar(d.id, payload)
+      .subscribe({
+        next: (data) => {
+          this.guardandoInfo.set(false);
+          this.distribuidora.set(data);
+          this.editandoInfo.set(false);
+        },
+        error: (err) => {
+          this.guardandoInfo.set(false);
+          if (err.status === 403) {
+            this.errorInfo.set('No tienes permiso para editar esta distribuidora.');
+            return;
+          }
+          const primerError = Object.values(err.error?.errors ?? {})[0] as string[] | undefined;
+          this.errorInfo.set(primerError?.[0] || err.error?.message || 'Ocurrió un error al guardar los cambios.');
+        }
+      });
   }
 
   toggleHistorialPuntos(): void {

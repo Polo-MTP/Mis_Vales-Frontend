@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private recaptchaService = inject(RecaptchaService);
   private http = inject(HttpClient);
 
@@ -49,6 +50,11 @@ export class LoginComponent implements OnInit {
       next: (res) => this.serverNumber.set(res.server),
       error: () => this.serverNumber.set(null),
     });
+
+    const sessionMessage = this.route.snapshot.queryParams['sessionMessage'];
+    if (sessionMessage) {
+      this.errorMessage.set(sessionMessage);
+    }
   }
 
   async onLoginSubmit(): Promise<void> {

@@ -36,6 +36,20 @@ export interface HistorialEstadoDistribuidora {
   created_at: string;
 }
 
+export interface ActualizarDistribuidoraPayload {
+  razon_social?: string;
+  rfc?: string;
+  coordinador_id?: number;
+  comentarios_verificador?: string | null;
+  datos_personales?: {
+    nombre?: string;
+    apellido_paterno?: string;
+    apellido_materno?: string;
+    fecha_nacimiento?: string;
+    lugar_nacimiento?: string;
+  };
+}
+
 export interface DistribuidoraResumen {
   id: number;
   usuario_id: number;

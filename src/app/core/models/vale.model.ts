@@ -1,6 +1,16 @@
 export type EstadoVale = 'solicitado' | 'validado' | 'autorizado' | 'pagado' | 'vencido' | 'incidencia' | 'parcial';
 export type TipoVale = 'pre-vale' | 'vale-digital';
 
+/** Cuota de este vale que ya se incluyó en un corte (Relación) -- para saber "de qué corte es". */
+export interface CorteDeVale {
+  relacion_id: number;
+  referencia_pago: string | null;
+  fecha_corte: string | null;
+  cuota: string;
+  estado_cuota: string;
+  total: string;
+}
+
 export interface Vale {
   id: number;
   distribuidora_id: number;
@@ -20,6 +30,7 @@ export interface Vale {
   fecha_autorizacion: string | null;
   numero_transferencia: string | null;
   created_at: string;
+  cortes: CorteDeVale[];
 }
 
 export interface SolicitarValePayload {
