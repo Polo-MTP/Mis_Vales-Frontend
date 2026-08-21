@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from '../../../../core/models/auth-response.model';
-import { EstadoRelacion, Relacion } from '../../../../core/models/relacion.model';
+import { EstadoRelacion, ProximoPago, Relacion } from '../../../../core/models/relacion.model';
 import { PaginacionAnidada } from '../../../../core/models/paginacion-anidada.model';
 
 @Injectable({ providedIn: 'root' })
@@ -21,5 +21,16 @@ export class RelacionService {
 
   detalle(id: number): Observable<ApiResponse<Relacion>> {
     return this.http.get<ApiResponse<Relacion>>(`${this.baseUrl}/${id}`);
+  }
+
+  /** Cuándo será el próximo corte y cuánto se estima, ANTES de que exista -- si quien pregunta
+   *  es una Distribuidora, es la suya; el staff puede pasar distribuidoraId para consultar la
+   *  de alguien más. */
+  proximoPago(distribuidoraId?: number): Observable<ApiResponse<ProximoPago>> {
+    let params = new HttpParams();
+    if (distribuidoraId) {
+      params = params.set('distribuidora_id', String(distribuidoraId));
+    }
+    return this.http.get<ApiResponse<ProximoPago>>(`${this.baseUrl}/proximo-pago`, { params });
   }
 }

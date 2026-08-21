@@ -20,6 +20,17 @@ export interface RelacionDetalle {
   estado: string;
 }
 
+/** Próximo corte antes de que exista -- fecha_corte/referencia_pago son deterministas
+ *  (distribuidora_id + fecha_corte), no dependen de que el corte ya se haya generado. */
+export interface ProximoPago {
+  fecha_corte: string;
+  fecha_limite_pago: string;
+  referencia_pago: string;
+  monto_estimado: number;
+  vales: Array<{ vale_id: number; monto: number; pago_estimado: number }>;
+  nota: string;
+}
+
 export interface Relacion {
   id: number;
   distribuidora_id: number;

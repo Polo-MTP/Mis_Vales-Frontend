@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
 import { Router, RouterModule } from '@angular/router';
 import { RelacionService } from '../../services/relacion.service';
-import { EstadoRelacion, Relacion } from '../../../../../core/models/relacion.model';
+import { EstadoRelacion, ProximoPago, Relacion } from '../../../../../core/models/relacion.model';
 import { PaginacionAnidada } from '../../../../../core/models/paginacion-anidada.model';
 
 @Component({
@@ -24,8 +24,15 @@ export class ListaRelacionesComponent implements OnInit {
   pagina = signal(1);
   filtroEstado = signal<EstadoRelacion | 'todas'>('todas');
 
+  proximoPago = signal<ProximoPago | null>(null);
+
   ngOnInit(): void {
     this.cargar();
+
+    this.relacionService.proximoPago().subscribe({
+      next: (res) => this.proximoPago.set(res.data ?? null),
+      error: () => this.proximoPago.set(null)
+    });
   }
 
   cargar(): void {
