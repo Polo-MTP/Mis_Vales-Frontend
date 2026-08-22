@@ -49,10 +49,11 @@ export class SharedSidebarComponent {
       { label: 'Auditoría', route: '/administrador/logs' },
       { label: 'Notificaciones', route: '/administrador/notificaciones' }
     ],
-    // "Personal y Sucursales" es exclusivo de Gerente General en el backend -- Gerente de
-    // Sucursal no lo ve, no le sirve de nada verlo de solo lectura.
+    // "Personal y Sucursales" ahora también le sirve a Gerente de Sucursal: puede dar de alta
+    // Coordinador/Verificador/Cajera para su propia sucursal (aunque solo Gerente General ve
+    // el alta de Gerentes de Sucursal y la administración de sucursales dentro de esa página).
     'Gerente General': [...MENU_GERENTE, { label: 'Personal y Sucursales', route: '/gerente/personal' }],
-    'Gerente de Sucursal': MENU_GERENTE,
+    'Gerente de Sucursal': [...MENU_GERENTE, { label: 'Mi Personal', route: '/gerente/personal' }],
     Cajera: [
       { label: 'Dashboard', route: '/cajera' },
       { label: 'Conciliación Bancaria', route: '/cajera/conciliaciones' },

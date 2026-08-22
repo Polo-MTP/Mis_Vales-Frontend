@@ -13,6 +13,8 @@ export interface User {
   role?: Role;
   sucursal_id?: number | null;
   sucursal?: { id: number; nombre: string; codigo: string; es_matriz: boolean } | null;
+  gerente_id?: number | null;
+  gerente?: { id: number; name: string } | null;
   is_active?: boolean;
   is_locked?: boolean;
   failed_attempts?: number;

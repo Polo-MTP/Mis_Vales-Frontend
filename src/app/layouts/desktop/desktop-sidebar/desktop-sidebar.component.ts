@@ -66,11 +66,11 @@ export class DesktopSidebarComponent {
       { label: 'Notificaciones', route: '/administrador/notificaciones' }
     ],
 
-    // "Personal y Sucursales" (dar de alta Gerentes de Sucursal, administrar sucursales) es
-    // exclusivo de Gerente General en el backend -- a Gerente de Sucursal no le sirve de nada
-    // verlo de solo lectura, así que ni se le muestra el link.
+    // "Personal y Sucursales" ahora también le sirve a Gerente de Sucursal: puede dar de alta
+    // Coordinador/Verificador/Cajera para su propia sucursal (aunque solo Gerente General ve
+    // el alta de Gerentes de Sucursal y la administración de sucursales dentro de esa página).
     'Gerente General': [...this.menuGerente, { label: 'Personal y Sucursales', route: '/gerente/personal' }],
-    'Gerente de Sucursal': this.menuGerente,
+    'Gerente de Sucursal': [...this.menuGerente, { label: 'Mi Personal', route: '/gerente/personal' }],
 
     Cajera: [
       { label: 'Dashboard', route: '/cajera' },

@@ -1,0 +1,82 @@
+<div class="dash-card space-y-4">
+  <div>
+    <h2 class="text-base font-black text-slate-100">Dar de alta Coordinador, Verificador o Cajera</h2>
+    <p class="text-xs text-slate-400 font-medium" *ngIf="esGerenteGeneral()">
+      Elige la sucursal y el Gerente de Sucursal al que quedará relacionado.
+    </p>
+    <p class="text-xs text-slate-400 font-medium" *ngIf="!esGerenteGeneral()">
+      Quedará relacionado automáticamente a tu sucursal y a ti como su gerente.
+    </p>
+  </div>
+
+  <p *ngIf="exito()" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-3 text-xs font-semibold">
+    {{ exito() }}
+  </p>
+  <p *ngIf="errorMessage()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-xs font-semibold">
+    {{ errorMessage() }}
+  </p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label class="form-label">Rol *</label>
+      <select formControlName="rol" class="form-select">
+        <option value="" disabled>Selecciona un rol</option>
+        <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+      </select>
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('rol')">{{ errorFor('rol') }}</p>
+    </div>
+
+    <div>
+      <label class="form-label">Nombre *</label>
+      <input type="text" formControlName="name" class="form-input">
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('name')">{{ errorFor('name') }}</p>
+    </div>
+
+    <div>
+      <label class="form-label">Correo *</label>
+      <input type="email" formControlName="email" class="form-input">
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('email')">{{ errorFor('email') }}</p>
+    </div>
+
+    <div>
+      <label class="form-label">Contraseña *</label>
+      <input type="password" formControlName="password" class="form-input">
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('password')">{{ errorFor('password') }}</p>
+    </div>
+
+    <div>
+      <label class="form-label">Confirmar contraseña *</label>
+      <input type="password" formControlName="password_confirmation" class="form-input">
+    </div>
+
+    <ng-container *ngIf="esGerenteGeneral()">
+      <div>
+        <label class="form-label">Sucursal *</label>
+        <select formControlName="sucursal_id" class="form-select" [disabled]="cargandoOpciones()">
+          <option value="" disabled>Selecciona una sucursal</option>
+          <option *ngFor="let s of sucursales()" [value]="s.id">{{ s.nombre }} ({{ s.codigo }})</option>
+        </select>
+        <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('sucursal_id')">{{ errorFor('sucursal_id') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Gerente de Sucursal *</label>
+        <select formControlName="gerente_id" class="form-select" [disabled]="cargandoOpciones() || !form.value.sucursal_id">
+          <option value="" disabled>{{ form.value.sucursal_id ? 'Selecciona un gerente' : 'Primero elige una sucursal' }}</option>
+          <option *ngFor="let g of gerentesDeLaSucursalElegida()" [value]="g.id">{{ g.name }}</option>
+        </select>
+        <p class="text-xs text-slate-500 mt-1" *ngIf="form.value.sucursal_id && gerentesDeLaSucursalElegida().length === 0">
+          Esta sucursal no tiene ningún Gerente de Sucursal dado de alta todavía.
+        </p>
+        <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('gerente_id')">{{ errorFor('gerente_id') }}</p>
+      </div>
+    </ng-container>
+
+    <div class="sm:col-span-2">
+      <button type="submit" [disabled]="form.invalid || enviando()" class="btn-primary">
+        <span *ngIf="!enviando()">Crear</span>
+        <span *ngIf="enviando()">Creando...</span>
+      </button>
+    </div>
+  </form>
+</div>

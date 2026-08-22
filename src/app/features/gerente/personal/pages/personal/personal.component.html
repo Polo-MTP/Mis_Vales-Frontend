@@ -1,11 +1,16 @@
 <div class="layout-container">
 
   <div class="dash-card space-y-1">
-    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Personal y Sucursales</h1>
-    <p class="text-xs text-slate-400 font-medium">Alta de Gerentes de Sucursal y administración de sucursales.</p>
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ esGerenteGeneral() ? 'Personal y Sucursales' : 'Mi Personal' }}</h1>
+    <p class="text-xs text-slate-400 font-medium">
+      {{ esGerenteGeneral()
+        ? 'Alta de Gerentes de Sucursal, de personal operativo y administración de sucursales.'
+        : 'Alta de Coordinador, Verificador y Cajera para tu sucursal.' }}
+    </p>
   </div>
 
   <app-crear-gerente-sucursal *ngIf="esGerenteGeneral()"></app-crear-gerente-sucursal>
+  <app-crear-personal-sucursal></app-crear-personal-sucursal>
   <app-sucursales></app-sucursales>
 
 </div>
