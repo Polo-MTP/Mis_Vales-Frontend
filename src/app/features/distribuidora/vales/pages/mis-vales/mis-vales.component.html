@@ -49,14 +49,18 @@
       </div>
 
       <!-- Cortes donde ya se facturó una cuota de este vale -->
-      <div *ngIf="v.cortes.length > 0" class="w-full mt-3 pt-3 border-t border-slate-700/60 flex flex-wrap gap-2">
-        <a *ngFor="let c of v.cortes" [routerLink]="['/distribuidora/relaciones', c.relacion_id]"
-           class="text-xs bg-slate-800/60 hover:bg-slate-700/60 border border-slate-700 rounded-lg px-2.5 py-1.5 inline-flex items-center gap-1.5 transition-colors">
-          <span class="text-slate-400">Cuota {{ c.cuota }} · Corte {{ c.fecha_corte }}</span>
-          <span class="font-bold" [class.text-emerald-400]="c.estado_cuota === 'pagado'" [class.text-amber-400]="c.estado_cuota !== 'pagado'">
-            ${{ c.total }}
-          </span>
-        </a>
+      <div *ngIf="v.cortes.length > 0" class="w-full mt-3 pt-3 border-t border-slate-700/60 space-y-2">
+        <div *ngFor="let c of v.cortes" class="bg-slate-800/60 border border-slate-700 rounded-lg p-2.5 text-xs">
+          <a [routerLink]="['/distribuidora/relaciones', c.relacion_id]" class="flex items-center justify-between gap-1.5 hover:underline">
+            <span class="text-slate-400">Cuota {{ c.cuota }} · Corte {{ c.fecha_corte }}</span>
+            <span class="font-bold" [class.text-emerald-400]="c.estado_cuota === 'pagado'" [class.text-amber-400]="c.estado_cuota !== 'pagado'">
+              ${{ c.total }}
+            </span>
+          </a>
+          <p *ngIf="c.estado_cuota !== 'pagado'" class="text-slate-500 mt-1">
+            Si pagas este vale por separado de los demás del mismo corte, pon en <strong class="text-slate-300">Concepto</strong>: <span class="font-mono font-bold text-slate-200">{{ c.concepto }}</span>
+          </p>
+        </div>
       </div>
       <!-- Estimado del pago quincenal mientras no tenga ninguna cuota facturada en un corte -->
       <div *ngIf="v.cortes.length === 0 && v.estimacion as e" class="w-full mt-3 pt-3 border-t border-slate-700/60 space-y-1.5">

@@ -3,6 +3,9 @@ export type EstadoRelacion = 'pendiente' | 'parcial' | 'vencida' | 'perdonada' |
 export interface RelacionDetalle {
   id: number;
   vale_id: number;
+  /** Identificador único de esta cuota dentro del corte -- lo que va en "Concepto" de la
+   *  transferencia si el corte junta más de un vale y se paga cada uno por separado. */
+  concepto: string;
   cliente: { id: number | null; nombre: string };
   producto: string | null;
   cuota: string;
@@ -29,7 +32,7 @@ export interface ProximoPago {
    *  la distribuidora aún puede cancelar, así que no hay nada firme que respalde una referencia. */
   referencia_pago: string | null;
   monto_estimado: number;
-  vales: Array<{ vale_id: number; monto: number; pago_estimado: number }>;
+  vales: Array<{ vale_id: number; monto: number; pago_estimado: number; concepto: string }>;
   nota: string;
 }
 

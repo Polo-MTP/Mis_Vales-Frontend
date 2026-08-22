@@ -5,6 +5,9 @@ export type TipoVale = 'pre-vale' | 'vale-digital';
 export interface CorteDeVale {
   relacion_id: number;
   referencia_pago: string | null;
+  /** Identificador único de esta cuota dentro del corte -- lo que va en "Concepto" de la
+   *  transferencia si el corte junta más de un vale y se paga cada uno por separado. */
+  concepto: string;
   fecha_corte: string | null;
   cuota: string;
   estado_cuota: string;
