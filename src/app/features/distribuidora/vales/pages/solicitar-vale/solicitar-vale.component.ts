@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,7 +13,7 @@ import { AlertComponent } from '../../../../../shared/components/alert/alert.com
 @Component({
   selector: 'app-solicitar-vale',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, DineroPipe],
   templateUrl: './solicitar-vale.component.html',
   styleUrl: './solicitar-vale.component.css'
 })

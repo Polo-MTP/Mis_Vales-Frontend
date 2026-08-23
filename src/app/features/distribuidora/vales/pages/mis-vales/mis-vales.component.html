@@ -26,7 +26,7 @@
     <div *ngFor="let v of vales()" class="list-card-item cursor-default flex-col items-stretch">
       <div class="flex items-center justify-between w-full">
         <div>
-          <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — ${{ v.monto }}</p>
+          <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — {{ (v.monto) | dinero }}</p>
           <p class="text-xs text-slate-400 mt-0.5">
             {{ v.producto?.descripcion || (v.quincenas + ' quincenas') }} · Solicitado {{ v.fecha_solicitud | date:'short' }}
           </p>
@@ -54,7 +54,7 @@
           <a [routerLink]="['/distribuidora/relaciones', c.relacion_id]" class="flex items-center justify-between gap-1.5 hover:underline">
             <span class="text-slate-400">Cuota {{ c.cuota }} · Corte {{ c.fecha_corte }}</span>
             <span class="font-bold" [class.text-emerald-400]="c.estado_cuota === 'pagado'" [class.text-amber-400]="c.estado_cuota !== 'pagado'">
-              ${{ c.total }}
+              {{ (c.total) | dinero }}
             </span>
           </a>
           <p *ngIf="c.estado_cuota !== 'pagado'" class="text-slate-500 mt-1">
@@ -66,16 +66,16 @@
       <div *ngIf="v.cortes.length === 0 && v.estimacion as e" class="w-full mt-3 pt-3 border-t border-slate-700/60 space-y-1.5">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Estimado por quincena (aún sin corte)</p>
         <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-          <span class="text-slate-500">Capital</span><span class="text-slate-300 text-right">${{ e.capital }}</span>
-          <span class="text-slate-500">Comisión</span><span class="text-slate-300 text-right">${{ e.comision }}</span>
-          <span class="text-slate-500">Interés</span><span class="text-slate-300 text-right">${{ e.interes }}</span>
-          <span class="text-slate-500">Seguro</span><span class="text-slate-300 text-right">${{ e.seguro }}</span>
+          <span class="text-slate-500">Capital</span><span class="text-slate-300 text-right">{{ (e.capital) | dinero }}</span>
+          <span class="text-slate-500">Comisión</span><span class="text-slate-300 text-right">{{ (e.comision) | dinero }}</span>
+          <span class="text-slate-500">Interés</span><span class="text-slate-300 text-right">{{ (e.interes) | dinero }}</span>
+          <span class="text-slate-500">Seguro</span><span class="text-slate-300 text-right">{{ (e.seguro) | dinero }}</span>
           <span class="text-slate-500" *ngIf="e.categoria > 0">Descuento categoría</span>
-          <span class="text-emerald-400 text-right" *ngIf="e.categoria > 0">-${{ e.categoria }}</span>
+          <span class="text-emerald-400 text-right" *ngIf="e.categoria > 0">-{{ (e.categoria) | dinero }}</span>
         </div>
         <div class="flex items-center justify-between pt-2 border-t border-slate-800">
           <span class="font-bold text-slate-200">Pago por quincena</span>
-          <span class="font-black text-slate-100 text-base">${{ e.pago_quincenal }}</span>
+          <span class="font-black text-slate-100 text-base">{{ (e.pago_quincenal) | dinero }}</span>
         </div>
         <p class="text-xs text-slate-500 pt-1">{{ e.nota }}</p>
       </div>

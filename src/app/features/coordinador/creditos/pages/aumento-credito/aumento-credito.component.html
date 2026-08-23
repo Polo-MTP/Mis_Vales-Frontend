@@ -20,7 +20,7 @@
       <div>
         <p class="font-bold text-slate-100">{{ s.distribuidora || ('Distribuidora #' + s.distribuidora_id) }}</p>
         <p class="text-xs text-slate-400 mt-0.5">
-          Límite actual ${{ s.limite_credito_anterior }} · Solicita ${{ s.monto_solicitado }}
+          Límite actual {{ (s.limite_credito_anterior) | dinero }} · Solicita {{ (s.monto_solicitado) | dinero }}
         </p>
         <p class="text-xs text-slate-500 mt-0.5">{{ s.motivo }}</p>
         <p class="text-xs text-slate-500 mt-0.5">Pedido por {{ s.solicitante || ('Usuario #' + s.solicitado_por) }} · {{ s.created_at | date:'short' }}</p>

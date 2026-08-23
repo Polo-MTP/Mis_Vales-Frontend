@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,7 +8,7 @@ import { SolicitudProveedor } from '../../../../../core/models/solicitud-proveed
 @Component({
   selector: 'app-detalle-solicitud',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DineroPipe],
   templateUrl: './detalle-solicitud.component.html',
   styleUrl: './detalle-solicitud.component.css'
 })

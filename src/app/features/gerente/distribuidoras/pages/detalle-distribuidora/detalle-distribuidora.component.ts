@@ -8,11 +8,12 @@ import { ActualizarDistribuidoraPayload, CategoriaDistribuidora, DistribuidoraRe
 import { PuntoMovimiento } from '../../../../../core/models/punto-movimiento.model';
 import { UsuarioService } from '../../../../../core/services/usuario.service';
 import { User } from '../../../../../core/models/user.model';
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 
 @Component({
   selector: 'app-detalle-distribuidora',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, DineroPipe],
   templateUrl: './detalle-distribuidora.component.html',
   styleUrl: './detalle-distribuidora.component.css'
 })

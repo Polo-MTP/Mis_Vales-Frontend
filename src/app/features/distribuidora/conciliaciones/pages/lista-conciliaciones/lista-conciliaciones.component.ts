@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -11,7 +12,7 @@ import { tipoPagoLabel, estadoAbonoLabel } from '../../../../../shared/utils/lab
 @Component({
   selector: 'app-lista-conciliaciones',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, PaginationComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, PaginationComponent, DineroPipe],
   templateUrl: './lista-conciliaciones.component.html',
   styleUrl: './lista-conciliaciones.component.css'
 })

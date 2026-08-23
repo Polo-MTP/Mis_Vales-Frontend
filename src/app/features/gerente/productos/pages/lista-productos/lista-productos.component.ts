@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,7 +9,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 @Component({
   selector: 'app-lista-productos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DineroPipe],
   templateUrl: './lista-productos.component.html',
   styleUrl: './lista-productos.component.css'
 })

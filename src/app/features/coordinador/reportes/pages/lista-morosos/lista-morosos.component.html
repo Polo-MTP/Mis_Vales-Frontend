@@ -2,12 +2,12 @@
 
   <div class="dash-card">
     <h1 class="text-2xl font-black text-slate-100 tracking-tight">Distribuidoras Morosas</h1>
-    <p class="text-xs text-slate-400 font-medium mt-1">Distribuidoras con relaciones vencidas o en pérdida.</p>
+    <p class="text-xs text-slate-400 font-medium mt-1">Distribuidoras con relaciones vencidas o en pérdida, y las marcadas como MOROSO (tienen el crédito bloqueado).</p>
   </div>
 
   <div *ngIf="!cargando() && !error() && distribuidoras().length > 0" class="dash-card">
     <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Saldo Pendiente Total</p>
-    <p class="text-3xl font-black text-red-400 mt-1">${{ saldoTotal.toFixed(2) }}</p>
+    <p class="text-3xl font-black text-red-400 mt-1">{{ (saldoTotal.toFixed(2)) | dinero }}</p>
   </div>
 
   <div *ngIf="cargando()" class="state-loading">Cargando reporte...</div>
@@ -31,7 +31,7 @@
       <div class="flex items-center gap-3 shrink-0">
         <span class="text-right">
           <span class="block text-xs text-slate-400">Saldo pendiente</span>
-          <span class="block font-bold text-red-400">${{ d.saldo_pendiente_total.toFixed(2) }}</span>
+          <span class="block font-bold text-red-400">{{ (d.saldo_pendiente_total.toFixed(2)) | dinero }}</span>
         </span>
         <span class="status-badge">{{ d.estado_distribuidora }}</span>
       </div>

@@ -45,7 +45,7 @@
       <tbody>
         <tr *ngFor="let s of seguros()" class="table-row">
           <td class="p-3.5 font-semibold text-slate-100">
-            <span *ngIf="editando() !== s.id">${{ s.monto_desde }}</span>
+            <span *ngIf="editando() !== s.id">{{ (s.monto_desde) | dinero }}</span>
             <form *ngIf="editando() === s.id" [formGroup]="editForm">
               <input type="number" step="0.01" formControlName="monto_desde" class="form-input py-1.5 px-2 text-xs w-24">
             </form>
@@ -57,7 +57,7 @@
             </form>
           </td>
           <td class="p-3.5">
-            <span *ngIf="editando() !== s.id" class="font-bold text-blue-400">${{ s.seguro_monto }}</span>
+            <span *ngIf="editando() !== s.id" class="font-bold text-blue-400">{{ (s.seguro_monto) | dinero }}</span>
             <form *ngIf="editando() === s.id" [formGroup]="editForm">
               <input type="number" step="0.01" formControlName="seguro_monto" class="form-input py-1.5 px-2 text-xs w-20">
             </form>

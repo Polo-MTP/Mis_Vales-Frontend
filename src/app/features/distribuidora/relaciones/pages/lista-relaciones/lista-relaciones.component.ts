@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -9,7 +10,7 @@ import { PaginacionAnidada } from '../../../../../core/models/paginacion-anidada
 @Component({
   selector: 'app-lista-relaciones',
   standalone: true,
-  imports: [CommonModule, RouterModule, PaginationComponent],
+  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe],
   templateUrl: './lista-relaciones.component.html',
   styleUrl: './lista-relaciones.component.css'
 })

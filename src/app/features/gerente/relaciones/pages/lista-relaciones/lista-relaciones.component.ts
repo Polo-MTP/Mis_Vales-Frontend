@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -10,7 +11,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 @Component({
   selector: 'app-lista-relaciones',
   standalone: true,
-  imports: [CommonModule, RouterModule, PaginationComponent],
+  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe],
   templateUrl: './lista-relaciones.component.html',
   styleUrl: './lista-relaciones.component.css'
 })

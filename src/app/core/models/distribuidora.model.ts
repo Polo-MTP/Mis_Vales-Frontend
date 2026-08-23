@@ -58,6 +58,9 @@ export interface DistribuidoraResumen {
   rfc: string | null;
   limite_credito: string | number | null;
   credito_disponible: string | number | null;
+  /** Crédito no consumido != crédito usable. Solo si esta bandera es true el backend deja
+   *  solicitar vales (ver Distribuidora::montoMaximoDisponible()). */
+  puede_solicitar_vales?: boolean;
   categoria: CategoriaDistribuidora | null;
   puntos_acumulados: number | null;
   estado: EstadoDistribuidora;

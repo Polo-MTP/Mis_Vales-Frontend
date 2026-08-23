@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SolicitudAumentoCreditoService } from '../../../../gerente/distribuidoras/services/solicitud-aumento-credito.service';
@@ -11,7 +12,7 @@ import { SolicitudAumentoCredito } from '../../../../../core/models/solicitud-au
 @Component({
   selector: 'app-coordinador-aumento-credito',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DineroPipe],
   templateUrl: './aumento-credito.component.html'
 })
 export class AumentoCreditoComponent implements OnInit {

@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -16,7 +17,7 @@ import { SoloNumerosDirective } from '../../../../../shared/directives/solo-nume
 @Component({
   selector: 'app-lista-vales',
   standalone: true,
-  imports: [CommonModule, RouterModule, AlertComponent, FormsModule, SoloNumerosDirective, PaginationComponent],
+  imports: [CommonModule, RouterModule, AlertComponent, FormsModule, SoloNumerosDirective, PaginationComponent, DineroPipe],
   templateUrl: './lista-vales.component.html',
   styleUrl: './lista-vales.component.css'
 })

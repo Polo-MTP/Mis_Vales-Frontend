@@ -6,11 +6,12 @@ import { SolicitudService } from '../../services/solicitud.service';
 import { AprobarSolicitudPayload, LogAuditoria, SolicitudProveedor } from '../../../../../core/models/solicitud-proveedor.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 import { generarPasswordSegura, MENSAJE_PASSWORD_SEGURA, passwordSeguraValidators } from '../../../../../shared/utils/password.util';
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 
 @Component({
   selector: 'app-detalle-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, DineroPipe],
   templateUrl: './detalle-solicitud.component.html',
   styleUrl: './detalle-solicitud.component.css'
 })

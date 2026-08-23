@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -10,7 +11,7 @@ import { estadoSolicitudLabel } from '../../../../../shared/utils/labels';
 @Component({
   selector: 'app-mis-solicitudes',
   standalone: true,
-  imports: [CommonModule, RouterModule, PaginationComponent],
+  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe],
   templateUrl: './mis-solicitudes.component.html',
   styleUrl: './mis-solicitudes.component.css'
 })

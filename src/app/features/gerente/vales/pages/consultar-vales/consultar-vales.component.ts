@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -14,7 +15,7 @@ import { estadoValeLabel } from '../../../../../shared/utils/labels';
 @Component({
   selector: 'app-consultar-vales',
   standalone: true,
-  imports: [CommonModule, PaginationComponent],
+  imports: [CommonModule, PaginationComponent, DineroPipe],
   templateUrl: './consultar-vales.component.html'
 })
 export class ConsultarValesComponent implements OnInit {

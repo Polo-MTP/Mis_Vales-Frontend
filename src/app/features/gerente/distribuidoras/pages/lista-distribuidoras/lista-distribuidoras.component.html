@@ -34,18 +34,23 @@
   <div *ngIf="!cargando() && !error() && distribuidoras().length > 0" class="space-y-3">
     <div *ngFor="let d of distribuidoras()" (click)="irADetalle(d.id)" class="list-card-item">
       <div>
-        <p class="font-bold text-slate-100">{{ d.razon_social }}</p>
+        <p class="font-bold text-slate-100">{{ d.razon_social || ('Distribuidora #' + d.id) }}</p>
         <p class="text-xs text-slate-400 mt-0.5">
-          {{ d.numero_distribuidora }} · RFC: {{ d.rfc }} · {{ d.sucursal.nombre || 'Sin sucursal' }}
+          {{ d.numero_distribuidora }}<span *ngIf="d.rfc"> · RFC: {{ d.rfc }}</span> · {{ d.sucursal.nombre || 'Sin sucursal' }}
         </p>
         <p class="text-xs text-slate-500 mt-0.5">
-          Titular: {{ d.datos_personales.nombre }} {{ d.datos_personales.apellido_paterno }}
+          Titular: {{ (d.datos_personales.nombre || d.datos_personales.apellido_paterno) ? (d.datos_personales.nombre + ' ' + d.datos_personales.apellido_paterno) : 'Sin registrar' }}
         </p>
       </div>
       <div class="flex items-center gap-3 shrink-0">
+        <!-- Una distribuidora que no está ACTIVO/EN_VERIFICACION tiene el crédito bloqueado:
+             mostrar el crédito no consumido haría creer que puede pedir vales cuando el backend
+             se los va a rechazar (ver Distribuidora::montoMaximoDisponible()). -->
         <span class="text-right">
           <span class="block text-xs text-slate-400">Disponible</span>
-          <span class="block font-bold text-emerald-400">${{ d.credito_disponible }}</span>
+          <span class="block font-bold" [class.text-emerald-400]="d.puede_solicitar_vales" [class.text-slate-500]="!d.puede_solicitar_vales">
+            {{ d.puede_solicitar_vales ? (d.credito_disponible | dinero) : 'Bloqueado' }}
+          </span>
         </span>
         <span class="status-badge"
               [class.bg-emerald-500/15]="d.estado === 'ACTIVO'" [class.text-emerald-300]="d.estado === 'ACTIVO'" [class.border-emerald-500/30]="d.estado === 'ACTIVO'"

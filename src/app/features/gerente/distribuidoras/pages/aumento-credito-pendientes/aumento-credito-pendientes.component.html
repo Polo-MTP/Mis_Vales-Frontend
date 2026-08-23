@@ -23,9 +23,9 @@
     <div *ngFor="let s of solicitudes()" class="list-card-item cursor-default flex-col items-stretch">
       <div class="flex items-start justify-between w-full">
         <div>
-          <p class="font-bold text-slate-100">{{ s.distribuidora }} — solicita ${{ s.monto_solicitado }}</p>
+          <p class="font-bold text-slate-100">{{ s.distribuidora }} — solicita {{ (s.monto_solicitado) | dinero }}</p>
           <p class="text-xs text-slate-400 mt-0.5">
-            Límite actual ${{ s.limite_credito_anterior }} · Solicitado por {{ s.solicitante }} · {{ s.created_at | date:'short' }}
+            Límite actual {{ (s.limite_credito_anterior) | dinero }} · Solicitado por {{ s.solicitante }} · {{ s.created_at | date:'short' }}
           </p>
           <p class="text-xs text-slate-300 mt-1">{{ s.motivo }}</p>
         </div>

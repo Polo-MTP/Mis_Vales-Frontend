@@ -33,11 +33,17 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="stat-card">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Límite de Crédito</p>
-        <p class="text-2xl font-black text-blue-500 mt-1">${{ d.limite_credito || 0 }}</p>
+        <p class="text-2xl font-black text-blue-500 mt-1">{{ d.limite_credito | dinero }}</p>
       </div>
       <div class="stat-card">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Crédito Disponible</p>
-        <p class="text-2xl font-black text-emerald-500 mt-1">${{ d.credito_disponible || 0 }}</p>
+        <!-- Bloqueado si no está ACTIVO/EN_VERIFICACION: el backend rechazaría cualquier vale. -->
+        <p class="text-2xl font-black mt-1" [class.text-emerald-500]="d.puede_solicitar_vales" [class.text-slate-500]="!d.puede_solicitar_vales">
+          {{ d.puede_solicitar_vales ? (d.credito_disponible | dinero) : 'Bloqueado' }}
+        </p>
+        <p class="text-xs text-slate-500 mt-1" *ngIf="!d.puede_solicitar_vales">
+          No puede solicitar vales mientras esté {{ d.estado }}.
+        </p>
       </div>
       <div class="stat-card">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Categoría</p>

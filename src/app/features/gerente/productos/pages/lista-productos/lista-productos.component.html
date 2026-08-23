@@ -71,7 +71,7 @@
         <tbody>
           <ng-container *ngFor="let p of productos()">
             <tr class="table-row" *ngIf="editando() !== p.id">
-              <td class="p-3.5 font-bold text-slate-100">${{ p.monto }}</td>
+              <td class="p-3.5 font-bold text-slate-100">{{ p.monto | dinero }}</td>
               <td class="p-3.5">{{ p.quincenas || '—' }}</td>
               <td class="p-3.5">{{ p.variante || '—' }}</td>
               <td class="p-3.5">{{ p.descripcion || '—' }}</td>

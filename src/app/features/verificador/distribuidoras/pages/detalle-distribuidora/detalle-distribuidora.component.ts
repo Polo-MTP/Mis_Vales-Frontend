@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -9,7 +10,7 @@ import { DistribuidoraResumen } from '../../../../../core/models/distribuidora.m
 @Component({
   selector: 'app-verificador-detalle-distribuidora',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DineroPipe],
   templateUrl: './detalle-distribuidora.component.html'
 })
 export class DetalleDistribuidoraComponent implements OnInit {

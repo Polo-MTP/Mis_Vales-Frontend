@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -7,7 +8,7 @@ import { DistribuidoraMorosa } from '../../../../../core/models/reporte.model';
 @Component({
   selector: 'app-lista-morosos',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DineroPipe],
   templateUrl: './lista-morosos.component.html',
   styleUrl: './lista-morosos.component.css'
 })

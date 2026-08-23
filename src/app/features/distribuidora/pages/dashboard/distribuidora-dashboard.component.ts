@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../shared/pipes/dinero.pipe';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -11,7 +12,7 @@ import { CopyButtonComponent } from '../../../../shared/components/copy-button/c
 @Component({
   selector: 'app-distribuidora-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, CopyButtonComponent],
+  imports: [CommonModule, RouterModule, CopyButtonComponent, DineroPipe],
   templateUrl: './distribuidora-dashboard.component.html',
   styleUrl: './distribuidora-dashboard.component.css'
 })

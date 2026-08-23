@@ -2,7 +2,9 @@
   <div class="flex items-center justify-between">
     <div>
       <h2 class="text-base font-black text-slate-100">Sucursales</h2>
-      <p class="text-xs text-slate-400 font-medium">Alta y edición de sucursales de la empresa.</p>
+      <p class="text-xs text-slate-400 font-medium">
+        {{ puedeEditar() ? 'Alta y edición de sucursales de la empresa.' : 'Sucursales de la empresa (solo lectura).' }}
+      </p>
     </div>
     <button *ngIf="puedeEditar() && !mostrandoNueva()" type="button" (click)="mostrarFormNueva()" class="btn-link-primary shrink-0">+ Nueva sucursal</button>
   </div>

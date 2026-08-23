@@ -34,7 +34,7 @@
     <div *ngFor="let a of abonos()">
       <div class="list-card-item cursor-default">
         <div>
-          <p class="font-bold text-slate-100">Ref. {{ a.referencia_leida }} · ${{ a.monto }}</p>
+          <p class="font-bold text-slate-100">Ref. {{ a.referencia_leida }} · {{ (a.monto) | dinero }}</p>
           <p class="text-xs text-slate-400 mt-0.5">
             {{ tipoPagoLabel(a.tipo_pago) }} · {{ a.fecha_pago | date:'shortDate' }}<span *ngIf="a.folio_pago"> · Folio {{ a.folio_pago }}</span>
           </p>

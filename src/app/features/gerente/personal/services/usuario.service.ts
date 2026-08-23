@@ -8,8 +8,6 @@ import { User } from '../../../../core/models/user.model';
 export interface CrearGerenteSucursalPayload {
   name: string;
   email: string;
-  password: string;
-  password_confirmation: string;
   sucursal_id: number;
 }
 

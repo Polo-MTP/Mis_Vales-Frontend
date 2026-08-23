@@ -59,7 +59,7 @@
     <div *ngFor="let a of abonos()">
       <div class="list-card-item cursor-default">
         <div>
-          <p class="font-bold text-slate-100">Ref. {{ a.referencia_leida }} · ${{ a.monto }}</p>
+          <p class="font-bold text-slate-100">Ref. {{ a.referencia_leida }} · {{ (a.monto) | dinero }}</p>
           <p class="text-xs text-slate-400 mt-0.5">
             {{ tipoPagoLabel(a.tipo_pago) }} · {{ a.fecha_pago | date:'shortDate' }}<span *ngIf="a.folio_pago"> · Folio {{ a.folio_pago }}</span>
             <span *ngIf="a.relacion_id"> · Relación #{{ a.relacion_id }}</span>
@@ -98,7 +98,7 @@
           <div *ngFor="let r of resultadosRelacion()" (click)="elegirRelacion(r)" class="list-card-item">
             <div>
               <p class="font-bold text-slate-100">{{ r.distribuidora?.razon_social || ('Distribuidora #' + r.distribuidora_id) }}</p>
-              <p class="text-xs text-slate-400 mt-0.5">Ref. {{ r.referencia_pago }} · Corte {{ r.fecha_corte | date:'shortDate' }} · A pagar ${{ r.totales.a_pagar }}</p>
+              <p class="text-xs text-slate-400 mt-0.5">Ref. {{ r.referencia_pago }} · Corte {{ r.fecha_corte | date:'shortDate' }} · A pagar {{ (r.totales.a_pagar) | dinero }}</p>
             </div>
           </div>
         </div>
@@ -107,7 +107,7 @@
           <div>
             <p class="text-xs text-slate-400">Relación elegida</p>
             <p class="font-bold text-slate-100">{{ relacion.distribuidora?.razon_social || ('Distribuidora #' + relacion.distribuidora_id) }}</p>
-            <p class="text-xs text-slate-400">Ref. {{ relacion.referencia_pago }} · A pagar ${{ relacion.totales.a_pagar }}</p>
+            <p class="text-xs text-slate-400">Ref. {{ relacion.referencia_pago }} · A pagar {{ (relacion.totales.a_pagar) | dinero }}</p>
           </div>
           <button type="button" (click)="relacionElegida.set(null)" class="btn-outline w-auto shrink-0">Cambiar</button>
         </div>

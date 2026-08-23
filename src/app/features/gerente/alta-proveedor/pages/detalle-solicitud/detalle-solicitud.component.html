@@ -51,7 +51,7 @@
         <p><span class="text-slate-400">Coordinador:</span> {{ s.coordinador.name || 'N/D' }}</p>
         <p><span class="text-slate-400">Verificador:</span> {{ s.verificador.name || 'Sin asignar' }}</p>
         <p><span class="text-slate-400">¿Cumple?</span> {{ s.cumple === null ? 'Pendiente' : (s.cumple ? 'Sí' : 'No') }}</p>
-        <p><span class="text-slate-400">Fecha de verificación:</span> {{ s.fecha_verificacion || 'N/D' }}</p>
+        <p><span class="text-slate-400">Fecha de verificación:</span> {{ s.fecha_verificacion ? (s.fecha_verificacion | date:'dd/MM/yyyy HH:mm') : 'N/D' }}</p>
         <p class="sm:col-span-2" *ngIf="s.comentario_verificador">
           <span class="text-slate-400">Comentario del verificador:</span> {{ s.comentario_verificador }}
         </p>
@@ -109,11 +109,11 @@
          [class.bg-red-500/10]="s.estado === 'rechazado'" [class.border-red-500/30]="s.estado === 'rechazado'">
       <h2 class="text-sm font-black uppercase tracking-tight"
           [class.text-emerald-400]="s.estado === 'aprobado'" [class.text-red-400]="s.estado === 'rechazado'">
-        Solicitud {{ s.estado }}
+        Solicitud {{ s.estado === 'aprobado' ? 'aprobada' : 'rechazada' }}
       </h2>
       <p class="text-sm text-slate-300" *ngIf="s.comentario_gerente">{{ s.comentario_gerente }}</p>
-      <p class="text-sm text-slate-300" *ngIf="s.limite_credito_asignado">Límite de crédito asignado: ${{ s.limite_credito_asignado }}</p>
-      <p class="text-xs text-slate-400">Gerente: {{ s.gerente.name || 'N/D' }} · {{ s.fecha_decision }}</p>
+      <p class="text-sm text-slate-300" *ngIf="s.limite_credito_asignado">Límite de crédito asignado: {{ s.limite_credito_asignado | dinero }}</p>
+      <p class="text-xs text-slate-400">Gerente: {{ s.gerente.name || 'N/D' }} · {{ s.fecha_decision | date:'dd/MM/yyyy HH:mm' }}</p>
     </div>
 
     <!-- Formulario de Decisión -->

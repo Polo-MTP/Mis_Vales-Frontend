@@ -48,7 +48,7 @@
       <div class="flex items-start justify-between w-full">
         <div>
           <p class="font-bold text-slate-100">
-            De ${{ s.limite_credito_anterior }} a ${{ s.monto_solicitado }} solicitado<span *ngIf="s.monto_otorgado !== null"> (${{ s.monto_otorgado }} otorgado)</span>
+            De {{ (s.limite_credito_anterior) | dinero }} a {{ (s.monto_solicitado) | dinero }} solicitado<span *ngIf="s.monto_otorgado !== null"> ({{ (s.monto_otorgado) | dinero }} otorgado)</span>
           </p>
           <p class="text-xs text-slate-400 mt-0.5">{{ s.created_at | date:'short' }}</p>
           <p class="text-xs text-slate-300 mt-1">{{ s.motivo }}</p>

@@ -53,15 +53,15 @@
     <div class="dash-card">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Totales del Corte</h2>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-        <p><span class="block text-slate-500 text-xs">Capital</span><span class="font-bold text-slate-100">${{ r.totales.capital }}</span></p>
-        <p><span class="block text-slate-500 text-xs">Comisión</span><span class="font-bold text-slate-100">${{ r.totales.comision }}</span></p>
-        <p><span class="block text-slate-500 text-xs">Interés</span><span class="font-bold text-slate-100">${{ r.totales.interes }}</span></p>
-        <p><span class="block text-slate-500 text-xs">Seguro</span><span class="font-bold text-slate-100">${{ r.totales.seguro }}</span></p>
-        <p><span class="block text-slate-500 text-xs">Descuento Categoría</span><span class="font-bold text-emerald-400">-${{ r.totales.categoria || '0.00' }}</span></p>
-        <p><span class="block text-slate-500 text-xs">Recargos</span><span class="font-bold text-red-400">${{ r.totales.recargos }}</span></p>
-        <p><span class="block text-slate-500 text-xs">Abonado</span><span class="font-bold text-emerald-400">${{ r.totales.abonado }}</span></p>
-        <p><span class="block text-slate-500 text-xs">A Pagar</span><span class="font-bold text-blue-400">${{ r.totales.a_pagar }}</span></p>
-        <p><span class="block text-slate-500 text-xs">Saldo Pendiente</span><span class="font-bold text-amber-400">${{ r.totales.saldo_pendiente }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Capital</span><span class="font-bold text-slate-100">{{ (r.totales.capital) | dinero }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Comisión</span><span class="font-bold text-slate-100">{{ (r.totales.comision) | dinero }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Interés</span><span class="font-bold text-slate-100">{{ (r.totales.interes) | dinero }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Seguro</span><span class="font-bold text-slate-100">{{ (r.totales.seguro) | dinero }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Descuento Categoría</span><span class="font-bold text-emerald-400">-{{ (r.totales.categoria || '0.00') | dinero }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Recargos</span><span class="font-bold text-red-400">{{ (r.totales.recargos) | dinero }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Abonado</span><span class="font-bold text-emerald-400">{{ (r.totales.abonado) | dinero }}</span></p>
+        <p><span class="block text-slate-500 text-xs">A Pagar</span><span class="font-bold text-blue-400">{{ (r.totales.a_pagar) | dinero }}</span></p>
+        <p><span class="block text-slate-500 text-xs">Saldo Pendiente</span><span class="font-bold text-amber-400">{{ (r.totales.saldo_pendiente) | dinero }}</span></p>
       </div>
     </div>
 
@@ -93,12 +93,12 @@
               <td class="p-3.5">{{ d.producto }}</td>
               <td class="p-3.5">{{ d.cuota }}</td>
               <td class="p-3.5 font-mono text-slate-400">{{ d.concepto }}</td>
-              <td class="p-3.5">${{ d.capital }}</td>
-              <td class="p-3.5">${{ d.comision }}</td>
-              <td class="p-3.5">${{ d.interes }}</td>
-              <td class="p-3.5" [class.text-emerald-400]="d.categoria && d.categoria !== '0.00'">-${{ d.categoria || '0.00' }}</td>
-              <td class="p-3.5" [class.text-red-400]="d.recargo !== '0.00'">${{ d.recargo }}</td>
-              <td class="p-3.5 font-bold text-slate-100">${{ d.total }}</td>
+              <td class="p-3.5">{{ (d.capital) | dinero }}</td>
+              <td class="p-3.5">{{ (d.comision) | dinero }}</td>
+              <td class="p-3.5">{{ (d.interes) | dinero }}</td>
+              <td class="p-3.5" [class.text-emerald-400]="d.categoria && d.categoria !== '0.00'">-{{ (d.categoria || '0.00') | dinero }}</td>
+              <td class="p-3.5" [class.text-red-400]="d.recargo !== '0.00'">{{ (d.recargo) | dinero }}</td>
+              <td class="p-3.5 font-bold text-slate-100">{{ (d.total) | dinero }}</td>
             </tr>
           </tbody>
         </table>

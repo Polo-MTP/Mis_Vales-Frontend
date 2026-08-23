@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -8,7 +9,7 @@ import { SolicitudAumentoCredito } from '../../../../../core/models/solicitud-au
 @Component({
   selector: 'app-aumento-credito',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DineroPipe],
   templateUrl: './aumento-credito.component.html',
   styleUrl: './aumento-credito.component.css'
 })

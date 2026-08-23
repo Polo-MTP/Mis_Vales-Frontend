@@ -42,9 +42,15 @@ export class CrearPersonalSucursalComponent implements OnInit {
     gerente_id: ['']
   });
 
+  /** Espejo en señal del valor del select de sucursal. Un FormControl NO es una señal, así que
+   *  un computed() que leyera form.get('sucursal_id').value directo se calcularía una sola vez y
+   *  jamás volvería a recalcularse al elegir sucursal -- el select de gerente se quedaba vacío
+   *  para siempre y el alta era imposible de enviar. Se actualiza desde valueChanges en ngOnInit. */
+  private sucursalSeleccionada = signal<number>(0);
+
   /** Solo se le muestran al Gerente General los gerentes que pertenecen a la sucursal elegida. */
   gerentesDeLaSucursalElegida = computed(() => {
-    const sucursalId = Number(this.form.get('sucursal_id')?.value || 0);
+    const sucursalId = this.sucursalSeleccionada();
     if (!sucursalId) {
       return [];
     }
@@ -61,7 +67,8 @@ export class CrearPersonalSucursalComponent implements OnInit {
     this.form.get('sucursal_id')?.setValidators([Validators.required]);
     this.form.get('gerente_id')?.setValidators([Validators.required]);
 
-    this.form.get('sucursal_id')?.valueChanges.subscribe(() => {
+    this.form.get('sucursal_id')?.valueChanges.subscribe((valor) => {
+      this.sucursalSeleccionada.set(Number(valor || 0));
       this.form.get('gerente_id')?.setValue('');
     });
 

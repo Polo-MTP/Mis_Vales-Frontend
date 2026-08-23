@@ -81,7 +81,7 @@
         Solicitud {{ s.estado }}
       </h2>
       <p class="text-sm text-slate-300" *ngIf="s.comentario_gerente">{{ s.comentario_gerente }}</p>
-      <p class="text-sm text-slate-300" *ngIf="s.limite_credito_asignado">Límite de crédito asignado: ${{ s.limite_credito_asignado }}</p>
+      <p class="text-sm text-slate-300" *ngIf="s.limite_credito_asignado">Límite de crédito asignado: {{ (s.limite_credito_asignado) | dinero }}</p>
       <p class="text-xs text-slate-400">Gerente: {{ s.gerente.name || 'N/D' }} · {{ s.fecha_decision }}</p>
     </div>
 

@@ -33,7 +33,7 @@
     <div *ngFor="let v of vales()">
       <div class="list-card-item cursor-default">
         <div>
-          <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — ${{ v.monto }}</p>
+          <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — {{ (v.monto) | dinero }}</p>
           <p class="text-xs text-slate-400 mt-0.5">
             {{ v.distribuidora?.razon_social || ('Distribuidora #' + v.distribuidora_id) }}
             <span *ngIf="v.distribuidora?.numero_distribuidora"> ({{ v.distribuidora?.numero_distribuidora }})</span>
@@ -43,7 +43,7 @@
             <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] === 'cargando'"> · cargando saldo...</span>
             <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] === 'error'" class="text-red-400"> · no se pudo cargar el saldo</span>
             <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] !== undefined && saldoPorDistribuidora()[v.distribuidora_id] !== 'cargando' && saldoPorDistribuidora()[v.distribuidora_id] !== 'error'" class="font-bold text-emerald-400">
-              · Saldo disponible: ${{ saldoPorDistribuidora()[v.distribuidora_id] }}
+              · Saldo disponible: {{ (saldoPorDistribuidora()[v.distribuidora_id]) | dinero }}
             </span>
           </p>
           <p class="text-xs text-slate-500 mt-0.5">
@@ -81,7 +81,7 @@
               class="text-xs bg-slate-800/60 border border-slate-700 rounded-lg px-2.5 py-1.5 inline-flex flex-col gap-0.5">
           <span class="text-slate-400">Cuota {{ c.cuota }} · Corte {{ c.fecha_corte }}<span *ngIf="c.referencia_pago"> · Ref. <span class="font-mono">{{ c.referencia_pago }}</span></span><span> · Concepto <span class="font-mono">{{ c.concepto }}</span></span></span>
           <span class="font-bold" [class.text-emerald-400]="c.estado_cuota === 'pagado'" [class.text-amber-400]="c.estado_cuota !== 'pagado'">
-            ${{ c.total }}
+            {{ (c.total) | dinero }}
           </span>
         </span>
       </div>
@@ -90,15 +90,15 @@
       <div *ngIf="v.cortes.length === 0 && v.estimacion as e" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 space-y-1.5">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Estimado por quincena (aún sin corte)</p>
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-x-4 gap-y-1 text-xs">
-          <span><span class="text-slate-500 block">Capital</span><span class="text-slate-300">${{ e.capital }}</span></span>
-          <span><span class="text-slate-500 block">Comisión</span><span class="text-slate-300">${{ e.comision }}</span></span>
-          <span><span class="text-slate-500 block">Interés</span><span class="text-slate-300">${{ e.interes }}</span></span>
-          <span><span class="text-slate-500 block">Seguro</span><span class="text-slate-300">${{ e.seguro }}</span></span>
-          <span *ngIf="e.categoria > 0"><span class="text-slate-500 block">Descuento categoría</span><span class="text-emerald-400">-${{ e.categoria }}</span></span>
+          <span><span class="text-slate-500 block">Capital</span><span class="text-slate-300">{{ (e.capital) | dinero }}</span></span>
+          <span><span class="text-slate-500 block">Comisión</span><span class="text-slate-300">{{ (e.comision) | dinero }}</span></span>
+          <span><span class="text-slate-500 block">Interés</span><span class="text-slate-300">{{ (e.interes) | dinero }}</span></span>
+          <span><span class="text-slate-500 block">Seguro</span><span class="text-slate-300">{{ (e.seguro) | dinero }}</span></span>
+          <span *ngIf="e.categoria > 0"><span class="text-slate-500 block">Descuento categoría</span><span class="text-emerald-400">-{{ (e.categoria) | dinero }}</span></span>
         </div>
         <div class="flex items-center justify-between pt-2 border-t border-slate-800">
           <span class="font-bold text-slate-200 text-xs">Pago por quincena</span>
-          <span class="font-black text-slate-100">${{ e.pago_quincenal }}</span>
+          <span class="font-black text-slate-100">{{ (e.pago_quincenal) | dinero }}</span>
         </div>
 
         <!-- Referencia del próximo corte -- solo tiene sentido una vez que el vale ya fue

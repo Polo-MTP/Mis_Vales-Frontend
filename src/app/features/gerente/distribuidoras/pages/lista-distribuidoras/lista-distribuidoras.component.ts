@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { DistribuidoraService } from '../../services/distribuidora.service';
 import { DistribuidoraResumen, EstadoDistribuidora } from '../../../../../core/models/distribuidora.model';
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 
 @Component({
   selector: 'app-lista-distribuidoras',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DineroPipe],
   templateUrl: './lista-distribuidoras.component.html',
   styleUrl: './lista-distribuidoras.component.css'
 })

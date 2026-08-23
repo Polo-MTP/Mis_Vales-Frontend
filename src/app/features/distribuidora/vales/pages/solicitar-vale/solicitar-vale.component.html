@@ -29,7 +29,7 @@
       <select formControlName="producto_id" class="form-select">
         <option value="" disabled>Selecciona un producto</option>
         <option *ngFor="let p of productos()" [value]="p.id">
-          ${{ p.monto }}<ng-container *ngIf="p.quincenas"> · {{ p.quincenas }} quincenas</ng-container><ng-container *ngIf="p.variante"> · {{ p.variante }}</ng-container>
+          {{ (p.monto) | dinero }}<ng-container *ngIf="p.quincenas"> · {{ p.quincenas }} quincenas</ng-container><ng-container *ngIf="p.variante"> · {{ p.variante }}</ng-container>
           <ng-container *ngIf="p.descripcion"> — {{ p.descripcion }}</ng-container>
         </option>
       </select>
@@ -38,7 +38,7 @@
 
     <div *ngIf="productoSeleccionado() as p" class="bg-slate-900/40 rounded-2xl p-4 text-sm text-slate-300 space-y-3">
       <p>
-        Vas a solicitar un vale de <strong class="text-slate-100">${{ p.monto }}</strong>
+        Vas a solicitar un vale de <strong class="text-slate-100">{{ (p.monto) | dinero }}</strong>
         <span *ngIf="p.quincenas"> a pagar en <strong class="text-slate-100">{{ p.quincenas }}</strong> quincenas</span>.
       </p>
 
@@ -47,20 +47,20 @@
       <div *ngIf="!simulando() && simulacion() as s" class="border-t border-slate-800 pt-3 space-y-1.5">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Estimado por quincena</p>
         <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-          <span class="text-slate-500">Capital</span><span class="text-slate-300 text-right">${{ s.capital }}</span>
-          <span class="text-slate-500">Comisión</span><span class="text-slate-300 text-right">${{ s.comision }}</span>
-          <span class="text-slate-500">Interés</span><span class="text-slate-300 text-right">${{ s.interes }}</span>
-          <span class="text-slate-500">Seguro</span><span class="text-slate-300 text-right">${{ s.seguro }}</span>
+          <span class="text-slate-500">Capital</span><span class="text-slate-300 text-right">{{ (s.capital) | dinero }}</span>
+          <span class="text-slate-500">Comisión</span><span class="text-slate-300 text-right">{{ (s.comision) | dinero }}</span>
+          <span class="text-slate-500">Interés</span><span class="text-slate-300 text-right">{{ (s.interes) | dinero }}</span>
+          <span class="text-slate-500">Seguro</span><span class="text-slate-300 text-right">{{ (s.seguro) | dinero }}</span>
           <span class="text-slate-500" *ngIf="s.categoria > 0">Descuento categoría</span>
-          <span class="text-emerald-400 text-right" *ngIf="s.categoria > 0">-${{ s.categoria }}</span>
+          <span class="text-emerald-400 text-right" *ngIf="s.categoria > 0">-{{ (s.categoria) | dinero }}</span>
         </div>
         <div class="flex items-center justify-between pt-2 border-t border-slate-800">
           <span class="font-bold text-slate-200">Pago por quincena</span>
-          <span class="font-black text-slate-100 text-base">${{ s.pago_quincenal }}</span>
+          <span class="font-black text-slate-100 text-base">{{ (s.pago_quincenal) | dinero }}</span>
         </div>
         <div class="flex items-center justify-between">
           <span class="text-slate-400">Total estimado a {{ s.quincenas }} quincenas</span>
-          <span class="font-bold text-slate-200">${{ s.total_estimado_plazo }}</span>
+          <span class="font-bold text-slate-200">{{ (s.total_estimado_plazo) | dinero }}</span>
         </div>
         <p class="text-xs text-slate-500 pt-1">{{ s.nota }}</p>
       </div>

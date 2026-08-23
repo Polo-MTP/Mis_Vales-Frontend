@@ -27,8 +27,6 @@ export class CrearGerenteSucursalComponent implements OnInit {
   form = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(255)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
-    password_confirmation: ['', [Validators.required]],
     sucursal_id: ['', [Validators.required]]
   });
 
@@ -63,15 +61,13 @@ export class CrearGerenteSucursalComponent implements OnInit {
       .crearGerenteSucursal({
         name: v.name!,
         email: v.email!,
-        password: v.password!,
-        password_confirmation: v.password_confirmation!,
         sucursal_id: Number(v.sucursal_id)
       })
       .subscribe({
         next: (res) => {
           this.enviando.set(false);
-          this.exito.set(`Gerente de Sucursal "${res.data?.name}" creado correctamente.`);
-          this.form.reset({ name: '', email: '', password: '', password_confirmation: '', sucursal_id: '' });
+          this.exito.set(`Gerente de Sucursal "${res.data?.name}" creado correctamente. Se le envió su contraseña por correo.`);
+          this.form.reset({ name: '', email: '', sucursal_id: '' });
         },
         error: (err) => {
           this.enviando.set(false);

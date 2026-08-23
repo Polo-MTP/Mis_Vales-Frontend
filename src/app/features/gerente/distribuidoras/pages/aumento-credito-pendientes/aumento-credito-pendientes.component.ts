@@ -1,3 +1,4 @@
+import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +8,7 @@ import { SolicitudAumentoCredito } from '../../../../../core/models/solicitud-au
 @Component({
   selector: 'app-aumento-credito-pendientes',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DineroPipe],
   templateUrl: './aumento-credito-pendientes.component.html',
   styleUrl: './aumento-credito-pendientes.component.css'
 })

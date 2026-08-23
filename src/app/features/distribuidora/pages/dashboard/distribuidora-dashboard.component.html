@@ -30,11 +30,11 @@
          celular en vez de apretar 3 números en una fila angosta. -->
     <div class="stat-card flex items-center justify-between">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Crédito Disponible</p>
-      <p class="text-2xl font-black text-emerald-500">${{ p.credito_disponible || 0 }}</p>
+      <p class="text-2xl font-black text-emerald-500">{{ (p.credito_disponible || 0) | dinero }}</p>
     </div>
     <div class="stat-card flex items-center justify-between">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Límite de Crédito</p>
-      <p class="text-2xl font-black text-blue-500">${{ p.limite_credito || 0 }}</p>
+      <p class="text-2xl font-black text-blue-500">{{ (p.limite_credito || 0) | dinero }}</p>
     </div>
     <div class="stat-card flex items-center justify-between">
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Puntos Acumulados</p>
@@ -51,7 +51,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
       <p><span class="block text-slate-500 text-xs">Fecha de corte</span><span class="font-bold text-slate-100">{{ p.fecha_corte }}</span></p>
       <p><span class="block text-slate-500 text-xs">Fecha límite de pago</span><span class="font-bold text-slate-100">{{ p.fecha_limite_pago }}</span></p>
-      <p><span class="block text-slate-500 text-xs">Monto estimado</span><span class="font-black text-blue-400">${{ p.monto_estimado }}</span></p>
+      <p><span class="block text-slate-500 text-xs">Monto estimado</span><span class="font-black text-blue-400">{{ (p.monto_estimado) | dinero }}</span></p>
     </div>
     <div class="flex items-center justify-between gap-2 text-xs text-slate-400">
       <span>Referencia de pago: <span class="font-mono font-bold text-slate-200 tracking-wider">{{ p.referencia_pago }}</span></span>

@@ -37,11 +37,11 @@
       <div class="flex items-center gap-3 shrink-0">
         <span class="text-right">
           <span class="block text-xs text-slate-400">A pagar</span>
-          <span class="block font-bold text-blue-400">${{ r.totales.a_pagar }}</span>
+          <span class="block font-bold text-blue-400">{{ (r.totales.a_pagar) | dinero }}</span>
         </span>
         <span *ngIf="r.totales.saldo_pendiente > 0" class="text-right">
           <span class="block text-xs text-slate-400">Saldo</span>
-          <span class="block font-bold text-amber-400">${{ r.totales.saldo_pendiente }}</span>
+          <span class="block font-bold text-amber-400">{{ (r.totales.saldo_pendiente) | dinero }}</span>
         </span>
         <span class="status-badge"
               [class.bg-amber-500/15]="r.estado === 'pendiente' || r.estado === 'parcial'" [class.text-amber-300]="r.estado === 'pendiente' || r.estado === 'parcial'" [class.border-amber-500/30]="r.estado === 'pendiente' || r.estado === 'parcial'"
