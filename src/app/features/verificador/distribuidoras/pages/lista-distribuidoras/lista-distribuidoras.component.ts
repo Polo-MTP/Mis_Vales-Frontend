@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -12,7 +13,7 @@ import { DistribuidoraResumen, EstadoDistribuidora } from '../../../../../core/m
 @Component({
   selector: 'app-verificador-lista-distribuidoras',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, EstadoBadgeComponent],
   templateUrl: './lista-distribuidoras.component.html'
 })
 export class ListaDistribuidorasComponent implements OnInit {

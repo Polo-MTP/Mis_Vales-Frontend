@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,7 +11,7 @@ import { DistribuidoraResumen } from '../../../../../core/models/distribuidora.m
 @Component({
   selector: 'app-verificador-detalle-distribuidora',
   standalone: true,
-  imports: [CommonModule, RouterModule, DineroPipe],
+  imports: [CommonModule, RouterModule, DineroPipe, EstadoBadgeComponent],
   templateUrl: './detalle-distribuidora.component.html'
 })
 export class DetalleDistribuidoraComponent implements OnInit {

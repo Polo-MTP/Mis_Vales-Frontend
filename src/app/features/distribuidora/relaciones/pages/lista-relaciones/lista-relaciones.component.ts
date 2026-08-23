@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,7 +11,7 @@ import { PaginacionAnidada } from '../../../../../core/models/paginacion-anidada
 @Component({
   selector: 'app-lista-relaciones',
   standalone: true,
-  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe],
+  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe, EstadoBadgeComponent],
   templateUrl: './lista-relaciones.component.html',
   styleUrl: './lista-relaciones.component.css'
 })

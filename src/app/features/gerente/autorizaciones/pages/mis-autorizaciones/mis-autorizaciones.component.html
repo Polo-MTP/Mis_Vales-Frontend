@@ -22,7 +22,7 @@
         <p class="text-xs text-slate-400 mt-0.5">{{ m.descripcion }}</p>
         <p class="text-xs text-slate-500 mt-0.5">{{ m.fecha | date:'short' }}</p>
       </div>
-      <span *ngIf="m.estado" class="status-badge shrink-0">{{ m.estado }}</span>
+      <app-estado-badge [tipo]="'autorizacion'" [estado]="m.estado"></app-estado-badge>
     </div>
   </div>
 

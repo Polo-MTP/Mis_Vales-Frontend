@@ -20,12 +20,7 @@
             {{ d.numero_distribuidora }} · RFC: {{ d.rfc }} · {{ d.sucursal.nombre || 'Sin sucursal' }}
           </p>
         </div>
-        <span class="status-badge"
-              [class.bg-emerald-500/15]="d.estado === 'ACTIVO'" [class.text-emerald-300]="d.estado === 'ACTIVO'" [class.border-emerald-500/30]="d.estado === 'ACTIVO'"
-              [class.bg-amber-500/15]="d.estado === 'MOROSO'" [class.text-amber-300]="d.estado === 'MOROSO'" [class.border-amber-500/30]="d.estado === 'MOROSO'"
-              [class.bg-red-500/15]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'" [class.text-red-300]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'" [class.border-red-500/30]="d.estado === 'RECHAZADO' || d.estado === 'INACTIVO'">
-          {{ d.estado }}
-        </span>
+        <app-estado-badge [tipo]="'distribuidora'" [estado]="d.estado"></app-estado-badge>
       </div>
     </div>
 

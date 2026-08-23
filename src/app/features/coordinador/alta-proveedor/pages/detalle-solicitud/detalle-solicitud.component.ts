@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,7 +9,7 @@ import { SolicitudProveedor } from '../../../../../core/models/solicitud-proveed
 @Component({
   selector: 'app-detalle-solicitud',
   standalone: true,
-  imports: [CommonModule, DineroPipe],
+  imports: [CommonModule, DineroPipe, EstadoBadgeComponent],
   templateUrl: './detalle-solicitud.component.html',
   styleUrl: './detalle-solicitud.component.css'
 })

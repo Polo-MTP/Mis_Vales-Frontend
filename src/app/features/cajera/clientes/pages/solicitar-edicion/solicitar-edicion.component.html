@@ -147,13 +147,7 @@
         <p class="text-xs text-slate-400 mt-0.5">{{ s.created_at | date:'short' }}<span *ngIf="s.autorizador"> · Decidido por {{ s.autorizador }}</span></p>
       </div>
       <div class="flex items-center gap-3 shrink-0">
-        <span class="status-badge"
-              [class.bg-amber-500/15]="s.estado === 'pendiente'" [class.text-amber-300]="s.estado === 'pendiente'" [class.border-amber-500/30]="s.estado === 'pendiente'"
-              [class.bg-blue-500/15]="s.estado === 'aprobada'" [class.text-blue-300]="s.estado === 'aprobada'" [class.border-blue-500/30]="s.estado === 'aprobada'"
-              [class.bg-red-500/15]="s.estado === 'rechazada'" [class.text-red-300]="s.estado === 'rechazada'" [class.border-red-500/30]="s.estado === 'rechazada'"
-              [class.bg-emerald-500/15]="s.estado === 'aplicada'" [class.text-emerald-300]="s.estado === 'aplicada'" [class.border-emerald-500/30]="s.estado === 'aplicada'">
-          {{ estadoSolicitudLabel(s.estado) }}
-        </span>
+        <app-estado-badge [tipo]="'autorizacion'" [estado]="s.estado"></app-estado-badge>
         <button *ngIf="s.estado === 'aprobada'" type="button" (click)="aplicar(s)" [disabled]="aplicando() === s.id" class="btn-primary w-auto shrink-0">
           <span *ngIf="aplicando() !== s.id">Aplicar</span>
           <span *ngIf="aplicando() === s.id">Aplicando...</span>

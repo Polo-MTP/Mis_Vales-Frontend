@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +14,7 @@ type FiltroEstado = 'en_proceso' | 'aprobado' | 'rechazado';
 @Component({
   selector: 'app-lista-solicitudes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, EstadoBadgeComponent],
   templateUrl: './lista-solicitudes.component.html',
   styleUrl: './lista-solicitudes.component.css'
 })

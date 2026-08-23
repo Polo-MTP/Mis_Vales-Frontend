@@ -24,7 +24,7 @@
             RFC: {{ s.rfc }} · {{ s.sucursal.nombre }}
           </p>
         </div>
-        <span class="status-badge">{{ s.estado }}</span>
+        <app-estado-badge [tipo]="'solicitud-proveedor'" [estado]="s.estado"></app-estado-badge>
       </div>
     </div>
 

@@ -20,9 +20,7 @@
             {{ p.numero_distribuidora }} <span *ngIf="p.rfc">· RFC: {{ p.rfc }}</span>
           </p>
         </div>
-        <span class="status-badge bg-emerald-500/15 text-emerald-300 border-emerald-500/30">
-          {{ p.estado }}
-        </span>
+        <app-estado-badge [tipo]="'relacion'" [estado]="p.estado"></app-estado-badge>
       </div>
     </div>
 

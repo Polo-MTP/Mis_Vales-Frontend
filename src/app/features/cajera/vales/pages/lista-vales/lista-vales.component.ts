@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,14 +11,13 @@ import { RelacionService } from '../../../../distribuidora/relaciones/services/r
 import { Vale, EstadoVale } from '../../../../../core/models/vale.model';
 import { ProximoPago } from '../../../../../core/models/relacion.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
-import { estadoValeLabel } from '../../../../../shared/utils/labels';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
 
 @Component({
   selector: 'app-lista-vales',
   standalone: true,
-  imports: [CommonModule, RouterModule, AlertComponent, FormsModule, SoloNumerosDirective, PaginationComponent, DineroPipe],
+  imports: [CommonModule, RouterModule, AlertComponent, FormsModule, SoloNumerosDirective, PaginationComponent, DineroPipe, EstadoBadgeComponent],
   templateUrl: './lista-vales.component.html',
   styleUrl: './lista-vales.component.css'
 })
@@ -48,7 +48,6 @@ export class ListaValesComponent implements OnInit {
   comprobanteVerificado = signal(false);
   clabeValor = signal('');
 
-  readonly estadoValeLabel = estadoValeLabel;
 
   ngOnInit(): void {
     this.cargar();

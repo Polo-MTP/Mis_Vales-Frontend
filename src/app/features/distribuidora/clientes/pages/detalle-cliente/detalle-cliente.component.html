@@ -20,11 +20,7 @@
           <p class="text-xs text-slate-400 font-medium mt-1">Cliente desde {{ c.created_at | date:'mediumDate' }}</p>
         </div>
         <div class="flex items-center gap-3 shrink-0">
-          <span class="status-badge"
-                [class.bg-emerald-500/15]="c.estado" [class.text-emerald-300]="c.estado" [class.border-emerald-500/30]="c.estado"
-                [class.bg-slate-700]="!c.estado" [class.text-slate-400]="!c.estado">
-            {{ c.estado ? 'Activo' : 'Inactivo' }}
-          </span>
+          <app-estado-badge [tipo]="'activacion'" [estado]="c.estado"></app-estado-badge>
           <button type="button" (click)="toggleEstado()" class="btn-outline">
             {{ c.estado ? 'Desactivar' : 'Activar' }}
           </button>

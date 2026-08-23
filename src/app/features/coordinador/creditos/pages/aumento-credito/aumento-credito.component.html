@@ -25,7 +25,7 @@
         <p class="text-xs text-slate-500 mt-0.5">{{ s.motivo }}</p>
         <p class="text-xs text-slate-500 mt-0.5">Pedido por {{ s.solicitante || ('Usuario #' + s.solicitado_por) }} · {{ s.created_at | date:'short' }}</p>
       </div>
-      <span class="status-badge">{{ s.estado }}</span>
+      <app-estado-badge [tipo]="'autorizacion'" [estado]="s.estado"></app-estado-badge>
     </div>
   </div>
 

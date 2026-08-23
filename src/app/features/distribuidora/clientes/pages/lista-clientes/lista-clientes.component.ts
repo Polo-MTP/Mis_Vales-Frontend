@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -11,7 +12,7 @@ import { PaginatedResponse } from '../../../../../core/models/user.model';
 @Component({
   selector: 'app-lista-clientes',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, PaginationComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, PaginationComponent, EstadoBadgeComponent],
   templateUrl: './lista-clientes.component.html',
   styleUrl: './lista-clientes.component.css'
 })

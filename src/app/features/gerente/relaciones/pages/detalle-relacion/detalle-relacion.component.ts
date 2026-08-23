@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,7 +9,7 @@ import { Relacion } from '../../../../../core/models/relacion.model';
 @Component({
   selector: 'app-detalle-relacion',
   standalone: true,
-  imports: [CommonModule, RouterModule, DineroPipe],
+  imports: [CommonModule, RouterModule, DineroPipe, EstadoBadgeComponent],
   templateUrl: './detalle-relacion.component.html',
   styleUrl: './detalle-relacion.component.css'
 })

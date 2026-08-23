@@ -33,7 +33,7 @@
           <span class="block text-xs text-slate-400">Saldo pendiente</span>
           <span class="block font-bold text-red-400">{{ (d.saldo_pendiente_total.toFixed(2)) | dinero }}</span>
         </span>
-        <span class="status-badge">{{ d.estado_distribuidora }}</span>
+        <app-estado-badge [tipo]="'distribuidora'" [estado]="d.estado_distribuidora"></app-estado-badge>
       </div>
     </div>
   </div>

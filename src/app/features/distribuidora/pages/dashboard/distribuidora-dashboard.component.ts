@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../shared/pipes/dinero.pipe';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -12,7 +13,7 @@ import { CopyButtonComponent } from '../../../../shared/components/copy-button/c
 @Component({
   selector: 'app-distribuidora-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, CopyButtonComponent, DineroPipe],
+  imports: [CommonModule, RouterModule, CopyButtonComponent, DineroPipe, EstadoBadgeComponent],
   templateUrl: './distribuidora-dashboard.component.html',
   styleUrl: './distribuidora-dashboard.component.css'
 })

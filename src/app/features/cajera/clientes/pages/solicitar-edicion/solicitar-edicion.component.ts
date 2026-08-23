@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -8,7 +9,6 @@ import { ClienteService } from '../../services/cliente.service';
 import { SolicitudEdicionCliente } from '../../../../../core/models/solicitud-edicion-cliente.model';
 import { Cliente } from '../../../../../core/models/cliente.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
-import { estadoSolicitudLabel } from '../../../../../shared/utils/labels';
 import { GooglePlacesAutocompleteDirective } from '../../../../../shared/directives/google-places-autocomplete.directive';
 import { parsearDireccionGoogle } from '../../../../../shared/utils/google-address.util';
 import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
@@ -18,7 +18,7 @@ import { MENSAJES_PATRON, CODIGO_POSTAL_PATTERN, CURP_PATTERN, NUMERO_PATTERN } 
 @Component({
   selector: 'app-solicitar-edicion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective, PaginationComponent],
+  imports: [CommonModule, ReactiveFormsModule, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective, PaginationComponent, EstadoBadgeComponent],
   templateUrl: './solicitar-edicion.component.html',
   styleUrl: './solicitar-edicion.component.css'
 })
@@ -66,7 +66,6 @@ export class SolicitarEdicionComponent implements OnInit {
   aplicando = signal<number | null>(null);
   errorAplicar = signal<string | null>(null);
 
-  readonly estadoSolicitudLabel = estadoSolicitudLabel;
 
   ngOnInit(): void {
     this.cargarSolicitudes();

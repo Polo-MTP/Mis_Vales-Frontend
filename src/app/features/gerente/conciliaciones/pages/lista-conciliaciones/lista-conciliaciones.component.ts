@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -6,12 +7,12 @@ import { RouterModule } from '@angular/router';
 import { ConciliacionService } from '../../services/conciliacion.service';
 import { AbonoConciliacion, EstadoAbonoConciliacion, ResumenImportacionConciliacion } from '../../../../../core/models/conciliacion.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
-import { tipoPagoLabel, estadoAbonoLabel } from '../../../../../shared/utils/labels';
+import { tipoPagoLabel} from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-lista-conciliaciones',
   standalone: true,
-  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe],
+  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe, EstadoBadgeComponent],
   templateUrl: './lista-conciliaciones.component.html',
   styleUrl: './lista-conciliaciones.component.css'
 })
@@ -26,7 +27,6 @@ export class ListaConciliacionesComponent implements OnInit {
   filtroEstado = signal<EstadoAbonoConciliacion | 'todos'>('todos');
 
   readonly tipoPagoLabel = tipoPagoLabel;
-  readonly estadoAbonoLabel = estadoAbonoLabel;
 
   archivoSeleccionado = signal<File | null>(null);
   importando = signal(false);

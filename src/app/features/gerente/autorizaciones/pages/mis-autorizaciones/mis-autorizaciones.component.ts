@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../../shared/components/pagination/pagination.component';
@@ -8,7 +9,7 @@ import { PaginatedResponse } from '../../../../../core/models/user.model';
 @Component({
   selector: 'app-mis-autorizaciones',
   standalone: true,
-  imports: [CommonModule, PaginationComponent],
+  imports: [CommonModule, PaginationComponent, EstadoBadgeComponent],
   templateUrl: './mis-autorizaciones.component.html'
 })
 export class MisAutorizacionesComponent implements OnInit {

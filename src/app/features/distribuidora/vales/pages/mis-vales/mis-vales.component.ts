@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -6,12 +7,11 @@ import { RouterModule } from '@angular/router';
 import { ValeService } from '../../services/vale.service';
 import { Vale } from '../../../../../core/models/vale.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
-import { estadoValeLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-mis-vales',
   standalone: true,
-  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe],
+  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe, EstadoBadgeComponent],
   templateUrl: './mis-vales.component.html',
   styleUrl: './mis-vales.component.css'
 })
@@ -27,7 +27,6 @@ export class MisValesComponent implements OnInit {
   actualizandoEstado = signal<number | null>(null);
   errorEstado = signal<string | null>(null);
 
-  readonly estadoValeLabel = estadoValeLabel;
 
   ngOnInit(): void {
     this.cargar();

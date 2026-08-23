@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -9,7 +10,7 @@ import { SolicitudAumentoCredito } from '../../../../../core/models/solicitud-au
 @Component({
   selector: 'app-aumento-credito',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DineroPipe],
+  imports: [CommonModule, ReactiveFormsModule, DineroPipe, EstadoBadgeComponent],
   templateUrl: './aumento-credito.component.html',
   styleUrl: './aumento-credito.component.css'
 })

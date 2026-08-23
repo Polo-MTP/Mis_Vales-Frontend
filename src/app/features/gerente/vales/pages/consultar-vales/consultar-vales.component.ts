@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -5,7 +6,6 @@ import { PaginationComponent } from '../../../../../shared/components/pagination
 import { ValeService } from '../../../../cajera/vales/services/vale.service';
 import { Vale, EstadoVale } from '../../../../../core/models/vale.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
-import { estadoValeLabel } from '../../../../../shared/utils/labels';
 
 /**
  * Solo lectura -- Coordinador y Gerente (General/Sucursal) ya tenían acceso de backend a
@@ -15,7 +15,7 @@ import { estadoValeLabel } from '../../../../../shared/utils/labels';
 @Component({
   selector: 'app-consultar-vales',
   standalone: true,
-  imports: [CommonModule, PaginationComponent, DineroPipe],
+  imports: [CommonModule, PaginationComponent, DineroPipe, EstadoBadgeComponent],
   templateUrl: './consultar-vales.component.html'
 })
 export class ConsultarValesComponent implements OnInit {
@@ -28,7 +28,6 @@ export class ConsultarValesComponent implements OnInit {
   pagina = signal(1);
   filtroEstado = signal<EstadoVale | 'todos'>('todos');
 
-  readonly estadoValeLabel = estadoValeLabel;
 
   ngOnInit(): void {
     this.cargar();

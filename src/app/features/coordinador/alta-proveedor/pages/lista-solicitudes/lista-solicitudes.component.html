@@ -44,12 +44,7 @@
           Verificador: {{ s.verificador.name || 'Sin asignar' }}
         </p>
       </div>
-      <span class="status-badge"
-            [class.bg-amber-500/15]="s.estado !== 'aprobado' && s.estado !== 'rechazado'" [class.text-amber-300]="s.estado !== 'aprobado' && s.estado !== 'rechazado'" [class.border-amber-500/30]="s.estado !== 'aprobado' && s.estado !== 'rechazado'"
-            [class.bg-emerald-500/15]="s.estado === 'aprobado'" [class.text-emerald-300]="s.estado === 'aprobado'" [class.border-emerald-500/30]="s.estado === 'aprobado'"
-            [class.bg-red-500/15]="s.estado === 'rechazado'" [class.text-red-300]="s.estado === 'rechazado'" [class.border-red-500/30]="s.estado === 'rechazado'">
-        {{ s.estado }}
-      </span>
+      <app-estado-badge [tipo]="'solicitud-proveedor'" [estado]="s.estado"></app-estado-badge>
     </div>
   </div>
 

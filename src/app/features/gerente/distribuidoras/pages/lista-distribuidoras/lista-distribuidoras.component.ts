@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -8,7 +9,7 @@ import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 @Component({
   selector: 'app-lista-distribuidoras',
   standalone: true,
-  imports: [CommonModule, RouterModule, DineroPipe],
+  imports: [CommonModule, RouterModule, DineroPipe, EstadoBadgeComponent],
   templateUrl: './lista-distribuidoras.component.html',
   styleUrl: './lista-distribuidoras.component.css'
 })

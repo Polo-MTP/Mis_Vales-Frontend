@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -6,12 +7,11 @@ import { RouterModule } from '@angular/router';
 import { ConciliacionService } from '../../services/conciliacion.service';
 import { SolicitudConciliacion } from '../../../../../core/models/solicitud-conciliacion.model';
 import { PaginatedResponse } from '../../../../../core/models/user.model';
-import { estadoSolicitudLabel } from '../../../../../shared/utils/labels';
 
 @Component({
   selector: 'app-mis-solicitudes',
   standalone: true,
-  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe],
+  imports: [CommonModule, RouterModule, PaginationComponent, DineroPipe, EstadoBadgeComponent],
   templateUrl: './mis-solicitudes.component.html',
   styleUrl: './mis-solicitudes.component.css'
 })
@@ -24,7 +24,6 @@ export class MisSolicitudesComponent implements OnInit {
   error = signal<string | null>(null);
   pagina = signal(1);
 
-  readonly estadoSolicitudLabel = estadoSolicitudLabel;
 
   ejecutando = signal<number | null>(null);
   errorEjecutar = signal<string | null>(null);

@@ -16,44 +16,6 @@ export function tipoPagoLabel(tipo: string | null | undefined): string {
   return TIPO_PAGO_LABELS[tipo] ?? humanizarClave(tipo);
 }
 
-const ESTADO_ABONO_LABELS: Record<string, string> = {
-  conciliado: 'Conciliado',
-  conciliado_manual: 'Conciliado manual',
-  sin_coincidencia: 'Sin coincidencia'
-};
-
-export function estadoAbonoLabel(estado: string | null | undefined): string {
-  if (!estado) return '';
-  return ESTADO_ABONO_LABELS[estado] ?? humanizarClave(estado);
-}
-
-const ESTADO_SOLICITUD_LABELS: Record<string, string> = {
-  pendiente: 'Pendiente',
-  aprobada: 'Aprobada',
-  rechazada: 'Rechazada',
-  aplicada: 'Aplicada'
-};
-
-export function estadoSolicitudLabel(estado: string | null | undefined): string {
-  if (!estado) return '';
-  return ESTADO_SOLICITUD_LABELS[estado] ?? humanizarClave(estado);
-}
-
-const ESTADO_VALE_LABELS: Record<string, string> = {
-  solicitado: 'Solicitado',
-  validado: 'Validado',
-  autorizado: 'Autorizado',
-  pagado: 'Pagado',
-  parcial: 'Pago parcial',
-  vencido: 'Vencido',
-  incidencia: 'Con incidencia'
-};
-
-export function estadoValeLabel(estado: string | null | undefined): string {
-  if (!estado) return '';
-  return ESTADO_VALE_LABELS[estado] ?? humanizarClave(estado);
-}
-
 const LOGIN_STATUS_LABELS: Record<string, string> = {
   failed_user_not_found: 'Usuario no encontrado',
   account_inactive: 'Cuenta inactiva',

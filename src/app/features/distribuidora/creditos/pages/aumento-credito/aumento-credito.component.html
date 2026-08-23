@@ -54,12 +54,7 @@
           <p class="text-xs text-slate-300 mt-1">{{ s.motivo }}</p>
           <p *ngIf="s.comentario_decision" class="text-xs text-slate-400 mt-1">Comentario del gerente: {{ s.comentario_decision }}</p>
         </div>
-        <span class="status-badge shrink-0"
-              [class.bg-amber-500/15]="s.estado === 'pendiente'" [class.text-amber-300]="s.estado === 'pendiente'" [class.border-amber-500/30]="s.estado === 'pendiente'"
-              [class.bg-emerald-500/15]="s.estado === 'aprobada'" [class.text-emerald-300]="s.estado === 'aprobada'" [class.border-emerald-500/30]="s.estado === 'aprobada'"
-              [class.bg-red-500/15]="s.estado === 'rechazada'" [class.text-red-300]="s.estado === 'rechazada'" [class.border-red-500/30]="s.estado === 'rechazada'">
-          {{ s.estado }}
-        </span>
+        <app-estado-badge [tipo]="'autorizacion'" [estado]="s.estado"></app-estado-badge>
       </div>
     </div>
   </div>

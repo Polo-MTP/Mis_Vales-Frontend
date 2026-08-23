@@ -32,14 +32,7 @@
           </p>
         </div>
         <div class="flex items-center gap-3 shrink-0">
-          <span class="status-badge"
-                [class.bg-amber-500/15]="v.estado === 'solicitado'" [class.text-amber-300]="v.estado === 'solicitado'" [class.border-amber-500/30]="v.estado === 'solicitado'"
-                [class.bg-blue-500/15]="v.estado === 'autorizado'" [class.text-blue-300]="v.estado === 'autorizado'" [class.border-blue-500/30]="v.estado === 'autorizado'"
-                [class.bg-emerald-500/15]="v.estado === 'pagado'" [class.text-emerald-300]="v.estado === 'pagado'" [class.border-emerald-500/30]="v.estado === 'pagado'"
-                [class.bg-orange-500/15]="v.estado === 'parcial'" [class.text-orange-300]="v.estado === 'parcial'" [class.border-orange-500/30]="v.estado === 'parcial'"
-                [class.bg-red-500/15]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.text-red-300]="v.estado === 'vencido' || v.estado === 'incidencia'" [class.border-red-500/30]="v.estado === 'vencido' || v.estado === 'incidencia'">
-            {{ estadoValeLabel(v.estado) }}
-          </span>
+          <app-estado-badge [tipo]="'vale'" [estado]="v.estado"></app-estado-badge>
           <span *ngIf="!v.activo" class="status-badge bg-slate-500/15 text-slate-400 border-slate-500/30">Inactivo</span>
           <button type="button" (click)="toggleActivo(v)" [disabled]="actualizandoEstado() === v.id" class="btn-outline w-auto shrink-0">
             <span *ngIf="actualizandoEstado() !== v.id">{{ v.activo ? 'Desactivar' : 'Activar' }}</span>

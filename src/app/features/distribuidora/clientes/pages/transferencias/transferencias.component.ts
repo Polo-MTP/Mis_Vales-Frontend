@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -9,7 +10,7 @@ import { SolicitudTransferenciaCliente } from '../../../../../core/models/solici
 @Component({
   selector: 'app-transferencias',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, EstadoBadgeComponent],
   templateUrl: './transferencias.component.html',
   styleUrl: './transferencias.component.css'
 })

@@ -1,3 +1,4 @@
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -14,7 +15,7 @@ import { MENSAJES_PATRON, codigoPostalValidators, curpValidators, numeroExtValid
 @Component({
   selector: 'app-detalle-cliente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective, EstadoBadgeComponent],
   templateUrl: './detalle-cliente.component.html',
   styleUrl: './detalle-cliente.component.css'
 })
