@@ -19,10 +19,13 @@ export interface CrearPersonalSucursalPayload {
   rol: RolPersonalSucursal;
   name: string;
   email: string;
-  password: string;
-  password_confirmation: string;
   sucursal_id?: number;
   gerente_id?: number;
+}
+
+export interface ReasignarPersonalPayload {
+  gerente_origen_id: number;
+  gerente_destino_id: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -36,5 +39,9 @@ export class UsuarioService {
 
   crearPersonalSucursal(payload: CrearPersonalSucursalPayload): Observable<ApiResponse<User>> {
     return this.http.post<ApiResponse<User>>(`${this.baseUrl}/personal`, payload);
+  }
+
+  reasignarPersonal(payload: ReasignarPersonalPayload): Observable<ApiResponse<{ personal_reasignado: number }>> {
+    return this.http.post<ApiResponse<{ personal_reasignado: number }>>(`${this.baseUrl}/reasignar-gerente`, payload);
   }
 }

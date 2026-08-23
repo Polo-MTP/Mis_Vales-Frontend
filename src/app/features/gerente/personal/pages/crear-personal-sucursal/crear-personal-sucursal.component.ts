@@ -38,8 +38,6 @@ export class CrearPersonalSucursalComponent implements OnInit {
     rol: ['', [Validators.required]],
     name: ['', [Validators.required, Validators.maxLength(255)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
-    password_confirmation: ['', [Validators.required]],
     sucursal_id: [''],
     gerente_id: ['']
   });
@@ -102,8 +100,6 @@ export class CrearPersonalSucursalComponent implements OnInit {
         rol: v.rol as RolPersonalSucursal,
         name: v.name!,
         email: v.email!,
-        password: v.password!,
-        password_confirmation: v.password_confirmation!,
         ...(this.esGerenteGeneral()
           ? { sucursal_id: Number(v.sucursal_id), gerente_id: Number(v.gerente_id) }
           : {})
@@ -111,9 +107,9 @@ export class CrearPersonalSucursalComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.enviando.set(false);
-          this.exito.set(`${res.data?.role?.name} "${res.data?.name}" creado correctamente.`);
+          this.exito.set(`${res.data?.role?.name} "${res.data?.name}" creado correctamente. Se le envió su contraseña por correo.`);
           this.form.reset({
-            rol: '', name: '', email: '', password: '', password_confirmation: '',
+            rol: '', name: '', email: '',
             sucursal_id: '', gerente_id: ''
           });
         },

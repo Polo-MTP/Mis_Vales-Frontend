@@ -139,6 +139,9 @@ const NOTIFICACION_ACCION_LABELS: Record<string, string> = {
   credito_asignado: 'Se te asignó tu línea de crédito',
   credito_incrementado: 'Tu línea de crédito aumentó',
   distribuidora_morosa: 'Una distribuidora de tu sucursal cayó en morosidad',
+  abono_con_queja: 'Una distribuidora reportó una queja sobre un abono — inicia la conciliación manual',
+  abono_excedente: 'Un corte recibió más dinero del que se debía — revisa si se reembolsa o se aplica al siguiente',
+  personal_asignado: 'Se te asignó un nuevo integrante de personal',
   solicitud_verificada: 'Una solicitud fue verificada en campo (cumple)',
   solicitud_rechazada_verificador: 'Una solicitud fue rechazada en la verificación de campo',
 };
