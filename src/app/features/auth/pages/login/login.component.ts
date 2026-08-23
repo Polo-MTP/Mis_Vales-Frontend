@@ -13,7 +13,7 @@ import { environment } from '../../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent],
   templateUrl: './login.component.html',
-  styleUrls: []
+  styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
