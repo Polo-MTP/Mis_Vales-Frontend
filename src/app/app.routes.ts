@@ -86,7 +86,13 @@ export const routes: Routes = [
     }
   ]
 },
-  // Redirect raíz al login
-  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'auth/login' }
+  // Página de aterrizaje principal (Landing Page pública)
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/landing/pages/landing-page/landing-page.component')
+        .then(m => m.LandingPageComponent),
+    pathMatch: 'full'
+  },
+  { path: '**', redirectTo: '' }
 ];

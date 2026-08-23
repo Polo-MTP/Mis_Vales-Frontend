@@ -1,0 +1,14 @@
+/* Patrón de puntos decorativo en el panel derecho */
+.blue-dot-matrix {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.25) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+}
+
+/* Sombras suaves para los widgets flotantes en el panel derecho */
+.floating-widget-shadow {
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.floating-pill-shadow {
+  box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}

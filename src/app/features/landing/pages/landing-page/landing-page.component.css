@@ -1,0 +1,88 @@
+/* Paleta Dark & Royal Blue adaptada de Paynex */
+
+.bg-paynex-dark-canvas {
+  background-color: #080e1e;
+}
+
+.bg-paynex-hero-dark {
+  background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, rgba(8, 14, 30, 1) 70%), #080e1e;
+}
+
+.bg-paynex-blue-section {
+  background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 50%, #0f172a 100%);
+}
+
+/* Escenario curvado de tarjetas en tonos oscuros y azul */
+.cards-stage-container-dark {
+  position: relative;
+  height: 390px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+  border-radius: 36px 36px 0 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.4) 0%, rgba(30, 58, 138, 0.35) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-bottom: none;
+}
+
+.fan-card {
+  position: absolute;
+  width: 225px;
+  height: 350px;
+  border-radius: 26px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  bottom: -35px;
+}
+
+.fan-card-left-dark {
+  left: calc(50% - 245px);
+  background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: rotate(-14deg);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+}
+
+.fan-card-left-dark:hover {
+  transform: rotate(-8deg) translateY(-20px);
+}
+
+.fan-card-center-dark {
+  left: calc(50% - 112px);
+  background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  transform: rotate(0deg) translateY(-25px);
+  box-shadow: 0 30px 60px -10px rgba(37, 99, 235, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 20;
+}
+
+.fan-card-center-dark:hover {
+  transform: rotate(0deg) translateY(-40px);
+}
+
+.fan-card-right-dark {
+  left: calc(50% + 20px);
+  background: linear-gradient(145deg, #0f172a 0%, #020617 100%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: white;
+  transform: rotate(14deg);
+  box-shadow: 0 25px 45px -10px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+}
+
+.fan-card-right-dark:hover {
+  transform: rotate(8deg) translateY(-20px);
+}
+
+/* Tipografía vertical en tarjetas */
+.card-vertical-watermark {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  opacity: 0.2;
+}
