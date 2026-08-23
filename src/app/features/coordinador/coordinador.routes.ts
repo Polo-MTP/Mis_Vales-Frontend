@@ -12,6 +12,7 @@ import { TransferenciasPendientesComponent } from './clientes/pages/transferenci
 import { MisAutorizacionesComponent } from '../gerente/autorizaciones/pages/mis-autorizaciones/mis-autorizaciones.component';
 import { ConsultarValesComponent } from '../gerente/vales/pages/consultar-vales/consultar-vales.component';
 import { AumentoCreditoComponent } from './creditos/pages/aumento-credito/aumento-credito.component';
+import { CambiarPasswordComponent } from '../../shared/components/cambiar-password/cambiar-password.component';
 
 export const COORDINADOR_ROUTES: Routes = [
   { path: '', component: CoordinadorDashboardComponent },
@@ -26,5 +27,6 @@ export const COORDINADOR_ROUTES: Routes = [
   { path: 'distribuidoras/reasignar-clientes', component: ReasignarClientesComponent },
   { path: 'autorizaciones', component: MisAutorizacionesComponent },
   { path: 'vales', component: ConsultarValesComponent },
-  { path: 'creditos/aumento', component: AumentoCreditoComponent }
+  { path: 'creditos/aumento', component: AumentoCreditoComponent },
+  { path: 'cuenta/contrasena', component: CambiarPasswordComponent }
 ];

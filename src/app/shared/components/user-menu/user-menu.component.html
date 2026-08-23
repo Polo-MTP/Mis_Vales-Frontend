@@ -67,6 +67,14 @@
     <!-- Acciones -->
     <div class="p-2">
 
+      <a
+        [routerLink]="authService.baseRoute() + '/cuenta/contrasena'"
+        (click)="cerrarMenu()"
+        class="block w-full text-left px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 transition"
+      >
+        Cambiar contraseña
+      </a>
+
       <button
         type="button"
         (click)="logout()"

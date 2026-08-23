@@ -47,5 +47,13 @@ export const VERIFICADOR_ROUTES: Routes = [
         (m) => m.DetalleDistribuidoraComponent
       ),
     title: 'Verificador - Detalle de Distribuidora'
+  },
+  {
+    path: 'cuenta/contrasena',
+    loadComponent: () =>
+      import('../../shared/components/cambiar-password/cambiar-password.component').then(
+        (m) => m.CambiarPasswordComponent
+      ),
+    title: 'Verificador - Cambiar Contraseña'
   }
 ];

@@ -1,12 +1,19 @@
 <div class="layout-container">
 
   <div class="dash-card space-y-1">
-    <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ esGerenteGeneral() ? 'Personal y Sucursales' : 'Mi Personal' }}</h1>
-    <p class="text-xs text-slate-400 font-medium">
-      {{ esGerenteGeneral()
-        ? 'Alta de Gerentes de Sucursal, de personal operativo y administración de sucursales.'
-        : 'Alta de Coordinador, Verificador y Cajera para tu sucursal.' }}
-    </p>
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ esGerenteGeneral() ? 'Personal y Sucursales' : 'Mi Personal' }}</h1>
+        <p class="text-xs text-slate-400 font-medium">
+          {{ esGerenteGeneral()
+            ? 'Alta de Gerentes de Sucursal, de personal operativo y administración de sucursales.'
+            : 'Alta de Coordinador, Verificador y Cajera para tu sucursal.' }}
+        </p>
+      </div>
+      <a *ngIf="esGerenteGeneral()" routerLink="/gerente/personal/reasignar-gerente" class="btn-outline shrink-0 whitespace-nowrap">
+        Reasignar Personal
+      </a>
+    </div>
   </div>
 
   <app-crear-gerente-sucursal *ngIf="esGerenteGeneral()"></app-crear-gerente-sucursal>

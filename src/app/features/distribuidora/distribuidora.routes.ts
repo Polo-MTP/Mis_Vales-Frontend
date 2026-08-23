@@ -11,6 +11,7 @@ import { TransferenciasComponent } from './clientes/pages/transferencias/transfe
 import { AumentoCreditoComponent } from './creditos/pages/aumento-credito/aumento-credito.component';
 import { ListaRelacionesComponent } from './relaciones/pages/lista-relaciones/lista-relaciones.component';
 import { DetalleRelacionComponent } from './relaciones/pages/detalle-relacion/detalle-relacion.component';
+import { CambiarPasswordComponent } from '../../shared/components/cambiar-password/cambiar-password.component';
 
 export const DISTRIBUIDORA_ROUTES: Routes = [
   { path: '', component: DistribuidoraDashboardComponent },
@@ -24,5 +25,6 @@ export const DISTRIBUIDORA_ROUTES: Routes = [
   { path: 'conciliaciones', component: ListaConciliacionesComponent },
   { path: 'creditos/aumento', component: AumentoCreditoComponent },
   { path: 'relaciones', component: ListaRelacionesComponent },
-  { path: 'relaciones/:id', component: DetalleRelacionComponent }
+  { path: 'relaciones/:id', component: DetalleRelacionComponent },
+  { path: 'cuenta/contrasena', component: CambiarPasswordComponent }
 ];

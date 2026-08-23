@@ -22,6 +22,22 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this.currentUser());
   readonly userRole = computed(() => this.currentUser()?.role?.name || 'Sin Rol');
 
+  /** Prefijo de ruta del layout de cada rol -- lo usan tanto redirectUserByRole() como
+   *  cualquier link que necesite apuntar a una página dentro del layout del usuario actual
+   *  (ej. "Cambiar contraseña" en app-user-menu, visible sin importar el rol). */
+  readonly baseRoute = computed<string>(() => {
+    switch (this.userRole()) {
+      case 'Administrador': return '/administrador';
+      case 'Gerente General':
+      case 'Gerente de Sucursal': return '/gerente';
+      case 'Coordinador': return '/coordinador';
+      case 'Verificador': return '/verificador';
+      case 'Distribuidora': return '/distribuidora';
+      case 'Cajera': return '/cajera';
+      default: return '/gerente';
+    }
+  });
+
   private getStoredUser(): User | null {
     const raw = localStorage.getItem('user');
     try {
@@ -148,6 +164,14 @@ export class AuthService {
       password,
       password_confirmation,
       recaptcha
+    });
+  }
+
+  changePassword(current_password: string, password: string, password_confirmation: string): Observable<ApiResponse<null>> {
+    return this.http.put<ApiResponse<null>>(`${environment.apiUrl}/me/password`, {
+      current_password,
+      password,
+      password_confirmation
     });
   }
 

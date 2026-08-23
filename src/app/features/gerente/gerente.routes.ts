@@ -16,8 +16,10 @@ import { ReasignarCoordinadorComponent } from './distribuidoras/pages/reasignar-
 import { TransferenciasPendientesComponent } from './clientes/pages/transferencias-pendientes/transferencias-pendientes.component';
 import { AumentoCreditoPendientesComponent } from './distribuidoras/pages/aumento-credito-pendientes/aumento-credito-pendientes.component';
 import { PersonalComponent } from './personal/pages/personal/personal.component';
+import { ReasignarGerenteComponent } from './personal/pages/reasignar-gerente/reasignar-gerente.component';
 import { MisAutorizacionesComponent } from './autorizaciones/pages/mis-autorizaciones/mis-autorizaciones.component';
 import { ConsultarValesComponent } from './vales/pages/consultar-vales/consultar-vales.component';
+import { CambiarPasswordComponent } from '../../shared/components/cambiar-password/cambiar-password.component';
 
 export const GERENTE_ROUTES: Routes = [
   { path: '', component: GerenteDashboardComponent },
@@ -37,6 +39,8 @@ export const GERENTE_ROUTES: Routes = [
   { path: 'clientes/ediciones', component: EdicionesPendientesComponent },
   { path: 'clientes/transferencias', component: TransferenciasPendientesComponent },
   { path: 'personal', component: PersonalComponent },
+  { path: 'personal/reasignar-gerente', component: ReasignarGerenteComponent },
   { path: 'autorizaciones', component: MisAutorizacionesComponent },
-  { path: 'vales', component: ConsultarValesComponent }
+  { path: 'vales', component: ConsultarValesComponent },
+  { path: 'cuenta/contrasena', component: CambiarPasswordComponent }
 ];

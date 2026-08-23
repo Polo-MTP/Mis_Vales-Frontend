@@ -6,6 +6,7 @@ import { SolicitarEdicionComponent } from './clientes/pages/solicitar-edicion/so
 import { CanjearPuntosComponent } from './puntos/pages/canjear-puntos/canjear-puntos.component';
 import { ListaValesComponent } from './vales/pages/lista-vales/lista-vales.component';
 import { ListaMorososComponent } from '../coordinador/reportes/pages/lista-morosos/lista-morosos.component';
+import { CambiarPasswordComponent } from '../../shared/components/cambiar-password/cambiar-password.component';
 
 export const CAJERA_ROUTES: Routes = [
   { path: '', component: CajeraDashboardComponent },
@@ -14,5 +15,6 @@ export const CAJERA_ROUTES: Routes = [
   { path: 'clientes/solicitar-edicion', component: SolicitarEdicionComponent },
   { path: 'puntos/canjear', component: CanjearPuntosComponent },
   { path: 'vales', component: ListaValesComponent },
-  { path: 'reportes/morosos', component: ListaMorososComponent }
+  { path: 'reportes/morosos', component: ListaMorososComponent },
+  { path: 'cuenta/contrasena', component: CambiarPasswordComponent }
 ];

@@ -1,0 +1,75 @@
+<div class="layout-container">
+
+  <div class="dash-card">
+    <h1 class="text-2xl font-black text-slate-100 tracking-tight">Reasignación de Personal</h1>
+    <p class="text-xs text-slate-400 font-medium mt-1">Mueve TODO el personal (Coordinador/Verificador/Cajera) de un Gerente de Sucursal a otro. Úsalo cuando un gerente deja la sucursal o la empresa.</p>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando gerentes...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <div *ngIf="errorConfirmar()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ errorConfirmar() }}
+  </div>
+
+  <div *ngIf="resultado() as r" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-4 text-sm">
+    {{ r.mensaje }}
+  </div>
+
+  <div *ngIf="!cargando() && !error() && gerentes().length < 2" class="state-empty">
+    Se necesitan al menos 2 Gerentes de Sucursal activos para hacer una reasignación.
+  </div>
+
+  <ng-container *ngIf="!cargando() && !error() && gerentes().length >= 2">
+    <div class="dash-card space-y-3">
+      <p class="text-sm font-bold text-slate-200">1. Gerente de origen (deja a su personal)</p>
+      <div class="space-y-2">
+        <div *ngFor="let g of gerentes()"
+             (click)="elegirOrigen(g.id)"
+             class="list-card-item"
+             [class.ring-2]="origenId() === g.id"
+             [class.ring-blue-500]="origenId() === g.id">
+          <div>
+            <p class="font-bold text-slate-100">{{ g.name }}</p>
+            <p class="text-xs text-slate-400 mt-0.5">{{ g.email }} · {{ g.sucursal?.nombre }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-card space-y-3">
+      <p class="text-sm font-bold text-slate-200">2. Gerente de destino (recibe el personal)</p>
+      <div class="space-y-2">
+        <div *ngFor="let g of gerentes()"
+             (click)="g.id !== origenId() && elegirDestino(g.id)"
+             class="list-card-item"
+             [class.opacity-40]="g.id === origenId()"
+             [class.cursor-not-allowed]="g.id === origenId()"
+             [class.ring-2]="destinoId() === g.id"
+             [class.ring-emerald-500]="destinoId() === g.id">
+          <div>
+            <p class="font-bold text-slate-100">{{ g.name }}</p>
+            <p class="text-xs text-slate-400 mt-0.5">{{ g.email }} · {{ g.sucursal?.nombre }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <p class="text-xs text-slate-500 mb-3" *ngIf="origenId() && destinoId()">
+        El gerente destino debe pertenecer a la misma sucursal que el de origen — si no, el servidor rechazará la reasignación.
+      </p>
+      <button type="button"
+              (click)="confirmar()"
+              [disabled]="!origenId() || !destinoId() || confirmando()"
+              class="btn-primary w-auto">
+        <span *ngIf="!confirmando()">Reasignar Personal</span>
+        <span *ngIf="confirmando()">Reasignando...</span>
+      </button>
+    </div>
+  </ng-container>
+
+</div>

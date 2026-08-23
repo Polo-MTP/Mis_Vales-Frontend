@@ -1,5 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { CrearGerenteSucursalComponent } from '../crear-gerente-sucursal/crear-gerente-sucursal.component';
 import { CrearPersonalSucursalComponent } from '../crear-personal-sucursal/crear-personal-sucursal.component';
 import { SucursalesComponent } from '../sucursales/sucursales.component';
@@ -8,7 +9,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 @Component({
   selector: 'app-personal',
   standalone: true,
-  imports: [CommonModule, CrearGerenteSucursalComponent, CrearPersonalSucursalComponent, SucursalesComponent],
+  imports: [CommonModule, RouterModule, CrearGerenteSucursalComponent, CrearPersonalSucursalComponent, SucursalesComponent],
   templateUrl: './personal.component.html'
 })
 export class PersonalComponent {
