@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        if (res.success && res.data?.token) {
+        if (res.success && res.data?.user) {
           this.authService.redirectUserByRole();
         }
       },
@@ -125,7 +125,7 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        if (res.success && res.data?.token) {
+        if (res.success && res.data?.user) {
           this.authService.redirectUserByRole();
         }
       },
@@ -153,7 +153,7 @@ export class LoginComponent implements OnInit {
     this.authService.verifyEmailOtp(this.userId, this.otpMailForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isLoading.set(false);
-        if (res.success && res.data?.token) {
+        if (res.success && res.data?.user) {
           this.authService.redirectUserByRole();
         }
       },

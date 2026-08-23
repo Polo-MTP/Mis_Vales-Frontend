@@ -83,7 +83,7 @@ export class MfaSetupComponent implements OnInit {
 
     // /mfa/verify (no /mfa/setup/confirm) — además de vincular el dispositivo, continúa la
     // misma cadena de login que usa un TOTP normal: pide el tercer factor si el rol lo
-    // requiere, o entrega el token de una vez si no. /mfa/setup/confirm solo marca el
+    // requiere, o autentica de una vez si no. /mfa/setup/confirm solo marca el
     // dispositivo como verificado y no sabe nada de lo que sigue después.
     this.authService.verifyMfa(setup.mfa_method_id, this.confirmForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
@@ -95,7 +95,7 @@ export class MfaSetupComponent implements OnInit {
           return;
         }
 
-        if (res.success && res.data?.token) {
+        if (res.success && res.data?.user) {
           this.successMessage.set('Dispositivo vinculado con éxito. Entrando...');
           this.authService.redirectUserByRole();
         }
@@ -125,7 +125,7 @@ export class MfaSetupComponent implements OnInit {
     this.authService.verifyEmailOtp(this.userId, this.otpMailForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
-        if (res.success && res.data?.token) {
+        if (res.success && res.data?.user) {
           this.successMessage.set('Dispositivo vinculado con éxito. Entrando...');
           this.authService.redirectUserByRole();
         }

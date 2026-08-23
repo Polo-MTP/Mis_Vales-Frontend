@@ -7,12 +7,13 @@ import { Router } from '@angular/router';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  const token = authService.token();
 
-  let authReq = req.clone({
+  // La sesión viaja en una cookie httpOnly (nunca leída por JS) en vez de un header
+  // Authorization -- withCredentials hace que el navegador la mande sola en cada request.
+  const authReq = req.clone({
+    withCredentials: true,
     setHeaders: {
-      Accept: 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
+      Accept: 'application/json'
     }
   });
 

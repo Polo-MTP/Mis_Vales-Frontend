@@ -14,9 +14,12 @@ export class AuthService {
   private router = inject(Router);
 
   readonly currentUser = signal<User | null>(this.getStoredUser());
-  readonly token = signal<string | null>(localStorage.getItem('token'));
 
-  readonly isAuthenticated = computed(() => !!this.token());
+  // La sesión real vive en una cookie httpOnly que JS no puede leer (ver auditoría de
+  // seguridad, hallazgo H-02) -- esta señal es solo una pista optimista para la UI (evita el
+  // parpadeo del login mientras carga). La autorización real la valida el backend en cada
+  // request vía la cookie; si ya no es válida, el interceptor limpia la sesión con el 401.
+  readonly isAuthenticated = computed(() => !!this.currentUser());
   readonly userRole = computed(() => this.currentUser()?.role?.name || 'Sin Rol');
 
   private getStoredUser(): User | null {
@@ -28,17 +31,13 @@ export class AuthService {
     }
   }
 
-  setSession(user: User, token: string): void {
-    localStorage.setItem('token', token);
+  setSession(user: User): void {
     localStorage.setItem('user', JSON.stringify(user));
-    this.token.set(token);
     this.currentUser.set(user);
   }
 
   clearSession(): void {
-    localStorage.removeItem('token');
     localStorage.removeItem('user');
-    this.token.set(null);
     this.currentUser.set(null);
   }
 
@@ -93,8 +92,8 @@ export class AuthService {
   login(credentials: { email: string; password: string; recaptcha?: string }): Observable<ApiResponse<LoginResultData>> {
     return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/login`, credentials).pipe(
       tap(res => {
-        if (res.success && res.data?.token && res.data?.user) {
-          this.setSession(res.data.user, res.data.token);
+        if (res.success && res.data?.user) {
+          this.setSession(res.data.user);
         }
       })
     );
@@ -103,8 +102,8 @@ export class AuthService {
   verifyMfa(mfa_method_id: string, code: string, recaptcha?: string): Observable<ApiResponse<LoginResultData>> {
     return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/mfa/verify`, { mfa_method_id, code, recaptcha }).pipe(
       tap(res => {
-        if (res.success && res.data?.token && res.data?.user) {
-          this.setSession(res.data.user, res.data.token);
+        if (res.success && res.data?.user) {
+          this.setSession(res.data.user);
         }
       })
     );
@@ -113,8 +112,8 @@ export class AuthService {
   verifyEmailOtp(user_id: number, code: string, recaptcha?: string): Observable<ApiResponse<LoginResultData>> {
     return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/mfa/email/verify`, { user_id, code, recaptcha }).pipe(
       tap(res => {
-        if (res.success && res.data?.token && res.data?.user) {
-          this.setSession(res.data.user, res.data.token);
+        if (res.success && res.data?.user) {
+          this.setSession(res.data.user);
         }
       })
     );
@@ -153,14 +152,13 @@ export class AuthService {
   }
 
   logout(): void {
-    if (this.token()) {
-      this.http.post(`${environment.apiUrl}/logout`, {}).subscribe({
-        complete: () => this.finalizeLogout(),
-        error: () => this.finalizeLogout()
-      });
-    } else {
-      this.finalizeLogout();
-    }
+    // La sesión vive en la cookie, no en algo que este servicio pueda inspeccionar -- siempre
+    // se intenta cerrar en el backend; si ya no había sesión válida, el backend simplemente
+    // no tiene nada que hacer y de todos modos se limpia el estado local.
+    this.http.post(`${environment.apiUrl}/logout`, {}).subscribe({
+      complete: () => this.finalizeLogout(),
+      error: () => this.finalizeLogout()
+    });
   }
 
   private finalizeLogout(): void {

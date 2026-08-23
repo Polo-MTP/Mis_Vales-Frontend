@@ -9,7 +9,6 @@ export interface ApiResponse<T = any> {
 
 export interface LoginResultData {
   user?: User;
-  token?: string;
   requires_mfa?: boolean;
   requires_email_otp?: boolean;
   requires_setup?: boolean;
