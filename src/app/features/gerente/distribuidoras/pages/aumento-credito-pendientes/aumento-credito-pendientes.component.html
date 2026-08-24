@@ -2,7 +2,11 @@
 
   <div class="dash-card">
     <h1 class="text-2xl font-black text-slate-100 tracking-tight">Solicitudes de Aumento de Crédito</h1>
-    <p class="text-xs text-slate-400 font-medium mt-1">Aprueba con el monto que decidas otorgar (puede ser distinto al solicitado) o rechaza la solicitud.</p>
+    <!-- El backend fijaba el límite en limite_credito + monto_otorgado hasta que se corrigió:
+         una distribuidora con límite $25,000 aprobada por $75,000 terminaba con $100,000. Ahora
+         el límite queda exactamente en el monto otorgado, así que el texto tiene que dejarlo
+         inequívoco -- "el nuevo límite total", no "cuánto más darle". -->
+    <p class="text-xs text-slate-400 font-medium mt-1">El monto que otorgues será el <strong>límite total nuevo</strong> de la distribuidora (no se suma al que ya tiene) — puede ser menor al solicitado, nunca mayor.</p>
   </div>
 
   <div *ngIf="errorDecidir()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
@@ -32,7 +36,7 @@
       </div>
 
       <div class="flex items-center gap-2 mt-3 w-full">
-        <input type="number" [(ngModel)]="montosOtorgados[s.id]" class="form-input flex-1 min-w-0" min="1" step="0.01" placeholder="Monto a otorgar" />
+        <input type="number" [(ngModel)]="montosOtorgados[s.id]" class="form-input flex-1 min-w-0" min="1" step="0.01" [placeholder]="'Nuevo límite total (máx. ' + (s.monto_solicitado | dinero) + ')'" />
         <button type="button" (click)="rechazar(s)" [disabled]="decidiendo() === s.id" class="btn-outline w-auto shrink-0">
           Rechazar
         </button>
