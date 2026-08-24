@@ -47,7 +47,12 @@ export class GooglePlacesAutocompleteDirective implements OnInit, OnChanges, OnD
     this.autocomplete = new google.maps.places.Autocomplete(this.el.nativeElement, {
       componentRestrictions: { country: 'mx' },
       fields: ['address_components', 'geometry'],
-      types: [this.appPlacesAutocompleteTipo]
+      types: [this.appPlacesAutocompleteTipo],
+      // setBounds() por sí solo es solo una preferencia -- Google sigue devolviendo calles de
+      // otros estados si no hay suficientes coincidencias cerca del CP elegido. strictBounds
+      // hace que de verdad filtre por el círculo del sesgo en vez de rellenar con resultados
+      // lejanos que luego pisan Ciudad/Estado si el usuario los elige sin fijarse.
+      strictBounds: true
     });
 
     this.aplicarSesgo();

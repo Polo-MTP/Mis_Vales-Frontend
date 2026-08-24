@@ -143,13 +143,16 @@ export class DetalleVerificacionComponent implements OnInit {
   onCalleSeleccionada(place: any): void {
     const direccion = parsearDireccionGoogle(place);
 
+    // Estado y Ciudad son autoridad exclusiva del Código Postal (ver onCodigoPostalSeleccionado)
+    // -- Google a veces nombra la misma zona distinto a nivel calle que a nivel CP (ej. "Torreón"
+    // vs "Lerdo" en la Comarca Lagunera, que cruza Coahuila/Durango). Solo se llenan aquí si el
+    // CP todavía no los estableció.
     this.datosForm.patchValue({
       calle: direccion.calle || this.datosForm.value.calle,
       numero_ext: direccion.numero_ext || this.datosForm.value.numero_ext,
       colonia: direccion.colonia || this.datosForm.value.colonia,
-      codigo_postal: direccion.codigo_postal || this.datosForm.value.codigo_postal,
-      estado: direccion.estado || this.datosForm.value.estado,
-      ciudad: direccion.ciudad || this.datosForm.value.ciudad
+      estado: this.datosForm.value.estado || direccion.estado || '',
+      ciudad: this.datosForm.value.ciudad || direccion.ciudad || ''
     });
   }
 

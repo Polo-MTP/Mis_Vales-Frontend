@@ -106,6 +106,8 @@ const NOTIFICACION_ACCION_LABELS: Record<string, string> = {
   personal_asignado: 'Se te asignó un nuevo integrante de personal',
   solicitud_verificada: 'Una solicitud fue verificada en campo (cumple)',
   solicitud_rechazada_verificador: 'Una solicitud fue rechazada en la verificación de campo',
+  solicitud_aprobada_gerente: 'Gerencia aprobó tu solicitud de distribuidor',
+  solicitud_rechazada_gerente: 'Gerencia rechazó tu solicitud de distribuidor',
 };
 
 /** Notificaciones dirigidas a un usuario (accion de negocio) o del feed de auditoría

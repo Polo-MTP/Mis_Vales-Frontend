@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { VerificacionService } from '../../services/verificacion.service';
 import { SolicitudProveedor, EstadoSolicitud } from '../../../../../core/models/solicitud-proveedor.model';
+import { EstadoBadgeComponent } from '../../../../../shared/components/estado-badge/estado-badge.component';
 
 // Debe coincidir con el tamaño de página por defecto de Laravel (Model::$perPage) en el backend.
 const PER_PAGE = 15;
@@ -10,7 +11,7 @@ const PER_PAGE = 15;
 @Component({
   selector: 'app-lista-pendientes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, EstadoBadgeComponent],
   templateUrl: './lista-pendientes.component.html',
   styleUrl: './lista-pendientes.component.css'
 })

@@ -1,4 +1,4 @@
-<div class="w-[820px] mx-auto py-8 space-y-6">
+<div class="layout-container">
 
   <div class="dash-card">
     <h1 class="text-2xl font-black text-slate-100 tracking-tight">Solicitudes de Aumento de Crédito</h1>
@@ -32,7 +32,7 @@
       </div>
 
       <div class="flex items-center gap-2 mt-3 w-full">
-        <input type="number" [(ngModel)]="montosOtorgados[s.id]" class="form-input" min="1" step="0.01" placeholder="Monto a otorgar" />
+        <input type="number" [(ngModel)]="montosOtorgados[s.id]" class="form-input flex-1 min-w-0" min="1" step="0.01" placeholder="Monto a otorgar" />
         <button type="button" (click)="rechazar(s)" [disabled]="decidiendo() === s.id" class="btn-outline w-auto shrink-0">
           Rechazar
         </button>

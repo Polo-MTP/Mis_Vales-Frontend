@@ -161,7 +161,13 @@ export class SolicitarEdicionComponent implements OnInit {
     }
   }
 
-  /** El usuario eligió una calle de las sugerencias: llenamos el resto de la dirección. */
+  /**
+   * El usuario eligió una calle de las sugerencias: llenamos calle/colonia. Estado y Ciudad son
+   * autoridad exclusiva del Código Postal (ver onCodigoPostalSeleccionado) -- Google a veces
+   * nombra la misma zona distinto a nivel calle que a nivel CP (ej. "Torreón" vs "Lerdo" en la
+   * Comarca Lagunera, que cruza Coahuila/Durango). Solo se llenan aquí si el CP todavía no los
+   * estableció.
+   */
   onCalleSeleccionada(place: any): void {
     const direccion = parsearDireccionGoogle(place);
 
@@ -169,9 +175,8 @@ export class SolicitarEdicionComponent implements OnInit {
       calle: direccion.calle || this.form.value.calle,
       numero_ext: direccion.numero_ext || this.form.value.numero_ext,
       colonia: direccion.colonia || this.form.value.colonia,
-      codigo_postal: direccion.codigo_postal || this.form.value.codigo_postal,
-      estado: direccion.estado || this.form.value.estado,
-      ciudad: direccion.ciudad || this.form.value.ciudad
+      estado: this.form.value.estado || direccion.estado || '',
+      ciudad: this.form.value.ciudad || direccion.ciudad || ''
     });
   }
 

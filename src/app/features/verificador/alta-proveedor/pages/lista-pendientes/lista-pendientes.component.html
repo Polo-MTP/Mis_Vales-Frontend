@@ -59,21 +59,7 @@
           <span class="text-xs font-bold uppercase text-slate-400 bg-slate-900/60 px-2 py-1 rounded truncate">
             {{ solicitud.sucursal?.nombre || 'Sucursal General' }}
           </span>
-          <span class="status-badge shrink-0"
-                [class.bg-amber-500/15]="solicitud.estado === 'pendiente_verificacion'"
-                [class.text-amber-300]="solicitud.estado === 'pendiente_verificacion'"
-                [class.border-amber-500/30]="solicitud.estado === 'pendiente_verificacion'"
-                [class.bg-blue-500/15]="solicitud.estado === 'en_verificacion'"
-                [class.text-blue-300]="solicitud.estado === 'en_verificacion'"
-                [class.border-blue-500/30]="solicitud.estado === 'en_verificacion'"
-                [class.bg-emerald-500/15]="solicitud.estado === 'verificado'"
-                [class.text-emerald-300]="solicitud.estado === 'verificado'"
-                [class.border-emerald-500/30]="solicitud.estado === 'verificado'"
-                [class.bg-red-500/15]="solicitud.estado === 'rechazado'"
-                [class.text-red-300]="solicitud.estado === 'rechazado'"
-                [class.border-red-500/30]="solicitud.estado === 'rechazado'">
-            {{ solicitud.estado | titlecase }}
-          </span>
+          <app-estado-badge class="shrink-0" tipo="solicitud-proveedor" [estado]="solicitud.estado"></app-estado-badge>
         </div>
 
         <h2 class="text-base font-bold text-slate-100 mb-2">
