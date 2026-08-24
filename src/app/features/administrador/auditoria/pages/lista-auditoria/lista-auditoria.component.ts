@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuditTableComponent } from '../../components/audit-table/audit-table.component';
 import { BitacoraActividadComponent } from '../../components/bitacora-actividad/bitacora-actividad.component';
@@ -13,4 +13,10 @@ import { BitacoraActividadComponent } from '../../components/bitacora-actividad/
   ],
   templateUrl: './lista-auditoria.component.html'
 })
-export class ListaAuditoriaComponent {}
+export class ListaAuditoriaComponent {
+  tabActiva = signal<'actividad' | 'accesos'>('actividad');
+
+  seleccionarTab(tab: 'actividad' | 'accesos'): void {
+    this.tabActiva.set(tab);
+  }
+}

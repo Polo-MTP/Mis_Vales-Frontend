@@ -1,17 +1,57 @@
-<div class="layout-container">
+<div class="layout-container space-y-4">
 
-  <div class="dash-card">
-    <h1 class="text-2xl font-black text-slate-100 tracking-tight">
-      Log de Auditoría
-    </h1>
+  <!-- Encabezado con selector de pestañas -->
+  <div class="dash-card flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-black text-slate-100 tracking-tight flex items-center gap-2">
+        <span>Centro de Auditoría Forense</span>
+      </h1>
+      <p class="text-xs text-slate-400 font-medium mt-0.5">
+        Supervisión global de eventos, cambios en modelos e historial de autenticación
+      </p>
+    </div>
 
-    <p class="text-xs text-slate-400 font-medium mt-1">
-      Historial forense de accesos e intentos de autenticación del sistema.
-    </p>
+    <!-- Segmented Tabs Switcher -->
+    <div class="flex items-center bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0 self-start md:self-auto shadow-inner">
+      <button
+        type="button"
+        (click)="seleccionarTab('actividad')"
+        [class.bg-sky-500]="tabActiva() === 'actividad'"
+        [class.text-white]="tabActiva() === 'actividad'"
+        [class.shadow-lg]="tabActiva() === 'actividad'"
+        [class.text-slate-400]="tabActiva() !== 'actividad'"
+        class="px-4 py-2 text-xs font-bold rounded-xl transition-all duration-200 flex items-center gap-2 hover:text-slate-200"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+        </svg>
+        <span>Bitácora de Actividad</span>
+      </button>
+
+      <button
+        type="button"
+        (click)="seleccionarTab('accesos')"
+        [class.bg-sky-500]="tabActiva() === 'accesos'"
+        [class.text-white]="tabActiva() === 'accesos'"
+        [class.shadow-lg]="tabActiva() === 'accesos'"
+        [class.text-slate-400]="tabActiva() !== 'accesos'"
+        class="px-4 py-2 text-xs font-bold rounded-xl transition-all duration-200 flex items-center gap-2 hover:text-slate-200"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <span>Historial de Accesos / Logins</span>
+      </button>
+    </div>
   </div>
 
-  <app-audit-table></app-audit-table>
+  <!-- Vista condicional según la pestaña seleccionada -->
+  <div *ngIf="tabActiva() === 'actividad'" class="animate-fade-in">
+    <app-bitacora-actividad></app-bitacora-actividad>
+  </div>
 
-  <app-bitacora-actividad></app-bitacora-actividad>
+  <div *ngIf="tabActiva() === 'accesos'" class="animate-fade-in">
+    <app-audit-table></app-audit-table>
+  </div>
 
-</div>
+</div>
