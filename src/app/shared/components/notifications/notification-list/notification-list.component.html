@@ -20,17 +20,20 @@
   *ngIf="!cargando() && !error() && notificaciones().length > 0"
   class="space-y-3"
 >
+  <!-- flex-col, no flex-row: en el panel de la campana (w-80) no cabe el texto al lado de la
+       fecha -- el título heredaba 16px sin tamaño propio y la fecha ("8/24/26, 10:38 AM", ~96px)
+       le dejaba a la etiqueta solo ~116px, así que cada palabra caía en su propia línea. -->
   <div
     *ngFor="let n of notificaciones()"
     (click)="marcarComoLeida(n)"
-    class="list-card-item"
+    class="list-card-item flex-col items-stretch gap-1"
     [class.cursor-default]="n.destinatario_id === null"
     [class.opacity-60]="n.leida"
   >
-    <div class="flex items-start gap-2">
+    <div class="flex items-start gap-2 min-w-0">
       <span *ngIf="n.destinatario_id !== null && !n.leida" class="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0"></span>
-      <div>
-        <p class="font-bold text-slate-100">
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-bold text-slate-100">
           {{ notificacionAccionLabel(n.accion) }}
         </p>
 
@@ -48,7 +51,7 @@
       </div>
     </div>
 
-    <span class="text-xs text-slate-500 shrink-0">
+    <span class="text-xs text-slate-500">
       {{ n.created_at | date:'short' }}
     </span>
   </div>

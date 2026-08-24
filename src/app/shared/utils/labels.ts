@@ -113,6 +113,15 @@ const NOTIFICACION_ACCION_LABELS: Record<string, string> = {
   transferencia_cliente_autorizada: 'Se autorizó la transferencia del cliente',
   transferencia_cliente_rechazada: 'Se rechazó la transferencia del cliente',
   transferencia_cliente_aceptada: 'El cliente salió de tu cartera por una transferencia confirmada',
+  aumento_credito_solicitado: 'Una distribuidora pidió un aumento de crédito — requiere tu decisión',
+  aumento_credito_aprobado: 'Se aprobó tu aumento de línea de crédito',
+  aumento_credito_rechazado: 'Se rechazó tu solicitud de aumento de crédito',
+  edicion_cliente_solicitada: 'Una cajera pide autorización para corregir datos de un cliente',
+  edicion_cliente_aprobada: 'Se autorizó tu corrección de datos — ya puedes aplicarla',
+  edicion_cliente_rechazada: 'Se rechazó tu solicitud de corrección de datos',
+  conciliacion_manual_solicitada: 'Una cajera pide autorizar una conciliación manual — requiere tu decisión',
+  conciliacion_manual_aprobada: 'Se autorizó tu conciliación manual — ya puedes ejecutarla',
+  conciliacion_manual_rechazada: 'Se rechazó tu solicitud de conciliación manual',
 };
 
 /** Notificaciones dirigidas a un usuario (accion de negocio) o del feed de auditoría
