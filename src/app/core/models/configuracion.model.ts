@@ -26,7 +26,10 @@ export interface ConfiguracionFechas {
   sucursal_id: number | null;
   sucursal: { id: number; nombre: string; codigo: string } | null;
   es_default_global: boolean;
+  /** Los dos días de corte quincenales (primera y segunda quincena), siempre en pareja --
+   *  ver UpdateConfiguracionFechasRequest en el backend. */
   dia_corte: number;
+  dia_corte_2: number;
   dia_limite_pago: number;
   dias_pago_anticipado: number;
   vigente_desde: string | null;
@@ -39,6 +42,7 @@ export interface ConfiguracionFechas {
 export interface CambiarConfiguracionFechasPayload {
   sucursal_id?: number | null;
   dia_corte: number;
+  dia_corte_2: number;
   dia_limite_pago: number;
   dias_pago_anticipado: number;
 }

@@ -31,6 +31,7 @@ export class ConfiguracionesFechasComponent implements OnInit {
 
   editForm = this.fb.group({
     dia_corte: ['', [Validators.required, Validators.min(1), Validators.max(31)]],
+    dia_corte_2: ['', [Validators.required, Validators.min(1), Validators.max(31)]],
     dia_limite_pago: ['', [Validators.required, Validators.min(1), Validators.max(31)]],
     dias_pago_anticipado: ['', [Validators.required, Validators.min(0), Validators.max(30)]]
   });
@@ -60,6 +61,7 @@ export class ConfiguracionesFechasComponent implements OnInit {
     this.errorEdicion.set(null);
     this.editForm.setValue({
       dia_corte: String(f.dia_corte),
+      dia_corte_2: String(f.dia_corte_2),
       dia_limite_pago: String(f.dia_limite_pago),
       dias_pago_anticipado: String(f.dias_pago_anticipado)
     });
@@ -75,15 +77,23 @@ export class ConfiguracionesFechasComponent implements OnInit {
       return;
     }
 
+    const val = this.editForm.value;
+
+    // El corte es quincenal: los dos días deben ser distintos, si no el mes solo tendría
+    // un corte real (ver UpdateConfiguracionFechasRequest en el backend, 'different').
+    if (Number(val.dia_corte) === Number(val.dia_corte_2)) {
+      this.errorEdicion.set('El día de corte de la primera y segunda quincena deben ser distintos.');
+      return;
+    }
+
     this.guardando.set(true);
     this.errorEdicion.set(null);
-
-    const val = this.editForm.value;
 
     this.configuracionService
       .cambiarFechas({
         sucursal_id: f.sucursal_id,
         dia_corte: Number(val.dia_corte),
+        dia_corte_2: Number(val.dia_corte_2),
         dia_limite_pago: Number(val.dia_limite_pago),
         dias_pago_anticipado: Number(val.dias_pago_anticipado)
       })

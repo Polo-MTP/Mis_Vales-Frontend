@@ -1,7 +1,7 @@
 <div class="dash-card">
   <div>
     <h2 class="text-base font-black text-slate-100">Fechas de Corte y Pago</h2>
-    <p class="text-xs text-slate-400 font-medium">Día de corte, límite de pago y días de pago anticipado — global y por sucursal.</p>
+    <p class="text-xs text-slate-400 font-medium">Días de corte quincenal (primera y segunda quincena), límite de pago y días de pago anticipado — global y por sucursal.</p>
   </div>
 
   <div *ngIf="cargando()" class="state-loading">Cargando configuraciones de fechas...</div>
@@ -19,10 +19,14 @@
         <button *ngIf="puedeEditar() && editando() !== f.id" type="button" (click)="iniciarEdicion(f)" class="btn-link-primary">Editar</button>
       </div>
 
-      <div *ngIf="editando() !== f.id" class="grid grid-cols-3 gap-4 text-sm">
+      <div *ngIf="editando() !== f.id" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
         <div>
-          <p class="text-xs text-slate-500">Día de Corte</p>
+          <p class="text-xs text-slate-500">Día de Corte (1ª quincena)</p>
           <p class="font-bold text-slate-100">{{ f.dia_corte }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500">Día de Corte (2ª quincena)</p>
+          <p class="font-bold text-slate-100">{{ f.dia_corte_2 }}</p>
         </div>
         <div>
           <p class="text-xs text-slate-500">Día Límite de Pago</p>
@@ -38,10 +42,14 @@
         <div *ngIf="errorEdicion()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-xl p-2 text-xs">
           {{ errorEdicion() }}
         </div>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div>
-            <label class="form-label">Día de Corte</label>
+            <label class="form-label">Día de Corte (1ª quincena)</label>
             <input type="number" formControlName="dia_corte" min="1" max="31" class="form-input">
+          </div>
+          <div>
+            <label class="form-label">Día de Corte (2ª quincena)</label>
+            <input type="number" formControlName="dia_corte_2" min="1" max="31" class="form-input">
           </div>
           <div>
             <label class="form-label">Día Límite de Pago</label>
