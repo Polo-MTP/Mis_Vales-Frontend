@@ -58,6 +58,7 @@
       <div *ngIf="a.queja" class="bg-slate-900/40 rounded-2xl p-4 mt-2 text-xs text-slate-400">
         <p class="font-bold text-slate-200">Queja de {{ a.queja.reportado_por }}</p>
         <p class="mt-0.5">{{ a.queja.motivo }}</p>
+        <a *ngIf="a.queja.evidencia_url" [href]="a.queja.evidencia_url" target="_blank" rel="noopener" class="inline-block mt-1 text-blue-400 hover:underline">Ver captura adjunta</a>
         <p *ngIf="a.queja.fecha" class="mt-0.5">{{ a.queja.fecha | date:'short' }}</p>
       </div>
 
@@ -67,6 +68,11 @@
           <div>
             <label class="form-label">¿Por qué crees que este abono está incorrecto?</label>
             <textarea formControlName="motivo" class="form-input" rows="3" placeholder="Ej. Yo pagué $2000, no $1500..."></textarea>
+          </div>
+          <div>
+            <label class="form-label">Captura de la transferencia (opcional)</label>
+            <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" (change)="onEvidenciaSeleccionada($event)" class="form-input">
+            <p class="text-xs text-slate-500 mt-1">jpg, png, webp o pdf. Máx. 5MB.</p>
           </div>
           <button type="submit" [disabled]="motivoForm.invalid || enviando() === a.id" class="btn-primary w-auto">
             <span *ngIf="enviando() !== a.id">Enviar Queja</span>

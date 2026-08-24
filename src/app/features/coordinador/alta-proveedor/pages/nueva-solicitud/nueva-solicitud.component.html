@@ -11,25 +11,6 @@
   <!-- Paso 1: datos de la solicitud -->
   <form *ngIf="!solicitudCreada()" [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
 
-    <!-- Datos del Negocio -->
-    <div class="dash-card">
-      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos del Negocio</h2>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="form-label">Nombre del Negocio *</label>
-          <input type="text" formControlName="nombre_negocio" class="form-input">
-          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('nombre_negocio')">{{ errorFor('nombre_negocio') }}</p>
-        </div>
-
-        <div>
-          <label class="form-label">RFC *</label>
-          <input type="text" formControlName="rfc" maxlength="13" appMayusculas class="form-input uppercase">
-          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('rfc')">{{ errorFor('rfc') }}</p>
-        </div>
-      </div>
-    </div>
-
     <!-- Datos Personales -->
     <div class="dash-card">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos Personales</h2>
@@ -56,6 +37,12 @@
           <label class="form-label">CURP *</label>
           <input type="text" formControlName="curp" maxlength="18" appMayusculas class="form-input uppercase">
           <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('curp')">{{ errorFor('curp') }}</p>
+        </div>
+
+        <div>
+          <label class="form-label">RFC *</label>
+          <input type="text" formControlName="rfc" maxlength="13" appMayusculas class="form-input uppercase">
+          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('rfc')">{{ errorFor('rfc') }}</p>
         </div>
 
         <div>

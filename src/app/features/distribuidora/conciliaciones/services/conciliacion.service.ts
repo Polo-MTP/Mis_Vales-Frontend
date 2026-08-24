@@ -19,7 +19,12 @@ export class ConciliacionService {
     return this.http.get<ApiResponse<PaginatedResponse<AbonoConciliacion>>>(this.baseUrl, { params });
   }
 
-  levantarQueja(abonoId: number, motivo: string): Observable<ApiResponse<AbonoConciliacion>> {
-    return this.http.post<ApiResponse<AbonoConciliacion>>(`${this.baseUrl}/${abonoId}/queja`, { motivo });
+  levantarQueja(abonoId: number, motivo: string, evidencia?: File): Observable<ApiResponse<AbonoConciliacion>> {
+    const body = new FormData();
+    body.set('motivo', motivo);
+    if (evidencia) {
+      body.set('evidencia', evidencia);
+    }
+    return this.http.post<ApiResponse<AbonoConciliacion>>(`${this.baseUrl}/${abonoId}/queja`, body);
   }
 }

@@ -68,6 +68,8 @@ export type EstadoSolicitud =
 export interface SolicitudProveedor {
   id: number;
   estado: EstadoSolicitud;
+  /** Calculado por el backend a partir de datos_personales (nombre + apellidos) -- no es un
+   *  campo capturable, es persona física, no tiene "nombre de negocio" propio. */
   nombre: string | null;
   rfc: string | null;
   datos_familiares: Record<string, unknown> | null;
@@ -93,9 +95,6 @@ export interface SolicitudProveedor {
 }
 
 export interface CrearSolicitudProveedorPayload {
-  /** Nombre del negocio -- distinto de `nombre` (persona), que va abajo; el backend valida
-   *  este payload plano y necesita las dos claves separadas para no pisarse. */
-  nombre_negocio: string;
   rfc: string;
   nombre: string;
   apellido_paterno: string;

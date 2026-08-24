@@ -38,6 +38,7 @@ export class ListaConciliacionesComponent implements OnInit {
   motivoForm = this.fb.group({
     motivo: ['', [Validators.required, Validators.maxLength(500)]]
   });
+  evidenciaSeleccionada: File | null = null;
 
   ngOnInit(): void {
     this.cargar();
@@ -80,12 +81,19 @@ export class ListaConciliacionesComponent implements OnInit {
   abrirQueja(abono: AbonoConciliacion): void {
     this.abonoAbierto.set(abono);
     this.motivoForm.reset();
+    this.evidenciaSeleccionada = null;
     this.errorQueja.set(null);
     this.successQueja.set(null);
   }
 
   cancelarQueja(): void {
     this.abonoAbierto.set(null);
+    this.evidenciaSeleccionada = null;
+  }
+
+  onEvidenciaSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.evidenciaSeleccionada = input.files?.[0] ?? null;
   }
 
   confirmarQueja(): void {
@@ -99,7 +107,7 @@ export class ListaConciliacionesComponent implements OnInit {
     this.errorQueja.set(null);
     this.successQueja.set(null);
 
-    this.conciliacionService.levantarQueja(abono.id, this.motivoForm.value.motivo!).subscribe({
+    this.conciliacionService.levantarQueja(abono.id, this.motivoForm.value.motivo!, this.evidenciaSeleccionada ?? undefined).subscribe({
       next: () => {
         this.enviando.set(null);
         this.successQueja.set('Queja registrada. La revisará el equipo de conciliación.');

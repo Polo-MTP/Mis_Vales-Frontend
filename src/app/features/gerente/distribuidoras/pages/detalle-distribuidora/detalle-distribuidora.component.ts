@@ -71,7 +71,6 @@ export class DetalleDistribuidoraComponent implements OnInit {
    * se reenvía y nunca dispara el error del backend.
    */
   infoForm = this.fb.group({
-    nombre_negocio: ['', [Validators.required, Validators.maxLength(255)]],
     rfc: ['', [Validators.required, Validators.maxLength(13)]],
     coordinador_id: ['', [Validators.required]],
     nombre: ['', [Validators.required, Validators.maxLength(255)]],
@@ -112,7 +111,6 @@ export class DetalleDistribuidoraComponent implements OnInit {
         });
 
         this.infoForm.patchValue({
-          nombre_negocio: data.nombre ?? '',
           rfc: data.rfc ?? '',
           coordinador_id: data.coordinador?.id ? String(data.coordinador.id) : '',
           nombre: data.datos_personales.nombre ?? '',
@@ -203,7 +201,6 @@ export class DetalleDistribuidoraComponent implements OnInit {
     const val = this.infoForm.value;
 
     const payload: ActualizarDistribuidoraPayload = {};
-    if (val.nombre_negocio !== d.nombre) payload.nombre = val.nombre_negocio!;
     if (val.rfc !== d.rfc) payload.rfc = val.rfc!;
     if (Number(val.coordinador_id) !== d.coordinador?.id) payload.coordinador_id = Number(val.coordinador_id);
     if ((val.comentarios_verificador || null) !== (d.comentarios_verificador || null)) {

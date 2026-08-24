@@ -67,6 +67,9 @@
         </div>
         <div class="flex items-center gap-3 shrink-0">
           <app-estado-badge [tipo]="'abono'" [estado]="a.estado"></app-estado-badge>
+          <span *ngIf="a.queja" class="status-badge bg-red-500/15 text-red-300 border-red-500/30">
+            Queja levantada
+          </span>
           <button *ngIf="a.estado === 'sin_coincidencia' && abonoAbierto()?.id !== a.id" type="button" (click)="abrirSolicitud(a)" class="btn-outline w-auto shrink-0">
             Solicitar Autorización
           </button>
@@ -74,6 +77,15 @@
             Cerrar
           </button>
         </div>
+      </div>
+
+      <!-- La distribuidora reportó que este abono no coincide con lo que pagó -- la cajera
+           necesita verlo para saber que debe iniciar la conciliación manual sobre este abono. -->
+      <div *ngIf="a.queja" class="bg-red-950/20 border border-red-900/40 rounded-2xl p-4 mt-2 text-xs text-slate-300">
+        <p class="font-bold text-red-300">Queja de {{ a.queja.reportado_por }}</p>
+        <p class="mt-0.5">{{ a.queja.motivo }}</p>
+        <a *ngIf="a.queja.evidencia_url" [href]="a.queja.evidencia_url" target="_blank" rel="noopener" class="inline-block mt-1 text-blue-400 hover:underline">Ver captura adjunta</a>
+        <p *ngIf="a.queja.fecha" class="text-slate-500 mt-0.5">{{ a.queja.fecha | date:'short' }}</p>
       </div>
 
       <!-- Panel de búsqueda de relación, en vez del prompt() de antes -->

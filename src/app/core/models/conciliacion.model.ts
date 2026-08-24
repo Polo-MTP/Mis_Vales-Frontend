@@ -13,7 +13,7 @@ export interface AbonoConciliacion {
   convenio_bancario: string | null;
   autorizado_por: string | null;
   motivo_manual: string | null;
-  queja: { reportado_por: string | null; motivo: string; fecha: string | null } | null;
+  queja: { reportado_por: string | null; motivo: string; evidencia_url: string | null; fecha: string | null } | null;
   created_at: string;
 }
 

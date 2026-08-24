@@ -37,7 +37,6 @@ export interface HistorialEstadoDistribuidora {
 }
 
 export interface ActualizarDistribuidoraPayload {
-  nombre?: string;
   rfc?: string;
   coordinador_id?: number;
   comentarios_verificador?: string | null;
@@ -54,6 +53,8 @@ export interface DistribuidoraResumen {
   id: number;
   usuario_id: number;
   numero_distribuidora: string | null;
+  /** Calculado por el backend a partir de datos_personales -- es persona física, no tiene
+   *  "nombre de negocio" propio. */
   nombre: string | null;
   rfc: string | null;
   limite_credito: string | number | null;
