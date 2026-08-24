@@ -108,6 +108,11 @@ const NOTIFICACION_ACCION_LABELS: Record<string, string> = {
   solicitud_rechazada_verificador: 'Una solicitud fue rechazada en la verificación de campo',
   solicitud_aprobada_gerente: 'Gerencia aprobó tu solicitud de distribuidor',
   solicitud_rechazada_gerente: 'Gerencia rechazó tu solicitud de distribuidor',
+  transferencia_cliente_solicitada: 'Otra distribuidora pidió quedarse con un cliente tuyo',
+  transferencia_cliente_por_autorizar: 'Hay una transferencia de cliente esperando tu autorización',
+  transferencia_cliente_autorizada: 'Se autorizó la transferencia del cliente',
+  transferencia_cliente_rechazada: 'Se rechazó la transferencia del cliente',
+  transferencia_cliente_aceptada: 'El cliente salió de tu cartera por una transferencia confirmada',
 };
 
 /** Notificaciones dirigidas a un usuario (accion de negocio) o del feed de auditoría

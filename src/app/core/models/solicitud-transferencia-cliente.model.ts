@@ -17,6 +17,9 @@ export interface SolicitudTransferenciaCliente {
   comentario_autorizacion: string | null;
   fecha_autorizacion: string | null;
   fecha_aceptacion: string | null;
+  /** La distribuidora origen también ve la solicitud (va a perder al cliente), pero solo la
+   *  destino puede confirmarla o declinarla -- ver decidirAceptacion() en el backend. */
+  soy_destino?: boolean;
   created_at: string;
 }
 

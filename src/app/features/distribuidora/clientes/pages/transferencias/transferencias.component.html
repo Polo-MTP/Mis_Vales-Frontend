@@ -46,9 +46,10 @@
     </div>
   </div>
 
-  <!-- Mis solicitudes -->
+  <!-- Solicitudes en las que participo: las que pedí y las que piden clientes MÍOS -->
   <div class="dash-card">
-    <p class="text-sm font-bold text-slate-200">Mis Solicitudes</p>
+    <p class="text-sm font-bold text-slate-200">Transferencias en curso</p>
+    <p class="text-xs text-slate-400 mt-1">Incluye las que solicitaste y las que otra distribuidora pidió sobre un cliente tuyo.</p>
   </div>
 
   <div *ngIf="errorDecidir()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
@@ -62,7 +63,7 @@
   </div>
 
   <div *ngIf="!cargandoSolicitudes() && !errorSolicitudes() && solicitudes().length === 0" class="state-empty">
-    No has solicitado ninguna transferencia todavía.
+    No hay transferencias en curso.
   </div>
 
   <div *ngIf="!cargandoSolicitudes() && !errorSolicitudes() && solicitudes().length > 0" class="space-y-3">
@@ -70,9 +71,12 @@
       <div class="flex items-start justify-between w-full">
         <div>
           <p class="font-bold text-slate-100">{{ s.cliente_nombre || ('Cliente #' + s.cliente_id) }}</p>
-          <p class="text-xs text-slate-400 mt-0.5">
-            De {{ s.distribuidora_origen }} · {{ s.created_at | date:'short' }}
+          <!-- Sin decir de quién sale y a quién llega, la origen no entendería por qué le
+               aparece aquí un cliente suyo que ella no pidió transferir. -->
+          <p class="text-xs mt-0.5" [class.text-amber-300]="!s.soy_destino" [class.text-slate-400]="s.soy_destino">
+            {{ s.soy_destino ? 'La pediste tú · de ' + s.distribuidora_origen : 'Te la piden a ti · la quiere ' + s.distribuidora_destino }}
           </p>
+          <p class="text-xs text-slate-400 mt-0.5">{{ s.created_at | date:'short' }}</p>
           <p class="text-xs text-slate-300 mt-1">{{ s.motivo }}</p>
           <p *ngIf="s.comentario_autorizacion" class="text-xs text-slate-400 mt-1">Comentario del autorizador: {{ s.comentario_autorizacion }}</p>
         </div>
@@ -81,7 +85,8 @@
         </div>
       </div>
 
-      <div *ngIf="s.estado === 'autorizada'" class="flex items-center gap-2 mt-3">
+      <!-- Solo la destino confirma: al origen el backend le devolvería 403 (decidirAceptacion). -->
+      <div *ngIf="s.estado === 'autorizada' && s.soy_destino" class="flex items-center gap-2 mt-3">
         <button type="button" (click)="declinar(s)" [disabled]="decidiendo() === s.id" class="btn-outline w-auto">
           Ya no quiero al cliente
         </button>
