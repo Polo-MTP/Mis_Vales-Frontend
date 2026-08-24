@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
   serverNumber = signal<string | null>(null);
+  mostrarPassword = signal<boolean>(false);
 
   mfaMethodId: string | null = null;
   userId: number | null = null;
@@ -56,6 +57,10 @@ export class LoginComponent implements OnInit {
     if (sessionMessage) {
       this.errorMessage.set(sessionMessage);
     }
+  }
+
+  toggleMostrarPassword(): void {
+    this.mostrarPassword.update(v => !v);
   }
 
   async onLoginSubmit(): Promise<void> {
