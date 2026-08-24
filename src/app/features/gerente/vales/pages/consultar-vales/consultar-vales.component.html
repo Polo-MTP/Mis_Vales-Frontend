@@ -39,6 +39,16 @@
           <p class="text-xs text-slate-500 mt-0.5">
             {{ v.producto?.descripcion || (v.quincenas + ' quincenas') }} · Solicitado {{ v.fecha_solicitud | date:'short' }}
           </p>
+          <!-- El checklist de validación (INE, comprobante de domicilio) se llena en Cajera,
+               pero antes no había forma de auditarlo desde esta pantalla de solo lectura. -->
+          <p *ngIf="v.validado_por" class="text-xs mt-0.5 flex items-center gap-2">
+            <span [class]="v.ine_verificada ? 'text-emerald-400' : 'text-red-400'">
+              {{ v.ine_verificada ? '✓' : '✕' }} INE
+            </span>
+            <span [class]="v.comprobante_domicilio_verificado ? 'text-emerald-400' : 'text-red-400'">
+              {{ v.comprobante_domicilio_verificado ? '✓' : '✕' }} Comprobante de domicilio
+            </span>
+          </p>
         </div>
         <div class="flex items-center gap-3 shrink-0">
           <app-estado-badge [tipo]="'vale'" [estado]="v.estado"></app-estado-badge>

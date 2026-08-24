@@ -10,26 +10,6 @@ interface SidebarItem {
   children?: SidebarItem[];
 }
 
-const MENU_GERENTE: SidebarItem[] = [
-  { label: 'Dashboard', route: '/gerente' },
-  { label: 'Solicitudes', route: '/gerente/solicitudes' },
-  { label: 'Distribuidoras', route: '/gerente/distribuidoras' },
-  { label: 'Productos', route: '/gerente/productos' },
-  { label: 'Vales', route: '/gerente/vales' },
-  { label: 'Relaciones', route: '/gerente/relaciones' },
-  { label: 'Conciliaciones', route: '/gerente/conciliaciones' },
-  {
-    label: 'Clientes',
-    children: [
-      { label: 'Ediciones Pendientes', route: '/gerente/clientes/ediciones' },
-      { label: 'Transferencias Pendientes', route: '/gerente/clientes/transferencias' }
-    ]
-  },
-  { label: 'Reportes', route: '/gerente/reportes/morosos' },
-  { label: 'Configuraciones', route: '/gerente/configuraciones' },
-  { label: 'Mis Autorizaciones', route: '/gerente/autorizaciones' }
-];
-
 @Component({
   selector: 'app-shared-sidebar',
   standalone: true,
@@ -43,26 +23,12 @@ export class SharedSidebarComponent {
   readonly authService = inject(AuthService);
   readonly submenuAbierto = signal<string | null>(null);
 
+  // Administrador, Gerente General, Gerente de Sucursal y Cajera siempre usan
+  // DesktopLayoutComponent (ver app.routes.ts), nunca este sidebar -- por eso no tienen
+  // entrada aquí. Antes sí la tenían, pero era código muerto inalcanzable que había divergido
+  // del menú real en desktop-sidebar.component.ts (le faltaban submenús como "Autorizaciones
+  // Pendientes").
   readonly menusPorRol: Record<string, SidebarItem[]> = {
-    Administrador: [
-      { label: 'Dashboard', route: '/administrador' },
-      { label: 'Auditoría', route: '/administrador/logs' },
-      { label: 'Notificaciones', route: '/administrador/notificaciones' }
-    ],
-    // "Personal y Sucursales" ahora también le sirve a Gerente de Sucursal: puede dar de alta
-    // Coordinador/Verificador/Cajera para su propia sucursal (aunque solo Gerente General ve
-    // el alta de Gerentes de Sucursal y la administración de sucursales dentro de esa página).
-    'Gerente General': [...MENU_GERENTE, { label: 'Personal y Sucursales', route: '/gerente/personal' }],
-    'Gerente de Sucursal': [...MENU_GERENTE, { label: 'Mi Personal', route: '/gerente/personal' }],
-    Cajera: [
-      { label: 'Dashboard', route: '/cajera' },
-      { label: 'Conciliación Bancaria', route: '/cajera/conciliaciones' },
-      { label: 'Mis Solicitudes', route: '/cajera/conciliaciones/mis-solicitudes' },
-      { label: 'Corregir Datos de Cliente', route: '/cajera/clientes/solicitar-edicion' },
-      { label: 'Canjear Puntos', route: '/cajera/puntos/canjear' },
-      { label: 'Consultar Vales', route: '/cajera/vales' },
-      { label: 'Reporte de Morosos', route: '/cajera/reportes/morosos' }
-    ],
     Coordinador: [
       { label: 'Dashboard', route: '/coordinador' },
       { label: 'Solicitudes', route: '/coordinador/solicitudes' },
@@ -84,6 +50,7 @@ export class SharedSidebarComponent {
     Distribuidora: [
       { label: 'Dashboard', route: '/distribuidora' },
       { label: 'Clientes', route: '/distribuidora/clientes' },
+      { label: 'Transferencia de Clientes', route: '/distribuidora/clientes/transferencias' },
       { label: 'Vales', route: '/distribuidora/vales' },
       { label: 'Historial de Puntos', route: '/distribuidora/puntos/historial' },
       { label: 'Mis Pagos y Abonos', route: '/distribuidora/conciliaciones' },
