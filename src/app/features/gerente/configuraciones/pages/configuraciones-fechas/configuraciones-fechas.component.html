@@ -1,10 +1,59 @@
 <div class="dash-card">
-  <div>
-    <h2 class="text-base font-black text-slate-100">Fechas de Corte y Pago</h2>
-    <p class="text-xs text-slate-400 font-medium">Días de corte quincenal (primera y segunda quincena), límite de pago y días de pago anticipado — global y por sucursal.</p>
+  <div class="flex items-center justify-between gap-4">
+    <div>
+      <h2 class="text-base font-black text-slate-100">Fechas de Corte y Pago</h2>
+      <p class="text-xs text-slate-400 font-medium">Días de corte quincenal (primera y segunda quincena), límite de pago y días de pago anticipado — global y por sucursal.</p>
+    </div>
+    <button
+      *ngIf="puedeEditar() && !mostrandoNueva() && sucursalesSinRegla().length > 0"
+      type="button"
+      (click)="mostrarFormNueva()"
+      class="btn-primary w-auto shrink-0"
+    >
+      + Nueva Regla por Sucursal
+    </button>
   </div>
 
   <div *ngIf="cargando()" class="state-loading">Cargando configuraciones de fechas...</div>
+
+  <!-- Nueva regla para una sucursal sin regla propia -- antes solo se podían editar filas que
+       ya existían, así que una sucursal recién dada de alta se quedaba en el default global
+       para siempre sin forma de darle su propio día de corte desde aquí. -->
+  <form *ngIf="mostrandoNueva()" [formGroup]="nuevaForm" (ngSubmit)="crearNueva()" class="bg-slate-900/40 rounded-2xl p-4 space-y-3">
+    <p class="font-bold text-slate-100">Nueva regla por sucursal</p>
+    <div *ngIf="errorNueva()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-xl p-2 text-xs">
+      {{ errorNueva() }}
+    </div>
+    <div>
+      <label class="form-label">Sucursal</label>
+      <select formControlName="sucursal_id" class="form-input">
+        <option value="" disabled>Selecciona una sucursal</option>
+        <option *ngFor="let s of sucursalesSinRegla()" [value]="s.id">{{ s.nombre }}</option>
+      </select>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div>
+        <label class="form-label">Día de Corte (1ª quincena)</label>
+        <input type="number" formControlName="dia_corte" min="1" max="31" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Día de Corte (2ª quincena)</label>
+        <input type="number" formControlName="dia_corte_2" min="1" max="31" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Día Límite de Pago</label>
+        <input type="number" formControlName="dia_limite_pago" min="1" max="31" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Días de Pago Anticipado</label>
+        <input type="number" formControlName="dias_pago_anticipado" min="0" max="30" class="form-input">
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <button type="submit" [disabled]="nuevaForm.invalid || guardandoNueva()" class="btn-primary w-auto">Crear Regla</button>
+      <button type="button" (click)="cancelarNueva()" class="btn-outline">Cancelar</button>
+    </div>
+  </form>
 
   <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
     {{ error() }}

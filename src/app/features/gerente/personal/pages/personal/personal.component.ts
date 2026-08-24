@@ -26,9 +26,8 @@ export class PersonalComponent {
   /** El backend solo deja dar de alta Gerentes de Sucursal y administrar sucursales a Gerente General. */
   esGerenteGeneral = computed(() => this.authService.userRole() === 'Gerente General');
 
-  /** Gerente General y Gerente de Sucursal pueden dar de alta Administradores (solo por VPN, lo valida el backend). */
-  puedeCrearAdministrador = computed(() => {
-    const rol = this.authService.userRole();
-    return rol === 'Gerente General' || rol === 'Gerente de Sucursal';
-  });
+  /** Solo Gerente General puede dar de alta Administradores (además de VPN, lo valida el
+   *  backend) -- un Administrador ve todo el sistema sin acotar por sucursal, así que dejar
+   *  que un Gerente de Sucursal lo creara sería escalar su propio alcance. */
+  puedeCrearAdministrador = computed(() => this.authService.userRole() === 'Gerente General');
 }

@@ -71,7 +71,20 @@ const MODELOS_AUDIT: Record<string, ModeloAuditInfo> = {
   PuntoMovimiento: { singular: 'Movimiento de puntos', genero: 'm' },
   SolicitudProveedor: { singular: 'Solicitud de proveedor', genero: 'f' },
   SolicitudConciliacion: { singular: 'Solicitud de conciliación', genero: 'f' },
-  SolicitudEdicionCliente: { singular: 'Solicitud de edición de cliente', genero: 'f' }
+  SolicitudEdicionCliente: { singular: 'Solicitud de edición de cliente', genero: 'f' },
+  // Ampliación de AuditLogObserver a catálogos/config -- ver AppServiceProvider::configureAuditLog().
+  CategoriaDistribuidora: { singular: 'Categoría de distribuidora', genero: 'f' },
+  RelacionDetalle: { singular: 'Detalle de relación', genero: 'm' },
+  RelacionPerdon: { singular: 'Perdón de relación', genero: 'm' },
+  SolicitudAumentoCredito: { singular: 'Solicitud de aumento de crédito', genero: 'f' },
+  SolicitudTransferenciaCliente: { singular: 'Solicitud de transferencia de cliente', genero: 'f' },
+  Sucursal: { singular: 'Sucursal', genero: 'f' },
+  Producto: { singular: 'Producto', genero: 'm' },
+  SeguroTabla: { singular: 'Tabla de seguro', genero: 'f' },
+  Evidencia: { singular: 'Evidencia', genero: 'f' },
+  ConvenioBancario: { singular: 'Convenio bancario', genero: 'm' },
+  Configuracion: { singular: 'Configuración', genero: 'f' },
+  ConfiguracionFechas: { singular: 'Configuración de fechas', genero: 'f' }
 };
 
 const EVENTO_PARTICIPIOS: Record<string, { m: string; f: string }> = {
