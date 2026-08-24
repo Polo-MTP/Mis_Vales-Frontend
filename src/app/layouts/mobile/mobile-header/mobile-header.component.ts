@@ -15,7 +15,7 @@ export class MobileHeaderComponent {
   readonly authService = inject(AuthService);
 
   get homeRoute(): string {
-    return '/distribuidora';
+    return this.authService.baseRoute();
   }
 
   logout(): void {
