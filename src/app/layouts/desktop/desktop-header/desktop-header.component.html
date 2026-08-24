@@ -1,7 +1,23 @@
-<header class="h-16 shrink-0 bg-slate-900 border-b border-slate-800 px-6 flex items-center justify-between">
+<!-- 'fixed', no 'sticky': un ancestro con display:flex (el layout de esta app usa flex-col/flex
+     en varios niveles) rompe position:sticky en Chromium -- el elemento sticky nunca se
+     pega y se desplaza junto con el contenido. 'fixed' no depende del ancestro para nada,
+     así que es inmune a ese bug (ver desktop-layout.component.html, que compensa el espacio
+     con padding-top / margin-left). -->
+<header class="h-16 shrink-0 bg-slate-900 border-b border-slate-800 px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-40">
 
-  <!-- Logo -->
-  <app-brand-logo [to]="authService.baseRoute()"></app-brand-logo>
+  <div class="flex items-center gap-3">
+    <button
+      type="button"
+      (click)="toggleSidebar.emit()"
+      class="p-2 -ml-2 hover:bg-slate-800 rounded-lg text-slate-300"
+      aria-label="Abrir/cerrar menú de navegación"
+    >
+      <span class="text-2xl leading-none">☰</span>
+    </button>
+
+    <!-- Logo -->
+    <app-brand-logo [to]="authService.baseRoute()"></app-brand-logo>
+  </div>
 
   <!-- Acciones -->
   <div class="flex items-center gap-3">

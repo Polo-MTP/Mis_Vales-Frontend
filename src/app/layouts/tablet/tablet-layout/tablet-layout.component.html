@@ -2,10 +2,15 @@
 
   <app-tablet-header></app-tablet-header>
 
-  <main class="flex-1 min-w-0">
+  <!-- Antes iba después de <main>: en cualquier página más alta que el viewport, la barra con
+       el botón hamburguesa quedaba debajo del contenido, invisible hasta hacer scroll hasta el
+       final. Ahora va pegada al header y ambos quedan fijos mientras se hace scroll. -->
+  <app-tablet-navigation></app-tablet-navigation>
+
+  <!-- pt-28 (7rem = h-16 del header + h-12 del nav): ambos son 'fixed', ya no ocupan espacio
+       en el flujo normal. -->
+  <main class="flex-1 min-w-0 pt-28">
     <router-outlet></router-outlet>
   </main>
-
-  <app-tablet-navigation></app-tablet-navigation>
 
 </div>

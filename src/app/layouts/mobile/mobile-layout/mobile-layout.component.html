@@ -2,7 +2,9 @@
 
   <app-mobile-header></app-mobile-header>
 
-  <main class="flex-1 min-w-0 pb-16">
+  <!-- pt-14: el header es 'fixed' (h-14), ya no ocupa espacio en el flujo normal.
+       pb-16: espacio para la barra inferior, que ya es 'fixed'. -->
+  <main class="flex-1 min-w-0 pt-14 pb-16">
     <router-outlet></router-outlet>
   </main>
 

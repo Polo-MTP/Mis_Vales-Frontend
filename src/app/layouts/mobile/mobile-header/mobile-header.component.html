@@ -1,4 +1,6 @@
-<header class="h-14 bg-slate-900 border-b border-slate-800 px-4 flex items-center gap-2 sticky top-0 z-40">
+<!-- 'fixed', no 'sticky': ver desktop-header.component.html -- un ancestro con display:flex
+     rompe position:sticky en Chromium. -->
+<header class="h-14 bg-slate-900 border-b border-slate-800 px-4 flex items-center gap-2 fixed top-0 left-0 right-0 z-40">
 
   <div class="shrink-0">
     <app-brand-logo [to]="homeRoute"></app-brand-logo>

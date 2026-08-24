@@ -1,15 +1,17 @@
 <div class="min-h-screen flex flex-col bg-slate-950">
 
   <!-- Header -->
-  <app-desktop-header></app-desktop-header>
+  <app-desktop-header (toggleSidebar)="sidebarOpen.set(!sidebarOpen())"></app-desktop-header>
 
-  <div class="flex flex-1">
+  <!-- pt-16: el header es 'fixed' (h-16), ya no ocupa espacio en el flujo normal. -->
+  <div class="flex flex-1 pt-16">
 
     <!-- Sidebar -->
-    <app-desktop-sidebar></app-desktop-sidebar>
+    <app-desktop-sidebar *ngIf="sidebarOpen()"></app-desktop-sidebar>
 
     <!-- Contenido -->
-    <main class="flex-1 min-w-0">
+    <!-- ml-64: el sidebar también es 'fixed', se compensa con margen en vez de espacio de flex. -->
+    <main class="flex-1 min-w-0" [style.marginLeft]="sidebarOpen() ? '16rem' : '0'">
       <router-outlet></router-outlet>
     </main>
 

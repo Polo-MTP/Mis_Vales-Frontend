@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../features/auth/services/auth.service';
@@ -21,4 +21,8 @@ import { BrandLogoComponent } from '../../../shared/components/brand-logo/brand-
 })
 export class DesktopHeaderComponent {
   readonly authService = inject(AuthService);
+
+  /** Colapsa/expande el sidebar fijo -- mismo botón hamburguesa que ya existe en mobile/tablet,
+   *  para que las tres capas de layout tengan el mismo control de navegación. */
+  @Output() toggleSidebar = new EventEmitter<void>();
 }
