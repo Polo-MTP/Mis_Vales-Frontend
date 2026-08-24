@@ -39,7 +39,12 @@
           <span class="block text-xs text-slate-400">A pagar</span>
           <span class="block font-bold text-blue-400">{{ (r.totales.a_pagar) | dinero }}</span>
         </span>
-        <span *ngIf="r.totales.saldo_pendiente > 0" class="text-right">
+        <!-- Un corte puede quedar "Liquidada" con un saldo residual > 0 si cae dentro del
+             margen de tolerancia de conciliación (redondeo bancario) -- ver
+             ConciliacionBancariaService::aplicarAbono() en el backend. Mostrar "Saldo" junto
+             al badge verde de Liquidada en este resumen confunde/alarma sin necesidad; el
+             desglose completo (con el saldo exacto) sigue disponible en el detalle del corte. -->
+        <span *ngIf="r.totales.saldo_pendiente > 0 && r.estado !== 'liquidada'" class="text-right">
           <span class="block text-xs text-slate-400">Saldo</span>
           <span class="block font-bold text-amber-400">{{ (r.totales.saldo_pendiente) | dinero }}</span>
         </span>
