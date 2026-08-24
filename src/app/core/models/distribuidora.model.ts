@@ -37,7 +37,7 @@ export interface HistorialEstadoDistribuidora {
 }
 
 export interface ActualizarDistribuidoraPayload {
-  razon_social?: string;
+  nombre?: string;
   rfc?: string;
   coordinador_id?: number;
   comentarios_verificador?: string | null;
@@ -54,7 +54,7 @@ export interface DistribuidoraResumen {
   id: number;
   usuario_id: number;
   numero_distribuidora: string | null;
-  razon_social: string | null;
+  nombre: string | null;
   rfc: string | null;
   limite_credito: string | number | null;
   credito_disponible: string | number | null;

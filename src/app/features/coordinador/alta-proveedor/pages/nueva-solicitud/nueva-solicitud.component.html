@@ -17,9 +17,9 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label class="form-label">Razón Social *</label>
-          <input type="text" formControlName="razon_social" class="form-input">
-          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('razon_social')">{{ errorFor('razon_social') }}</p>
+          <label class="form-label">Nombre del Negocio *</label>
+          <input type="text" formControlName="nombre_negocio" class="form-input">
+          <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('nombre_negocio')">{{ errorFor('nombre_negocio') }}</p>
         </div>
 
         <div>
@@ -170,7 +170,7 @@
   <div *ngIf="solicitudCreada() as s" class="space-y-6">
 
     <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-4 text-sm text-emerald-300">
-      Solicitud capturada exitosamente ({{ s.razon_social }}). Ahora puedes subir fotos de evidencia (opcional).
+      Solicitud capturada exitosamente ({{ s.nombre }}). Ahora puedes subir fotos de evidencia (opcional).
     </div>
 
     <app-alert [message]="errorEvidencia()" type="error"></app-alert>

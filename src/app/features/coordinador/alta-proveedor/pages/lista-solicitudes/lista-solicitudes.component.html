@@ -35,7 +35,7 @@
     <div *ngFor="let s of solicitudes()" (click)="irADetalle(s.id)" class="list-card-item">
       <div>
         <p class="font-bold text-slate-100">
-          {{ s.razon_social || (s.datos_personales.nombre + ' ' + s.datos_personales.apellido_paterno) }}
+          {{ s.nombre || (s.datos_personales.nombre + ' ' + s.datos_personales.apellido_paterno) }}
         </p>
         <p class="text-xs text-slate-400 mt-0.5">
           {{ s.sucursal.nombre }} · CURP: {{ s.datos_personales.curp }}

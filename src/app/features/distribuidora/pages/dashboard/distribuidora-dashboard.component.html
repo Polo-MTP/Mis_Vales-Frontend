@@ -15,7 +15,7 @@
     <div class="dash-card">
       <div class="flex items-start justify-between">
         <div>
-          <h2 class="text-base font-black text-slate-100">{{ p.razon_social || 'Distribuidora' }}</h2>
+          <h2 class="text-base font-black text-slate-100">{{ p.nombre || 'Distribuidora' }}</h2>
           <p class="text-xs text-slate-400 mt-1">
             {{ p.numero_distribuidora }} <span *ngIf="p.rfc">· RFC: {{ p.rfc }}</span>
           </p>

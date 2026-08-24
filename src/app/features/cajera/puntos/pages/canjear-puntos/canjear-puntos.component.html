@@ -11,7 +11,7 @@
       <select formControlName="distribuidora_id" class="form-select" (change)="onCambiarDistribuidora()">
         <option value="" disabled>{{ cargandoDistribuidoras() ? 'Cargando...' : 'Selecciona una distribuidora' }}</option>
         <option *ngFor="let d of distribuidoras()" [value]="d.id">
-          {{ d.numero_distribuidora }} · {{ d.razon_social }} ({{ d.puntos_acumulados }} pts)
+          {{ d.numero_distribuidora }} · {{ d.nombre }} ({{ d.puntos_acumulados }} pts)
         </option>
       </select>
     </div>

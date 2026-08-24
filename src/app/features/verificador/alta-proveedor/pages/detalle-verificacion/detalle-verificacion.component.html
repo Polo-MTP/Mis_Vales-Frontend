@@ -14,7 +14,7 @@
 
     <!-- Resumen -->
     <div class="dash-card">
-      <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ s.razon_social }}</h1>
+      <h1 class="text-2xl font-black text-slate-100 tracking-tight">{{ s.nombre }}</h1>
       <p class="text-xs text-slate-400 font-medium mt-1">
         RFC: {{ s.rfc }} · Capturado por {{ s.coordinador.name }} · {{ s.sucursal.nombre }}
       </p>
@@ -95,7 +95,7 @@
         <app-mapa-ubicacion
           [latitud]="s.datos_personales.direccion.latitud"
           [longitud]="s.datos_personales.direccion.longitud"
-          [etiqueta]="s.razon_social ?? ''">
+          [etiqueta]="s.nombre ?? ''">
         </app-mapa-ubicacion>
 
         <a [href]="'https://www.google.com/maps/dir/?api=1&destination=' + s.datos_personales.direccion.latitud + ',' + s.datos_personales.direccion.longitud + '&travelmode=driving'"

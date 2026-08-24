@@ -33,7 +33,7 @@
              [class.ring-2]="origenId() === d.id"
              [class.ring-blue-500]="origenId() === d.id">
           <div>
-            <p class="font-bold text-slate-100">{{ d.razon_social || ('Distribuidora #' + d.id) }}</p>
+            <p class="font-bold text-slate-100">{{ d.nombre || ('Distribuidora #' + d.id) }}</p>
             <p class="text-xs text-slate-400 mt-0.5">{{ d.numero_distribuidora }} · {{ d.estado }}</p>
           </div>
         </div>
@@ -51,7 +51,7 @@
              [class.ring-2]="destinoId() === d.id"
              [class.ring-emerald-500]="destinoId() === d.id">
           <div>
-            <p class="font-bold text-slate-100">{{ d.razon_social || ('Distribuidora #' + d.id) }}</p>
+            <p class="font-bold text-slate-100">{{ d.nombre || ('Distribuidora #' + d.id) }}</p>
             <p class="text-xs text-slate-400 mt-0.5">{{ d.numero_distribuidora }} · {{ d.estado }}</p>
           </div>
         </div>

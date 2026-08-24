@@ -51,7 +51,7 @@ export class NuevaSolicitudComponent implements OnInit {
   readonly mensajesPatron = MENSAJES_PATRON;
 
   form = this.fb.group({
-    razon_social: ['', [Validators.required, Validators.maxLength(255)]],
+    nombre_negocio: ['', [Validators.required, Validators.maxLength(255)]],
     rfc: ['', rfcValidators],
     nombre: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_paterno: ['', [Validators.required, Validators.maxLength(255)]],
@@ -138,7 +138,7 @@ export class NuevaSolicitudComponent implements OnInit {
 
     const val = this.form.value;
     const payload: CrearSolicitudProveedorPayload = {
-      razon_social: val.razon_social!,
+      nombre_negocio: val.nombre_negocio!,
       rfc: val.rfc!,
       nombre: val.nombre!,
       apellido_paterno: val.apellido_paterno!,

@@ -39,7 +39,7 @@ export interface ProximoPago {
 export interface Relacion {
   id: number;
   distribuidora_id: number;
-  distribuidora: { numero_distribuidora: string | null; razon_social: string | null } | null;
+  distribuidora: { numero_distribuidora: string | null; nombre: string | null } | null;
   sucursal: string | null;
   referencia_pago: string;
   fecha_corte: string;

@@ -68,7 +68,7 @@ export type EstadoSolicitud =
 export interface SolicitudProveedor {
   id: number;
   estado: EstadoSolicitud;
-  razon_social: string | null;
+  nombre: string | null;
   rfc: string | null;
   datos_familiares: Record<string, unknown> | null;
   datos_vehiculos: Record<string, unknown> | null;
@@ -93,7 +93,9 @@ export interface SolicitudProveedor {
 }
 
 export interface CrearSolicitudProveedorPayload {
-  razon_social: string;
+  /** Nombre del negocio -- distinto de `nombre` (persona), que va abajo; el backend valida
+   *  este payload plano y necesita las dos claves separadas para no pisarse. */
+  nombre_negocio: string;
   rfc: string;
   nombre: string;
   apellido_paterno: string;

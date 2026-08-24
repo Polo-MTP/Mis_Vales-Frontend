@@ -33,7 +33,7 @@
         <div>
           <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — {{ (v.monto) | dinero }}</p>
           <p class="text-xs text-slate-400 mt-0.5">
-            {{ v.distribuidora?.razon_social || ('Distribuidora #' + v.distribuidora_id) }}
+            {{ v.distribuidora?.nombre || ('Distribuidora #' + v.distribuidora_id) }}
             <span *ngIf="v.distribuidora?.numero_distribuidora"> ({{ v.distribuidora?.numero_distribuidora }})</span>
           </p>
           <p class="text-xs text-slate-500 mt-0.5">

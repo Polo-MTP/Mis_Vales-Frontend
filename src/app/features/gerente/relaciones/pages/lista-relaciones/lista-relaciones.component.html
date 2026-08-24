@@ -49,7 +49,7 @@
     <div *ngFor="let r of relaciones()" (click)="irADetalle(r.id)" class="list-card-item">
       <div>
         <p class="font-bold text-slate-100">
-          {{ r.distribuidora?.razon_social || ('Distribuidora #' + r.distribuidora_id) }}<span *ngIf="r.distribuidora?.numero_distribuidora"> ({{ r.distribuidora?.numero_distribuidora }})</span> · {{ r.sucursal || 'Sin sucursal' }}
+          {{ r.distribuidora?.nombre || ('Distribuidora #' + r.distribuidora_id) }}<span *ngIf="r.distribuidora?.numero_distribuidora"> ({{ r.distribuidora?.numero_distribuidora }})</span> · {{ r.sucursal || 'Sin sucursal' }}
         </p>
         <p class="text-xs text-slate-400 mt-0.5">
           Corte {{ r.fecha_corte }} · Vence {{ r.fecha_limite_pago }} · Ref. {{ r.referencia_pago }}

@@ -93,7 +93,7 @@
         <div *ngIf="!buscandoRelacion() && resultadosRelacion().length > 0" class="space-y-2">
           <div *ngFor="let r of resultadosRelacion()" (click)="elegirRelacion(r)" class="list-card-item">
             <div>
-              <p class="font-bold text-slate-100">{{ r.distribuidora?.razon_social || ('Distribuidora #' + r.distribuidora_id) }}</p>
+              <p class="font-bold text-slate-100">{{ r.distribuidora?.nombre || ('Distribuidora #' + r.distribuidora_id) }}</p>
               <p class="text-xs text-slate-400 mt-0.5">Ref. {{ r.referencia_pago }} · Corte {{ r.fecha_corte | date:'shortDate' }} · A pagar {{ (r.totales.a_pagar) | dinero }}</p>
             </div>
           </div>
@@ -102,7 +102,7 @@
         <div *ngIf="relacionElegida() as relacion" class="bg-slate-900/40 rounded-2xl p-4 flex items-center justify-between">
           <div>
             <p class="text-xs text-slate-400">Relación elegida</p>
-            <p class="font-bold text-slate-100">{{ relacion.distribuidora?.razon_social || ('Distribuidora #' + relacion.distribuidora_id) }}</p>
+            <p class="font-bold text-slate-100">{{ relacion.distribuidora?.nombre || ('Distribuidora #' + relacion.distribuidora_id) }}</p>
             <p class="text-xs text-slate-400">Ref. {{ relacion.referencia_pago }} · A pagar {{ (relacion.totales.a_pagar) | dinero }}</p>
           </div>
           <button type="button" (click)="relacionElegida.set(null)" class="btn-outline w-auto shrink-0">Cambiar</button>

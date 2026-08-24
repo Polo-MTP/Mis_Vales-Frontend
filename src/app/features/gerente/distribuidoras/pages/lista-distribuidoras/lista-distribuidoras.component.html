@@ -34,7 +34,7 @@
   <div *ngIf="!cargando() && !error() && distribuidoras().length > 0" class="space-y-3">
     <div *ngFor="let d of distribuidoras()" (click)="irADetalle(d.id)" class="list-card-item">
       <div>
-        <p class="font-bold text-slate-100">{{ d.razon_social || ('Distribuidora #' + d.id) }}</p>
+        <p class="font-bold text-slate-100">{{ d.nombre || ('Distribuidora #' + d.id) }}</p>
         <p class="text-xs text-slate-400 mt-0.5">
           {{ d.numero_distribuidora }}<span *ngIf="d.rfc"> · RFC: {{ d.rfc }}</span> · {{ d.sucursal.nombre || 'Sin sucursal' }}
         </p>

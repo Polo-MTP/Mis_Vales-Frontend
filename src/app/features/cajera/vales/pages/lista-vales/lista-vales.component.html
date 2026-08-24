@@ -35,7 +35,7 @@
         <div>
           <p class="font-bold text-slate-100">{{ v.cliente?.nombre }} — {{ (v.monto) | dinero }}</p>
           <p class="text-xs text-slate-400 mt-0.5">
-            {{ v.distribuidora?.razon_social || ('Distribuidora #' + v.distribuidora_id) }}
+            {{ v.distribuidora?.nombre || ('Distribuidora #' + v.distribuidora_id) }}
             <span *ngIf="v.distribuidora?.numero_distribuidora"> ({{ v.distribuidora?.numero_distribuidora }})</span>
             <ng-container *ngIf="saldoPorDistribuidora()[v.distribuidora_id] === undefined">
               · <button type="button" (click)="verSaldoDisponible(v.distribuidora_id)" class="text-blue-400 hover:underline">ver saldo disponible</button>

@@ -84,7 +84,7 @@ export interface DistribuidoraPerfil {
   id: number;
   usuario_id: number;
   numero_distribuidora: string | null;
-  razon_social: string | null;
+  nombre: string | null;
   rfc: string | null;
   limite_credito: string | number | null;
   credito_disponible: string | number | null;
