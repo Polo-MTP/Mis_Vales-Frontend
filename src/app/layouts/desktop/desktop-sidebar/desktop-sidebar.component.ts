@@ -61,7 +61,6 @@ export class DesktopSidebarComponent {
   readonly menusPorRol: Record<string, SidebarItem[]> = {
 
     Administrador: [
-      { label: 'Dashboard', route: '/administrador' },
       { label: 'Auditoría', route: '/administrador/logs' },
       { label: 'Notificaciones', route: '/administrador/notificaciones' }
     ],

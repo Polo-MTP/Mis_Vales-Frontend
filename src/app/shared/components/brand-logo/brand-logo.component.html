@@ -1,0 +1,29 @@
+<ng-container *ngIf="to; else plain">
+  <a [routerLink]="to" class="flex items-center gap-2 group">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+</ng-container>
+
+<ng-template #plain>
+  <div class="flex items-center gap-2">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #content>
+  <img
+    src="logovales.png"
+    alt="Mis Vales"
+    class="w-auto object-contain"
+    [class.h-9]="size === 'lg'"
+    [class.h-7]="size === 'sm'"
+    onerror="this.style.display='none'"
+  >
+  <span
+    class="font-black tracking-tight text-white flex items-center gap-0.5"
+    [class.text-xl]="size === 'lg'"
+    [class.text-lg]="size === 'sm'"
+  >
+    MIS<span class="text-blue-500">VALES</span>
+  </span>
+</ng-template>

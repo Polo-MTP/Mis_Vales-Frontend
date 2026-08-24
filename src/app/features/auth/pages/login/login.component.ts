@@ -5,13 +5,14 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { BrandLogoComponent } from '../../../../shared/components/brand-logo/brand-logo.component';
 import { RecaptchaService } from '../../../../core/services/recaptcha.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, BrandLogoComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

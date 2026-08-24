@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { roleGuard } from './features/auth/guards/role.guard';
+import { guestGuard } from './features/auth/guards/guest.guard';
 import { DesktopLayoutComponent } from './layouts/desktop/desktop-layout/desktop-layout.component';
 import { TabletLayoutComponent } from './layouts/tablet/tablet-layout/tablet-layout.component';
 import { MobileLayoutComponent } from './layouts/mobile/mobile-layout/mobile-layout.component';
@@ -86,9 +87,11 @@ export const routes: Routes = [
     }
   ]
 },
-  // Página de aterrizaje principal (Landing Page pública)
+  // Página de aterrizaje principal (Landing Page pública) -- un usuario ya autenticado
+  // que llega aquí (p.ej. clic en el logo) va directo a su dashboard, no a la landing.
   {
     path: '',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./features/landing/pages/landing-page/landing-page.component')
         .then(m => m.LandingPageComponent),
