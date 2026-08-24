@@ -1,29 +1,52 @@
 <div class="dash-card">
   <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
     <div>
-      <h3 class="text-base font-black text-slate-100">Bitácora de Actividad</h3>
-      <p class="text-xs text-slate-400 font-medium">Creación, edición y borrado de los modelos de negocio (distribuidoras, clientes, vales, relaciones, etc.)</p>
+      <h3 class="text-base font-black text-slate-100">Bitácora de Actividad del Sistema</h3>
+      <p class="text-xs text-slate-400 font-medium">Registro forense de creación, edición y borrado de todos los módulos y eventos de la plataforma</p>
     </div>
     <span class="mfa-badge bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
       Solo Administrador
     </span>
   </div>
 
-  <!-- Filtros -->
-  <div class="flex flex-col sm:flex-row gap-3 sm:items-end pt-4">
-    <div class="flex-1">
+  <!-- Filtros Avanzados -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-4 items-end">
+    <div>
+      <label class="form-label">Buscar término</label>
+      <input type="text" [(ngModel)]="filtroBusqueda" (keyup.enter)="aplicarFiltros()" class="form-input" placeholder="IP, recurso, texto..." />
+    </div>
+
+    <div>
+      <label class="form-label">Módulo</label>
+      <select [(ngModel)]="filtroModulo" class="form-input">
+        <option value="">Todos los módulos</option>
+        <option *ngFor="let m of modulosDisponibles" [value]="m">{{ m }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="form-label">Nivel</label>
+      <select [(ngModel)]="filtroNivel" class="form-input">
+        <option value="">Todos los niveles</option>
+        <option value="INFO">INFO</option>
+        <option value="WARNING">WARNING</option>
+        <option value="ERROR">ERROR</option>
+        <option value="CRITICAL">CRITICAL</option>
+      </select>
+    </div>
+
+    <div>
       <label class="form-label">Usuario</label>
       <select [(ngModel)]="filtroUsuarioId" class="form-input">
         <option value="">Todos los usuarios</option>
         <option *ngFor="let u of usuarios()" [value]="u.id">{{ u.name }} ({{ u.email }})</option>
       </select>
     </div>
-    <div class="flex-1">
-      <label class="form-label">Acción</label>
-      <input type="text" [(ngModel)]="filtroAccion" class="form-input" placeholder="Ej. created, updated, deleted..." />
+
+    <div class="flex gap-2">
+      <button type="button" (click)="aplicarFiltros()" class="btn-primary flex-1 justify-center">Filtrar</button>
+      <button type="button" (click)="limpiarFiltros()" class="btn-outline flex-1 justify-center">Limpiar</button>
     </div>
-    <button type="button" (click)="aplicarFiltros()" class="btn-primary w-auto shrink-0">Filtrar</button>
-    <button type="button" (click)="limpiarFiltros()" class="btn-outline w-auto shrink-0">Limpiar</button>
   </div>
 
   <div
@@ -35,34 +58,60 @@
 
   <div
     *ngIf="!cargando() && !error()"
-    class="table-container mt-2"
+    class="table-container mt-4"
   >
     <table class="w-full text-left text-xs">
       <thead>
         <tr>
           <th class="table-head-cell">Fecha / Hora</th>
+          <th class="table-head-cell">Nivel</th>
+          <th class="table-head-cell">Módulo / Acción</th>
           <th class="table-head-cell">Usuario</th>
-          <th class="table-head-cell">Acción</th>
-          <th class="table-head-cell">Recurso</th>
+          <th class="table-head-cell">Sucursal</th>
           <th class="table-head-cell">Dirección IP</th>
+          <th class="table-head-cell text-right">Detalle</th>
         </tr>
       </thead>
       <tbody class="font-medium">
-        <tr *ngFor="let item of paginacion()?.data" class="table-row">
-          <td class="p-3.5 font-mono text-[11px] text-slate-400">{{ item.created_at | date:'short' }}</td>
+        <tr *ngFor="let item of paginacion()?.data" class="table-row hover:bg-slate-800/40 transition-colors cursor-pointer" (click)="abrirDetalle(item)">
+          <td class="p-3.5 font-mono text-[11px] text-slate-400 whitespace-nowrap">{{ item.created_at | date:'short' }}</td>
+          <td class="p-3.5 whitespace-nowrap">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border" [ngClass]="getNivelClass(item.nivel)">
+              {{ item.nivel || 'INFO' }}
+            </span>
+          </td>
+          <td class="p-3.5">
+            <div class="font-bold text-slate-100 flex items-center gap-1.5 flex-wrap">
+              <span class="text-slate-300">{{ item.modulo || 'General' }}</span>
+              <span class="px-1.5 py-0.2 rounded text-[10px] font-mono bg-slate-800 text-slate-300 border border-slate-700">{{ item.action }}</span>
+            </div>
+            <div class="text-[11px] text-slate-400 mt-0.5 truncate max-w-xs">{{ item.descripcion || item.resource }}</div>
+          </td>
           <td class="p-3.5">
             <div class="font-bold text-slate-100">{{ item.user?.name || 'Sistema' }}</div>
             <div class="text-[11px] text-slate-500" *ngIf="item.user?.email">{{ item.user?.email }}</div>
           </td>
-          <td class="p-3.5">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-700 text-slate-200">{{ item.action }}</span>
+          <td class="p-3.5 text-slate-300 whitespace-nowrap">{{ item.sucursal?.nombre || 'Global' }}</td>
+          <td class="p-3.5 font-mono text-slate-300 whitespace-nowrap">
+            <span class="bg-slate-800 px-2 py-0.5 rounded text-amber-300 font-semibold text-[11px]">{{ item.ip_address || '—' }}</span>
           </td>
-          <td class="p-3.5 text-slate-300">{{ item.resource || '—' }}</td>
-          <td class="p-3.5 font-mono text-slate-300">{{ item.ip_address || '—' }}</td>
+          <td class="p-3.5 text-right whitespace-nowrap">
+            <button 
+              type="button" 
+              (click)="$event.stopPropagation(); abrirDetalle(item)" 
+              class="px-2.5 py-1 text-xs font-semibold text-sky-300 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 rounded-lg transition-colors inline-flex items-center gap-1"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              Ver
+            </button>
+          </td>
         </tr>
 
         <tr *ngIf="paginacion()?.data?.length === 0">
-          <td colspan="5" class="p-6 text-center text-slate-400">No hay registros con estos filtros.</td>
+          <td colspan="7" class="p-8 text-center text-slate-400">No hay registros con los filtros seleccionados.</td>
         </tr>
       </tbody>
     </table>
@@ -77,3 +126,11 @@
     (pageChange)="cambiarPagina($event)">
   </app-pagination>
 </div>
+
+<!-- Modal interactivo de desglose de auditoría -->
+<app-modal-detalle-auditoria
+  [visible]="modalVisible()"
+  [data]="itemSeleccionado()"
+  (close)="modalVisible.set(false)">
+</app-modal-detalle-auditoria>
+

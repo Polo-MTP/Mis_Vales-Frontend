@@ -11,6 +11,11 @@ export interface CrearGerenteSucursalPayload {
   sucursal_id: number;
 }
 
+export interface CrearAdministradorPayload {
+  name: string;
+  email: string;
+}
+
 export type RolPersonalSucursal = 'Coordinador' | 'Verificador' | 'Cajera';
 
 export interface CrearPersonalSucursalPayload {
@@ -33,6 +38,10 @@ export class UsuarioService {
 
   crearGerenteSucursal(payload: CrearGerenteSucursalPayload): Observable<ApiResponse<User>> {
     return this.http.post<ApiResponse<User>>(`${this.baseUrl}/gerente-sucursal`, payload);
+  }
+
+  crearAdministrador(payload: CrearAdministradorPayload): Observable<ApiResponse<User>> {
+    return this.http.post<ApiResponse<User>>(`${this.baseUrl}/administrador`, payload);
   }
 
   crearPersonalSucursal(payload: CrearPersonalSucursalPayload): Observable<ApiResponse<User>> {

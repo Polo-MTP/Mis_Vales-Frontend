@@ -36,6 +36,14 @@ export interface LoginAttempt {
     id: number;
     name: string;
     email: string;
+    role?: {
+      id: number;
+      name: string;
+    };
+    sucursal?: {
+      id: number;
+      nombre: string;
+    };
   };
 }
 
