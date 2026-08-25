@@ -38,6 +38,10 @@ export class CrearGerenteGeneralComponent {
   }
 
   onSubmit(): void {
+    if (this.enviando()) {
+      return;
+    }
+
     if (this.datosPersonales.invalid || this.email.invalid) {
       this.datosPersonales.markAllAsTouched();
       this.email.markAsTouched();

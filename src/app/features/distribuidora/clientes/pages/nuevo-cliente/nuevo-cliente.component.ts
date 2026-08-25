@@ -100,6 +100,10 @@ export class NuevoClienteComponent {
   }
 
   onSubmit(): void {
+    if (this.isLoading()) {
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

@@ -54,6 +54,10 @@ export class NuevaSolicitudComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.isLoading()) {
+      return;
+    }
+
     if (this.datosPersonales.invalid) {
       this.datosPersonales.markAllAsTouched();
       return;

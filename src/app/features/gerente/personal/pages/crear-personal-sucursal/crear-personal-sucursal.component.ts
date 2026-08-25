@@ -94,6 +94,10 @@ export class CrearPersonalSucursalComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.enviando()) {
+      return;
+    }
+
     if (this.datosPersonales.invalid || this.form.invalid) {
       this.datosPersonales.markAllAsTouched();
       this.form.markAllAsTouched();

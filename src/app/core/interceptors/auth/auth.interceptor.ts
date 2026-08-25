@@ -1,9 +1,43 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../../../features/auth/services/auth.service';
-import { catchError, throwError } from 'rxjs';
+import { catchError, throwError, timeout, TimeoutError } from 'rxjs';
 import { Router } from '@angular/router';
 import { obtenerCodigoDeSoporte } from '../../models/api-error-code.model';
+
+/**
+ * Nada se debe quedar "cargando" para siempre -- si el backend se cuelga (BD caída, red, lo que
+ * sea) más de esto, se corta y se muestra un error claro en vez de un spinner indefinido que
+ * invita al usuario a reintentar a ciegas sin saber si la petición original sigue viva o no
+ * (ver la investigación de creación de clientes/distribuidores con la BD apagada). 45s da margen
+ * de sobra sobre cualquier operación normal (el peor caso de BD caída falla en ~6-10s) sin
+ * cortar de más un reporte pesado.
+ */
+const TIMEOUT_PETICION_MS = 45_000;
+
+/** Las subidas de archivo (multipart) pueden tardar legítimamente más que eso en una conexión
+ *  lenta -- no tiene sentido cortarlas con el mismo límite que una petición JSON normal. */
+function esSubidaDeArchivo(body: unknown): boolean {
+  return typeof FormData !== 'undefined' && body instanceof FormData;
+}
+
+/**
+ * El operador timeout() de RxJS lanza un TimeoutError, no un HttpErrorResponse -- hay que
+ * normalizarlo a la misma forma que el resto del pipeline de errores espera, para que
+ * agregarCodigoDeSoporte()/las pantallas que hacen err.error?.message sigan funcionando igual.
+ */
+function normalizarTimeout(error: unknown, url: string): HttpErrorResponse | unknown {
+  if (!(error instanceof TimeoutError)) {
+    return error;
+  }
+
+  return new HttpErrorResponse({
+    error: { message: 'La solicitud tardó demasiado en responder. Intenta de nuevo en unos momentos.' },
+    status: 0,
+    statusText: 'Timeout',
+    url
+  });
+}
 
 /** Angular solo adjunta el header X-XSRF-TOKEN automáticamente en requests del MISMO origen
  *  (es una protección propia del framework contra filtrar el token a otros dominios) -- como el
@@ -78,7 +112,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   });
 
   return next(authReq).pipe(
-    catchError((error: HttpErrorResponse) => {
+    esSubidaDeArchivo(authReq.body) ? (source) => source : timeout(TIMEOUT_PETICION_MS),
+    catchError((errorCrudo: unknown) => {
+      const error = normalizarTimeout(errorCrudo, authReq.url) as HttpErrorResponse;
       const errorNormalizado = agregarCodigoDeSoporte(normalizarErrorDeRed(error));
 
       const isAuthChallengeRequest = req.url.includes('/login') || req.url.includes('/mfa/');

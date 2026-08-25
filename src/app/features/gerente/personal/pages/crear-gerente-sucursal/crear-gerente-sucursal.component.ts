@@ -53,6 +53,10 @@ export class CrearGerenteSucursalComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.enviando()) {
+      return;
+    }
+
     if (this.datosPersonales.invalid || this.email.invalid || this.sucursalId.invalid) {
       this.datosPersonales.markAllAsTouched();
       this.email.markAsTouched();
