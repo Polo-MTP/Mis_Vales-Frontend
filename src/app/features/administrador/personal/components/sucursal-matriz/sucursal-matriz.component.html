@@ -1,0 +1,36 @@
+<div class="dash-card">
+  <div>
+    <h2 class="text-base font-black text-slate-100">Sucursal Matriz</h2>
+    <p class="text-xs text-slate-400 font-medium">
+      Solo puede haber una. Determina a dónde se asignan los Gerentes Generales que se den de alta.
+    </p>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando...</div>
+
+  <div *ngIf="!cargando() && matriz() as m" class="bg-slate-900/40 rounded-2xl p-4 text-sm">
+    <p class="font-semibold text-slate-100">{{ m.nombre }}</p>
+    <p class="text-xs text-slate-400 mt-1">
+      Código: <span class="font-bold text-blue-400">{{ m.codigo }}</span>
+      · Estado: {{ m.is_active ? 'Activa' : 'Inactiva' }}
+    </p>
+  </div>
+
+  <form *ngIf="!cargando() && !matriz()" [formGroup]="nuevaForm" (ngSubmit)="crear()" class="bg-slate-900/40 rounded-2xl p-4 flex flex-wrap items-end gap-3">
+    <p class="w-full text-amber-300 text-xs font-medium">
+      Todavía no existe ninguna sucursal matriz. Créala aquí antes de dar de alta un Gerente General.
+    </p>
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">Nombre</label>
+      <input type="text" formControlName="nombre" class="form-input py-1.5 px-2 text-xs w-40">
+    </div>
+    <div>
+      <label class="block text-xs text-slate-400 mb-1">Código</label>
+      <input type="text" formControlName="codigo" class="form-input py-1.5 px-2 text-xs w-24">
+    </div>
+    <button type="submit" [disabled]="nuevaForm.invalid || guardando()" class="btn-link-primary">Crear sucursal matriz</button>
+    <p *ngIf="errorForm()" class="w-full text-red-400 text-xs">{{ errorForm() }}</p>
+  </form>
+
+  <p *ngIf="exito()" class="text-emerald-400 text-xs">{{ exito() }}</p>
+</div>

@@ -24,9 +24,6 @@
       <label class="block text-xs text-slate-400 mb-1">Código</label>
       <input type="text" formControlName="codigo" class="form-input py-1.5 px-2 text-xs w-24">
     </div>
-    <label class="flex items-center gap-2 text-xs text-slate-400 pb-2">
-      <input type="checkbox" formControlName="es_matriz"> Es matriz
-    </label>
     <button type="submit" [disabled]="nuevaForm.invalid || guardando()" class="btn-link-primary">Crear</button>
     <button type="button" (click)="cancelarNueva()" class="btn-link-danger">Cancelar</button>
     <p *ngIf="errorForm()" class="w-full text-red-400 text-xs">{{ errorForm() }}</p>
@@ -57,12 +54,7 @@
               <input type="text" formControlName="codigo" class="form-input py-1.5 px-2 text-xs w-20">
             </form>
           </td>
-          <td class="p-3.5 text-slate-400">
-            <span *ngIf="editando() !== s.id">{{ s.es_matriz ? 'Sí' : 'No' }}</span>
-            <form *ngIf="editando() === s.id" [formGroup]="editForm">
-              <input type="checkbox" formControlName="es_matriz">
-            </form>
-          </td>
+          <td class="p-3.5 text-slate-400">{{ s.es_matriz ? 'Sí' : 'No' }}</td>
           <td class="p-3.5">
             <span *ngIf="editando() !== s.id" class="status-badge" [class.bg-emerald-500/15]="s.is_active" [class.text-emerald-300]="s.is_active" [class.border-emerald-500/30]="s.is_active"
                   [class.bg-slate-500/15]="!s.is_active" [class.text-slate-400]="!s.is_active" [class.border-slate-500/30]="!s.is_active">
@@ -75,7 +67,7 @@
             </form>
           </td>
           <td class="p-3.5 whitespace-nowrap">
-            <ng-container *ngIf="puedeEditar() && editando() !== s.id">
+            <ng-container *ngIf="puedeEditar() && !s.es_matriz && editando() !== s.id">
               <button type="button" (click)="iniciarEdicion(s)" class="btn-link-primary">Editar</button>
             </ng-container>
             <ng-container *ngIf="editando() === s.id">

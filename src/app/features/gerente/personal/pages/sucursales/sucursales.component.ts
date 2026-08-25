@@ -16,7 +16,10 @@ export class SucursalesComponent implements OnInit {
   private sucursalService = inject(SucursalService);
   private authService = inject(AuthService);
 
-  /** El backend solo deja crear/editar sucursales a Gerente General. */
+  /** El backend solo deja crear/editar sucursales normales a Gerente General -- la sucursal
+   *  matriz la controla Administrador desde su propia pantalla (ver
+   *  features/administrador/personal), por eso esta página nunca expone el campo "es_matriz"
+   *  ni deja editar la fila que ya es matriz. */
   puedeEditar = computed(() => this.authService.userRole() === 'Gerente General');
 
   sucursales = signal<Sucursal[]>([]);
@@ -32,14 +35,12 @@ export class SucursalesComponent implements OnInit {
   editForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.maxLength(100)]],
     codigo: ['', [Validators.required, Validators.maxLength(20)]],
-    es_matriz: [false],
     is_active: [true]
   });
 
   nuevaForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.maxLength(100)]],
-    codigo: ['', [Validators.required, Validators.maxLength(20)]],
-    es_matriz: [false]
+    codigo: ['', [Validators.required, Validators.maxLength(20)]]
   });
 
   ngOnInit(): void {
@@ -68,7 +69,6 @@ export class SucursalesComponent implements OnInit {
     this.editForm.setValue({
       nombre: sucursal.nombre,
       codigo: sucursal.codigo,
-      es_matriz: sucursal.es_matriz,
       is_active: sucursal.is_active
     });
   }
@@ -91,7 +91,6 @@ export class SucursalesComponent implements OnInit {
       .actualizar(sucursal.id, {
         nombre: v.nombre!,
         codigo: v.codigo!,
-        es_matriz: v.es_matriz ?? false,
         is_active: v.is_active ?? true
       })
       .subscribe({
@@ -110,7 +109,7 @@ export class SucursalesComponent implements OnInit {
   mostrarFormNueva(): void {
     this.mostrandoNueva.set(true);
     this.errorForm.set(null);
-    this.nuevaForm.reset({ nombre: '', codigo: '', es_matriz: false });
+    this.nuevaForm.reset({ nombre: '', codigo: '' });
   }
 
   cancelarNueva(): void {
@@ -130,8 +129,7 @@ export class SucursalesComponent implements OnInit {
     this.sucursalService
       .crear({
         nombre: v.nombre!,
-        codigo: v.codigo!,
-        es_matriz: v.es_matriz ?? false
+        codigo: v.codigo!
       })
       .subscribe({
         next: () => {
