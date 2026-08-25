@@ -158,24 +158,14 @@
             <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('limite_credito_asignado')">{{ errorFor('limite_credito_asignado') }}</p>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="form-label">Email de acceso *</label>
-              <input type="email" formControlName="email" class="form-input">
-              <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('email')">{{ errorFor('email') }}</p>
-            </div>
-            <div>
-              <label class="form-label">Contraseña *</label>
-              <div class="flex items-center gap-2">
-                <input [type]="mostrarPassword() ? 'text' : 'password'" formControlName="password" class="form-input flex-1">
-                <button type="button" (click)="toggleMostrarPassword()" class="btn-link-primary shrink-0 whitespace-nowrap">
-                  {{ mostrarPassword() ? 'Ocultar' : 'Ver' }}
-                </button>
-                <button type="button" (click)="generarPassword()" class="btn-link-primary shrink-0 whitespace-nowrap">Generar</button>
-              </div>
-              <p class="text-xs text-slate-500 mt-1">{{ mensajePasswordSegura }}</p>
-              <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('password')">{{ errorFor('password') }}</p>
-            </div>
+          <div>
+            <label class="form-label">Email de acceso *</label>
+            <input type="email" formControlName="email" class="form-input">
+            <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('email')">{{ errorFor('email') }}</p>
+            <!-- La contraseña ya no se captura aquí -- el sistema la genera y la manda por
+                 correo a este email, mismo patrón que dar de alta Administrador/Gerente de
+                 Sucursal/personal interno. Nadie más que la distribuidora llega a conocerla. -->
+            <p class="text-xs text-slate-500 mt-1">La contraseña de acceso se genera automáticamente y se envía a este correo.</p>
           </div>
         </ng-container>
 

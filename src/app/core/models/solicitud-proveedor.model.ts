@@ -151,6 +151,5 @@ export interface AprobarSolicitudPayload {
   comentario_gerente?: string;
   limite_credito_asignado?: number;
   email?: string;
-  password?: string;
   dispositivo?: string;
 }

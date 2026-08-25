@@ -6,7 +6,6 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 import { SolicitudService } from '../../services/solicitud.service';
 import { AprobarSolicitudPayload, LogAuditoria, SolicitudProveedor } from '../../../../../core/models/solicitud-proveedor.model';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
-import { generarPasswordSegura, MENSAJE_PASSWORD_SEGURA, passwordSeguraValidators } from '../../../../../shared/utils/password.util';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 
 @Component({
@@ -43,13 +42,8 @@ export class DetalleSolicitudComponent implements OnInit {
     decision: ['', [Validators.required]],
     comentario_gerente: [''],
     limite_credito_asignado: ['', [DetalleSolicitudComponent.multiploDe(1000)]],
-    email: ['', [Validators.email]],
-    password: ['', passwordSeguraValidators]
+    email: ['', [Validators.email]]
   });
-
-  mostrarPassword = signal(false);
-
-  readonly mensajePasswordSegura = MENSAJE_PASSWORD_SEGURA;
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -80,20 +74,8 @@ export class DetalleSolicitudComponent implements OnInit {
     const control = this.decisionForm.get(campo);
     if (control?.invalid && (control.touched || control.dirty)) {
       if (control.errors?.['email']) return 'Ingresa un correo válido.';
-      if (control.errors?.['pattern'] && campo === 'password') return this.mensajePasswordSegura;
     }
     return this.fieldErrors()[campo]?.[0] ?? null;
-  }
-
-  generarPassword(): void {
-    const nueva = generarPasswordSegura();
-    this.decisionForm.get('password')?.setValue(nueva);
-    this.decisionForm.get('password')?.markAsDirty();
-    this.mostrarPassword.set(true);
-  }
-
-  toggleMostrarPassword(): void {
-    this.mostrarPassword.update((v) => !v);
   }
 
   limiteCreditoInvalido(): boolean {
@@ -111,8 +93,8 @@ export class DetalleSolicitudComponent implements OnInit {
     const val = this.decisionForm.value;
     const decision = val.decision as 'aprobado' | 'rechazado';
 
-    if (decision === 'aprobado' && (!val.limite_credito_asignado || !val.email || !val.password)) {
-      this.errorDecision.set('Para aprobar debes indicar límite de crédito, email y contraseña del distribuidor.');
+    if (decision === 'aprobado' && (!val.limite_credito_asignado || !val.email)) {
+      this.errorDecision.set('Para aprobar debes indicar límite de crédito y email del distribuidor.');
       return;
     }
 
@@ -124,8 +106,7 @@ export class DetalleSolicitudComponent implements OnInit {
       decision,
       comentario_gerente: val.comentario_gerente || undefined,
       limite_credito_asignado: decision === 'aprobado' ? Number(val.limite_credito_asignado) : undefined,
-      email: decision === 'aprobado' ? val.email! : undefined,
-      password: decision === 'aprobado' ? val.password! : undefined
+      email: decision === 'aprobado' ? val.email! : undefined
     };
 
     this.solicitudService.aprobarORechazar(s.id, payload).subscribe({
