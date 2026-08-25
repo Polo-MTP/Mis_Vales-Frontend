@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { AuthService } from '../../../features/auth/services/auth.service';
 import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { obtenerCodigoDeSoporte } from '../../models/api-error-code.model';
 
 /** Angular solo adjunta el header X-XSRF-TOKEN automáticamente en requests del MISMO origen
  *  (es una protección propia del framework contra filtrar el token a otros dominios) -- como el
@@ -36,15 +37,15 @@ function normalizarErrorDeRed(error: HttpErrorResponse): HttpErrorResponse {
 }
 
 /**
- * El backend agrega 'support_code' (ej. "MV-301") a CUALQUIER respuesta de error -- un código
- * corto y reportable, distinto de 'error_code' (ese es técnico, para lógica de cliente; este
- * es para que la persona lo lea y lo reporte a soporte). Se pega aquí, en un solo lugar, en
- * vez de tocar cada una de las ~50 pantallas que hacen `err.error?.message` -- así todas lo
- * muestran junto al mensaje sin cambiar nada más.
+ * El código corto reportable (ej. "MV-301") se calcula aquí, en el frontend, a partir del
+ * 'error_code' técnico que sí manda el backend -- el backend nunca lo calcula ni lo agrega a
+ * la respuesta, ver obtenerCodigoDeSoporte() en api-error-code.model.ts. Se pega al mensaje en
+ * este único lugar, en vez de tocar cada una de las ~50 pantallas que hacen
+ * `err.error?.message` -- así todas lo muestran junto al mensaje sin cambiar nada más.
  */
 function agregarCodigoDeSoporte(error: HttpErrorResponse): HttpErrorResponse {
   const cuerpo = error.error;
-  const codigo = cuerpo?.support_code;
+  const codigo = obtenerCodigoDeSoporte(cuerpo?.error_code);
   const mensaje = cuerpo?.message;
 
   if (!codigo || typeof mensaje !== 'string' || mensaje.includes(codigo)) {

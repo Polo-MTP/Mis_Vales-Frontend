@@ -41,3 +41,31 @@ export function leerErrorCode(err: unknown): ApiErrorCode | null {
   const body = (err as { error?: Partial<ApiErrorBody> } | null)?.error;
   return body?.error_code ?? null;
 }
+
+/**
+ * Código corto para mostrar al usuario junto al mensaje (ej. "Código: MV-301"), para que lo
+ * anote y lo reporte a soporte sin describir el problema ni mandar una captura. Vive solo
+ * aquí, en el frontend -- el backend nunca lo calcula ni lo manda, solo el 'error_code'
+ * técnico de arriba. Agrupado por prefijo para que soporte triage por familia con solo ver
+ * el número: 1xx sesión, 2xx permisos, 3xx solicitud/negocio, 5xx servidor.
+ */
+const CODIGOS_DE_SOPORTE: Record<ApiErrorCode, string> = {
+  UNAUTHENTICATED: 'MV-101',
+  SESSION_IDLE_TIMEOUT: 'MV-102',
+  ACCOUNT_INACTIVE: 'MV-103',
+  FORBIDDEN: 'MV-201',
+  VPN_REQUIRED: 'MV-202',
+  VALIDATION_ERROR: 'MV-301',
+  DOMAIN_ERROR: 'MV-302',
+  NOT_FOUND: 'MV-303',
+  METHOD_NOT_ALLOWED: 'MV-304',
+  RATE_LIMITED: 'MV-305',
+  SERVER_ERROR: 'MV-501',
+  SERVICE_UNAVAILABLE: 'MV-502'
+};
+
+/** Traduce un error_code técnico al código corto reportable, o null si no hay uno (respuesta
+ *  de red sin error_code real, o un error_code futuro que aún no se agregó a la tabla). */
+export function obtenerCodigoDeSoporte(errorCode: ApiErrorCode | null | undefined): string | null {
+  return errorCode ? (CODIGOS_DE_SOPORTE[errorCode] ?? null) : null;
+}
