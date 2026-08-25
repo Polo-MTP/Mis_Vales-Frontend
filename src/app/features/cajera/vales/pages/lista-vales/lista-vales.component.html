@@ -18,6 +18,7 @@
   </div>
 
   <app-alert [message]="errorAutorizar()" type="error"></app-alert>
+  <app-alert [message]="errorReembolso()" type="error"></app-alert>
 
   <div *ngIf="cargando()" class="state-loading">Cargando vales...</div>
 
@@ -72,6 +73,19 @@
             <span *ngIf="autorizandoId() !== v.id">Autorizar</span>
             <span *ngIf="autorizandoId() === v.id">Autorizando...</span>
           </button>
+
+          <!-- Vale ya liquidado por completo, sin más cuotas que le apliquen el saldo a favor
+               solo -- la cajera puede pedir que se lo reembolsen. -->
+          <button *ngIf="v.estado === 'pagado' && v.saldo_excedente > 0 && !reembolsoSolicitadoIds().has(v.id)"
+                  type="button" (click)="solicitarReembolso(v)" [disabled]="solicitandoReembolsoId() === v.id"
+                  class="btn-outline w-auto py-2 px-4 text-xs">
+            <span *ngIf="solicitandoReembolsoId() !== v.id">Reembolsar {{ (v.saldo_excedente) | dinero }}</span>
+            <span *ngIf="solicitandoReembolsoId() === v.id">Enviando...</span>
+          </button>
+          <span *ngIf="v.estado === 'pagado' && v.saldo_excedente > 0 && reembolsoSolicitadoIds().has(v.id)"
+                class="status-badge bg-amber-500/15 text-amber-300 border-amber-500/30">
+            Reembolso solicitado
+          </span>
         </div>
       </div>
 

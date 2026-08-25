@@ -19,6 +19,7 @@ import { PersonalComponent } from './personal/pages/personal/personal.component'
 import { ReasignarGerenteComponent } from './personal/pages/reasignar-gerente/reasignar-gerente.component';
 import { MisAutorizacionesComponent } from './autorizaciones/pages/mis-autorizaciones/mis-autorizaciones.component';
 import { ConsultarValesComponent } from './vales/pages/consultar-vales/consultar-vales.component';
+import { ReembolsoExcedentePendientesComponent } from './vales/pages/reembolso-excedente-pendientes/reembolso-excedente-pendientes.component';
 import { CambiarPasswordComponent } from '../../shared/components/cambiar-password/cambiar-password.component';
 
 export const GERENTE_ROUTES: Routes = [
@@ -42,5 +43,6 @@ export const GERENTE_ROUTES: Routes = [
   { path: 'personal/reasignar-gerente', component: ReasignarGerenteComponent },
   { path: 'autorizaciones', component: MisAutorizacionesComponent },
   { path: 'vales', component: ConsultarValesComponent },
+  { path: 'vales/reembolso-excedente', component: ReembolsoExcedentePendientesComponent },
   { path: 'cuenta/contrasena', component: CambiarPasswordComponent }
 ];

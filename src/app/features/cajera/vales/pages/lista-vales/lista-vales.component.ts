@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ValeService } from '../../services/vale.service';
 import { DistribuidoraService } from '../../../../gerente/distribuidoras/services/distribuidora.service';
+import { SolicitudReembolsoExcedenteService } from '../../../../gerente/vales/services/solicitud-reembolso-excedente.service';
 import { RelacionService } from '../../../../distribuidora/relaciones/services/relacion.service';
 import { Vale, EstadoVale } from '../../../../../core/models/vale.model';
 import { ProximoPago } from '../../../../../core/models/relacion.model';
@@ -25,6 +26,7 @@ export class ListaValesComponent implements OnInit {
   private valeService = inject(ValeService);
   private distribuidoraService = inject(DistribuidoraService);
   private relacionService = inject(RelacionService);
+  private solicitudReembolsoExcedenteService = inject(SolicitudReembolsoExcedenteService);
 
   saldoPorDistribuidora = signal<Record<number, { credito_disponible: number; saldo_excedente: number } | 'cargando' | 'error'>>({});
   /** Referencia del próximo corte por distribuidora, para vales ya autorizados que todavía no
@@ -41,6 +43,13 @@ export class ListaValesComponent implements OnInit {
   validandoId = signal<number | null>(null);
   autorizandoId = signal<number | null>(null);
   errorAutorizar = signal<string | null>(null);
+
+  /** Vales para los que ya se solicitó el reembolso del saldo a favor en esta sesión -- oculta
+   *  el botón sin tener que recargar toda la lista (el vale sigue 'pagado' con saldo > 0 hasta
+   *  que el gerente decide, así que sin esto el botón seguiría apareciendo). */
+  reembolsoSolicitadoIds = signal<Set<number>>(new Set());
+  solicitandoReembolsoId = signal<number | null>(null);
+  errorReembolso = signal<string | null>(null);
 
   /** Vale para el que estamos llenando el checklist de validación (INE, comprobante, CLABE). */
   validandoDatosId = signal<number | null>(null);
@@ -157,6 +166,22 @@ export class ListaValesComponent implements OnInit {
    *  los vales pendientes de esa distribuidora; aquí se aísla el de este vale en particular. */
   conceptoDelVale(p: ProximoPago, valeId: number): string | null {
     return p.vales.find((v) => v.vale_id === valeId)?.concepto ?? null;
+  }
+
+  solicitarReembolso(vale: Vale): void {
+    this.solicitandoReembolsoId.set(vale.id);
+    this.errorReembolso.set(null);
+
+    this.solicitudReembolsoExcedenteService.solicitar(vale.id).subscribe({
+      next: () => {
+        this.solicitandoReembolsoId.set(null);
+        this.reembolsoSolicitadoIds.update((set) => new Set(set).add(vale.id));
+      },
+      error: (err) => {
+        this.solicitandoReembolsoId.set(null);
+        this.errorReembolso.set(err.error?.message || 'No se pudo solicitar el reembolso.');
+      }
+    });
   }
 
   verSaldoDisponible(distribuidoraId: number): void {

@@ -44,6 +44,11 @@ export interface Vale {
   comprobante_domicilio_verificado: boolean | null;
   fecha_autorizacion: string | null;
   numero_transferencia: string | null;
+  /** Saldo a favor de ESTE vale (no de la distribuidora) por un pago de más en conciliación --
+   *  se aplica solo a las cuotas futuras de este mismo vale. Si el vale ya está 'pagado' y
+   *  esto sigue siendo mayor a cero, ya no hay ninguna cuota que lo consuma sola: la cajera
+   *  puede solicitar su reembolso. */
+  saldo_excedente: number;
   created_at: string;
   cortes: CorteDeVale[];
   estimacion: EstimacionPagoVale | null;
