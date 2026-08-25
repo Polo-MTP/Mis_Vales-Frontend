@@ -10,6 +10,15 @@
   </div>
 
   <app-sucursal-matriz></app-sucursal-matriz>
-  <app-crear-gerente-general></app-crear-gerente-general>
+
+  <div *ngIf="!cargandoGerenteGeneral() && yaExisteGerenteGeneral()" class="dash-card">
+    <h2 class="text-base font-black text-slate-100">Gerente General</h2>
+    <p class="text-xs text-slate-400 font-medium mt-1">
+      Ya existe un Gerente General en el sistema -- no se puede dar de alta otro. Para
+      reemplazarlo, reactiva o recupera esa cuenta directamente en vez de crear una nueva.
+    </p>
+  </div>
+
+  <app-crear-gerente-general *ngIf="!cargandoGerenteGeneral() && !yaExisteGerenteGeneral()"></app-crear-gerente-general>
 
 </div>

@@ -37,6 +37,15 @@ export class UsuarioService {
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/usuarios`;
 
+  /** Lista usuarios activos, opcionalmente filtrados por rol -- ej. para saber si ya existe un
+   *  Gerente General antes de mostrar el formulario para dar de alta otro (el backend lo
+   *  rechaza de todas formas, esto solo evita mostrar un formulario que va a fallar seguro). */
+  listar(filtroRol?: string): Observable<ApiResponse<User[]>> {
+    return this.http.get<ApiResponse<User[]>>(this.baseUrl, {
+      params: filtroRol ? { 'filter[role]': filtroRol } : {}
+    });
+  }
+
   crearGerenteSucursal(payload: CrearGerenteSucursalPayload): Observable<ApiResponse<User>> {
     return this.http.post<ApiResponse<User>>(`${this.baseUrl}/gerente-sucursal`, payload);
   }
