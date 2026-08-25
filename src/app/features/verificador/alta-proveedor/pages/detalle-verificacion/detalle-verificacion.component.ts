@@ -212,6 +212,10 @@ export class DetalleVerificacionComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.enviando()) {
+      return;
+    }
+
     const s = this.solicitud();
     if (!s || this.dictamenForm.invalid || this.datosForm.invalid) {
       this.dictamenForm.markAllAsTouched();

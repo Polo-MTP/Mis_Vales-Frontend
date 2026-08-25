@@ -206,6 +206,10 @@ export class SolicitarEdicionComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.enviando()) {
+      return;
+    }
+
     const cliente = this.clienteSeleccionado();
     if (!cliente || this.form.invalid) {
       this.form.markAllAsTouched();

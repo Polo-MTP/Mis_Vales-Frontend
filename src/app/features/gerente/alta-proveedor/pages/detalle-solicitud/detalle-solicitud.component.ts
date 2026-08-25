@@ -84,6 +84,10 @@ export class DetalleSolicitudComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.enviando()) {
+      return;
+    }
+
     const s = this.solicitud();
     if (!s || this.decisionForm.invalid) {
       this.decisionForm.markAllAsTouched();

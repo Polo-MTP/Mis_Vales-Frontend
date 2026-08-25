@@ -150,6 +150,10 @@ export class DetalleClienteComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.guardando()) {
+      return;
+    }
+
     const c = this.cliente();
     if (!c || this.form.invalid) {
       this.form.markAllAsTouched();

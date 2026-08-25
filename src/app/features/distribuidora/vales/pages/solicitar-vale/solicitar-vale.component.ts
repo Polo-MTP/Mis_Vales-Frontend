@@ -82,6 +82,10 @@ export class SolicitarValeComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.enviando()) {
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
