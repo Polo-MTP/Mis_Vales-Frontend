@@ -35,6 +35,31 @@ function normalizarErrorDeRed(error: HttpErrorResponse): HttpErrorResponse {
   });
 }
 
+/**
+ * El backend agrega 'support_code' (ej. "MV-301") a CUALQUIER respuesta de error -- un código
+ * corto y reportable, distinto de 'error_code' (ese es técnico, para lógica de cliente; este
+ * es para que la persona lo lea y lo reporte a soporte). Se pega aquí, en un solo lugar, en
+ * vez de tocar cada una de las ~50 pantallas que hacen `err.error?.message` -- así todas lo
+ * muestran junto al mensaje sin cambiar nada más.
+ */
+function agregarCodigoDeSoporte(error: HttpErrorResponse): HttpErrorResponse {
+  const cuerpo = error.error;
+  const codigo = cuerpo?.support_code;
+  const mensaje = cuerpo?.message;
+
+  if (!codigo || typeof mensaje !== 'string' || mensaje.includes(codigo)) {
+    return error;
+  }
+
+  return new HttpErrorResponse({
+    error: { ...cuerpo, message: `${mensaje} (Código: ${codigo})` },
+    headers: error.headers,
+    status: error.status,
+    statusText: error.statusText,
+    url: error.url ?? undefined
+  });
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -53,7 +78,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      const errorNormalizado = normalizarErrorDeRed(error);
+      const errorNormalizado = agregarCodigoDeSoporte(normalizarErrorDeRed(error));
 
       const isAuthChallengeRequest = req.url.includes('/login') || req.url.includes('/mfa/');
       if (errorNormalizado.status === 401 && !isAuthChallengeRequest) {
