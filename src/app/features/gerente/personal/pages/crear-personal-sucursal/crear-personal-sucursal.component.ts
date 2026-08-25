@@ -7,11 +7,13 @@ import { UsuarioService as UsuariosPorRolService } from '../../../../../core/ser
 import { Sucursal } from '../../../../../core/models/sucursal.model';
 import { User } from '../../../../../core/models/user.model';
 import { AuthService } from '../../../../auth/services/auth.service';
+import { DatosPersonalesFieldsComponent } from '../../../../../shared/components/datos-personales-fields/datos-personales-fields.component';
+import { crearGrupoDatosPersonales, datosPersonalesPayload } from '../../../../../shared/utils/datos-personales-form.util';
 
 @Component({
   selector: 'app-crear-personal-sucursal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DatosPersonalesFieldsComponent],
   templateUrl: './crear-personal-sucursal.component.html'
 })
 export class CrearPersonalSucursalComponent implements OnInit {
@@ -34,9 +36,11 @@ export class CrearPersonalSucursalComponent implements OnInit {
   exito = signal<string | null>(null);
   fieldErrors = signal<Record<string, string[]>>({});
 
+  /** Mismo formulario que el alta de una distribuidora -- ver DatosPersonalesFieldsComponent. */
+  datosPersonales = crearGrupoDatosPersonales(this.fb);
+
   form = this.fb.group({
     rol: ['', [Validators.required]],
-    name: ['', [Validators.required, Validators.maxLength(255)]],
     email: ['', [Validators.required, Validators.email]],
     sucursal_id: [''],
     gerente_id: ['']
@@ -90,7 +94,8 @@ export class CrearPersonalSucursalComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) {
+    if (this.datosPersonales.invalid || this.form.invalid) {
+      this.datosPersonales.markAllAsTouched();
       this.form.markAllAsTouched();
       return;
     }
@@ -104,8 +109,8 @@ export class CrearPersonalSucursalComponent implements OnInit {
 
     this.usuarioService
       .crearPersonalSucursal({
+        ...datosPersonalesPayload(this.datosPersonales),
         rol: v.rol as RolPersonalSucursal,
-        name: v.name!,
         email: v.email!,
         ...(this.esGerenteGeneral()
           ? { sucursal_id: Number(v.sucursal_id), gerente_id: Number(v.gerente_id) }
@@ -115,8 +120,9 @@ export class CrearPersonalSucursalComponent implements OnInit {
         next: (res) => {
           this.enviando.set(false);
           this.exito.set(`${res.data?.role?.name} "${res.data?.name}" creado correctamente. Se le envió su contraseña por correo.`);
+          this.datosPersonales.reset();
           this.form.reset({
-            rol: '', name: '', email: '',
+            rol: '', email: '',
             sucursal_id: '', gerente_id: ''
           });
         },

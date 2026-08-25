@@ -14,33 +14,29 @@
     {{ errorMessage() }}
   </p>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div>
-      <label class="form-label">Nombre *</label>
-      <input type="text" formControlName="name" class="form-input">
-      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('name')">{{ errorFor('name') }}</p>
+  <form (ngSubmit)="onSubmit()" class="space-y-4">
+    <app-datos-personales-fields [group]="datosPersonales" [fieldErrors]="fieldErrors()"></app-datos-personales-fields>
+
+    <div class="dash-card grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="form-label">Correo *</label>
+        <input type="email" [formControl]="email" class="form-input">
+        <p class="text-xs text-red-400 mt-1" *ngIf="errorForEmail()">{{ errorForEmail() }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Sucursal *</label>
+        <select [formControl]="sucursalId" class="form-select" [disabled]="cargandoSucursales()">
+          <option value="" disabled>Selecciona una sucursal</option>
+          <option *ngFor="let s of sucursales()" [value]="s.id">{{ s.nombre }} ({{ s.codigo }})</option>
+        </select>
+        <p class="text-xs text-red-400 mt-1" *ngIf="errorForSucursal()">{{ errorForSucursal() }}</p>
+      </div>
     </div>
 
-    <div>
-      <label class="form-label">Correo *</label>
-      <input type="email" formControlName="email" class="form-input">
-      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('email')">{{ errorFor('email') }}</p>
-    </div>
-
-    <div class="sm:col-span-2">
-      <label class="form-label">Sucursal *</label>
-      <select formControlName="sucursal_id" class="form-select" [disabled]="cargandoSucursales()">
-        <option value="" disabled>Selecciona una sucursal</option>
-        <option *ngFor="let s of sucursales()" [value]="s.id">{{ s.nombre }} ({{ s.codigo }})</option>
-      </select>
-      <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('sucursal_id')">{{ errorFor('sucursal_id') }}</p>
-    </div>
-
-    <div class="sm:col-span-2">
-      <button type="submit" [disabled]="form.invalid || enviando()" class="btn-primary">
-        <span *ngIf="!enviando()">Crear Gerente de Sucursal</span>
-        <span *ngIf="enviando()">Creando...</span>
-      </button>
-    </div>
+    <button type="submit" [disabled]="datosPersonales.invalid || email.invalid || sucursalId.invalid || enviando()" class="btn-primary w-auto">
+      <span *ngIf="!enviando()">Crear Gerente de Sucursal</span>
+      <span *ngIf="enviando()">Creando...</span>
+    </button>
   </form>
 </div>

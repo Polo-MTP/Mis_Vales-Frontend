@@ -68,6 +68,7 @@ export class DesktopSidebarComponent {
 
     Administrador: [
       { label: 'Auditoría', route: '/administrador/logs' },
+      { label: 'Personal', route: '/administrador/personal' },
       { label: 'Notificaciones', route: '/administrador/notificaciones' }
     ],
 

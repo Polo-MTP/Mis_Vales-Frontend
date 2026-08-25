@@ -1,0 +1,31 @@
+<div class="dash-card space-y-4">
+  <div>
+    <h2 class="text-base font-black text-slate-100">Dar de alta un Gerente General</h2>
+    <p class="text-xs text-slate-400 font-medium">La cuenta nace activa y con el correo ya verificado.</p>
+    <p class="text-xs text-slate-500 font-medium">
+      La contraseña se genera automáticamente y se le envía por correo — no hace falta capturarla aquí.
+    </p>
+  </div>
+
+  <p *ngIf="exito()" class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-2xl p-3 text-xs font-semibold">
+    {{ exito() }}
+  </p>
+  <p *ngIf="errorMessage()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-xs font-semibold">
+    {{ errorMessage() }}
+  </p>
+
+  <form (ngSubmit)="onSubmit()" class="space-y-4">
+    <app-datos-personales-fields [group]="datosPersonales" [fieldErrors]="fieldErrors()"></app-datos-personales-fields>
+
+    <div class="dash-card">
+      <label class="form-label">Correo *</label>
+      <input type="email" [formControl]="email" class="form-input">
+      <p class="text-xs text-red-400 mt-1" *ngIf="errorForEmail()">{{ errorForEmail() }}</p>
+    </div>
+
+    <button type="submit" [disabled]="datosPersonales.invalid || email.invalid || enviando()" class="btn-primary w-auto">
+      <span *ngIf="!enviando()">Crear Gerente General</span>
+      <span *ngIf="enviando()">Creando...</span>
+    </button>
+  </form>
+</div>

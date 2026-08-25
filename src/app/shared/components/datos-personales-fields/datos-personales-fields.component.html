@@ -1,0 +1,116 @@
+<ng-container [formGroup]="group">
+
+  <!-- Datos Personales -->
+  <div class="dash-card">
+    <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Datos Personales</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="form-label">Nombre(s) *</label>
+        <input type="text" formControlName="nombre" class="form-input">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('nombre')">{{ errorFor('nombre') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Apellido Paterno *</label>
+        <input type="text" formControlName="apellido_paterno" class="form-input">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('apellido_paterno')">{{ errorFor('apellido_paterno') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Apellido Materno</label>
+        <input type="text" formControlName="apellido_materno" class="form-input">
+      </div>
+
+      <div>
+        <label class="form-label">CURP *</label>
+        <input type="text" formControlName="curp" maxlength="18" appMayusculas class="form-input uppercase">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('curp')">{{ errorFor('curp') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">RFC *</label>
+        <input type="text" formControlName="rfc" maxlength="13" appMayusculas class="form-input uppercase">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('rfc')">{{ errorFor('rfc') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Fecha de Nacimiento</label>
+        <app-selector-fecha formControlName="fecha_nacimiento" [fechaMaxima]="fechaMaximaNacimiento"></app-selector-fecha>
+        <p class="text-xs text-slate-500 mt-1">Debe ser mayor de edad (18 años o más).</p>
+      </div>
+
+      <div>
+        <label class="form-label">Lugar de Nacimiento</label>
+        <input type="text" formControlName="lugar_nacimiento" class="form-input">
+      </div>
+    </div>
+  </div>
+
+  <!-- Dirección -->
+  <div class="dash-card">
+    <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Dirección</h2>
+    <p class="text-xs text-slate-400 -mt-2">Escribe primero el código postal para filtrar mejor las sugerencias de la calle.</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="form-label">Código Postal *</label>
+        <input type="text" formControlName="codigo_postal" maxlength="5" inputmode="numeric" appSoloNumeros class="form-input"
+               appPlacesAutocomplete appPlacesAutocompleteTipo="postal_code"
+               (lugarSeleccionado)="onCodigoPostalSeleccionado($event)">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('codigo_postal')">{{ errorFor('codigo_postal') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Estado *</label>
+        <input type="text" formControlName="estado" readonly class="form-input bg-slate-800/50 cursor-not-allowed text-slate-400">
+        <p class="text-xs text-slate-500 mt-1">Se completa solo al elegir el código postal.</p>
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('estado')">{{ errorFor('estado') }}</p>
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="form-label">Calle *</label>
+        <input type="text" formControlName="calle" class="form-input"
+               appPlacesAutocomplete appPlacesAutocompleteTipo="address" [appPlacesAutocompleteSesgo]="sesgoDireccion()"
+               (lugarSeleccionado)="onCalleSeleccionada($event)">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('calle')">{{ errorFor('calle') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Colonia *</label>
+        <input type="text" formControlName="colonia" class="form-input">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('colonia')">{{ errorFor('colonia') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Ciudad *</label>
+        <input type="text" formControlName="ciudad" readonly class="form-input bg-slate-800/50 cursor-not-allowed text-slate-400">
+        <p class="text-xs text-slate-500 mt-1">Se completa solo al elegir el código postal.</p>
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('ciudad')">{{ errorFor('ciudad') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Número Exterior *</label>
+        <input type="text" formControlName="numero_ext" class="form-input">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('numero_ext')">{{ errorFor('numero_ext') }}</p>
+      </div>
+
+      <div>
+        <label class="form-label">Número Interior</label>
+        <input type="text" formControlName="numero_int" class="form-input">
+        <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('numero_int')">{{ errorFor('numero_int') }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Referencia Laboral -->
+  <div class="dash-card">
+    <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Referencia Laboral (Opcional)</h2>
+    <div>
+      <label class="form-label">Referencia Laboral</label>
+      <input type="text" formControlName="referencia_laboral" class="form-input">
+      <p class="text-xs text-red-500 mt-1" *ngIf="errorFor('referencia_laboral')">{{ errorFor('referencia_laboral') }}</p>
+    </div>
+  </div>
+
+</ng-container>

@@ -4,23 +4,24 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from '../../../../core/models/auth-response.model';
 import { User } from '../../../../core/models/user.model';
+import { DatosPersonalesPayload } from '../../../../shared/utils/datos-personales-form.util';
 
-export interface CrearGerenteSucursalPayload {
-  name: string;
+/** El alta de cualquier rol de staff ahora captura el mismo expediente que la alta de una
+ *  distribuidora (Datos Personales + Dirección + RFC + Referencia Laboral, ver
+ *  DatosPersonalesPayload) -- 'name' ya no se manda, el backend lo calcula de nombre/apellidos. */
+export interface CrearGerenteSucursalPayload extends DatosPersonalesPayload {
   email: string;
   sucursal_id: number;
 }
 
-export interface CrearAdministradorPayload {
-  name: string;
+export interface CrearGerenteGeneralPayload extends DatosPersonalesPayload {
   email: string;
 }
 
 export type RolPersonalSucursal = 'Coordinador' | 'Verificador' | 'Cajera';
 
-export interface CrearPersonalSucursalPayload {
+export interface CrearPersonalSucursalPayload extends DatosPersonalesPayload {
   rol: RolPersonalSucursal;
-  name: string;
   email: string;
   sucursal_id?: number;
   gerente_id?: number;
@@ -40,8 +41,8 @@ export class UsuarioService {
     return this.http.post<ApiResponse<User>>(`${this.baseUrl}/gerente-sucursal`, payload);
   }
 
-  crearAdministrador(payload: CrearAdministradorPayload): Observable<ApiResponse<User>> {
-    return this.http.post<ApiResponse<User>>(`${this.baseUrl}/administrador`, payload);
+  crearGerenteGeneral(payload: CrearGerenteGeneralPayload): Observable<ApiResponse<User>> {
+    return this.http.post<ApiResponse<User>>(`${this.baseUrl}/gerente-general`, payload);
   }
 
   crearPersonalSucursal(payload: CrearPersonalSucursalPayload): Observable<ApiResponse<User>> {
