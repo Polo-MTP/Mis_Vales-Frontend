@@ -22,7 +22,8 @@ export type ApiErrorCode =
   | 'METHOD_NOT_ALLOWED'
   | 'RATE_LIMITED'
   // Servidor
-  | 'SERVER_ERROR';
+  | 'SERVER_ERROR'
+  | 'SERVICE_UNAVAILABLE';
 
 /** Cuerpo típico de una respuesta de error de la API (ver ApiResponse<T> para el de éxito). */
 export interface ApiErrorBody {
