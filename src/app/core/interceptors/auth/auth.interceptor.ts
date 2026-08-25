@@ -13,6 +13,28 @@ function leerCookieXsrf(): string | null {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
+/**
+ * Status 0 = la petición nunca llegó a tener una respuesta HTTP real (sin conexión, CORS,
+ * servidor caído, timeout de red) -- ahí Angular mete el error crudo del navegador dentro de
+ * `error.error` (un TypeError con mensaje "Failed to fetch", un ProgressEvent, etc.), no un
+ * cuerpo JSON del backend. Sin normalizar esto, cualquier pantalla que hace
+ * `err.error?.message || 'mensaje pensado para el usuario'` termina mostrando ese texto crudo
+ * en inglés -- pasa el `||` porque sí es un valor truthy, solo que no es un mensaje real.
+ */
+function normalizarErrorDeRed(error: HttpErrorResponse): HttpErrorResponse {
+  if (error.status !== 0) {
+    return error;
+  }
+
+  return new HttpErrorResponse({
+    error: { message: 'No se pudo conectar con el servidor. Revisa tu conexión a internet e intenta de nuevo.' },
+    headers: error.headers,
+    status: error.status,
+    statusText: error.statusText,
+    url: error.url ?? undefined
+  });
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -31,15 +53,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
+      const errorNormalizado = normalizarErrorDeRed(error);
+
       const isAuthChallengeRequest = req.url.includes('/login') || req.url.includes('/mfa/');
-      if (error.status === 401 && !isAuthChallengeRequest) {
+      if (errorNormalizado.status === 401 && !isAuthChallengeRequest) {
         const yaHabiaSesion = authService.isAuthenticated();
         authService.clearSession();
         router.navigate(['/auth/login'], {
-          queryParams: yaHabiaSesion ? { sessionMessage: error.error?.message || 'Tu sesión terminó. Inicia sesión de nuevo.' } : {}
+          queryParams: yaHabiaSesion ? { sessionMessage: errorNormalizado.error?.message || 'Tu sesión terminó. Inicia sesión de nuevo.' } : {}
         });
       }
-      return throwError(() => error);
+      return throwError(() => errorNormalizado);
     })
   );
 };
