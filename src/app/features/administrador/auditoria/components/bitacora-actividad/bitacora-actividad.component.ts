@@ -34,17 +34,14 @@ export class BitacoraActividadComponent implements OnInit {
   itemSeleccionado = signal<DetalleAuditoriaItem | null>(null);
 
   modulosDisponibles = [
-    'Auth',
     'Vales',
     'Distribuidoras',
     'Clientes',
     'Conciliaciones',
-    'Cobranza',
-    'Sucursales',
-    'Configuración',
+    'Relaciones',
+    'Puntos y Lealtad',
     'Alta Proveedores',
-    'Usuarios',
-    'Seguridad',
+    'Configuración',
     'General'
   ];
 
