@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { FeedbackAutoScrollService } from './shared/services/feedback-auto-scroll.service';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,8 @@ import { RouterOutlet } from '@angular/router';
     <router-outlet></router-outlet>
   `
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor() {
+    inject(FeedbackAutoScrollService).iniciar();
+  }
+}
