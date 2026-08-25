@@ -89,6 +89,9 @@ export interface DistribuidoraPerfil {
   limite_credito: string | number | null;
   credito_disponible: string | number | null;
   puntos_acumulados: number | null;
+  /** Saldo a favor por un pago de más en conciliación bancaria que todavía no se le ha
+   *  aplicado a ningún corte -- se descuenta solo, sin que nadie tenga que hacer nada. */
+  saldo_excedente: string | number | null;
   estado: string | null;
   sucursal: Sucursal;
   coordinador: UsuarioResumen;

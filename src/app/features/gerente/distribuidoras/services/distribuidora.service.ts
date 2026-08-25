@@ -26,10 +26,11 @@ export class DistribuidoraService {
     return this.http.get<DistribuidoraResumen>(`${this.baseUrl}/${id}`);
   }
 
-  /** Solo el crédito disponible ahora mismo -- más barato que traer toda la distribuidora
-   *  cuando lo único que se necesita es comprobar el saldo antes de autorizar un vale. */
-  saldoDisponible(id: number): Observable<number> {
-    return this.http.get<number>(`${this.baseUrl}/${id}/saldo-disponible`);
+  /** Crédito disponible + saldo a favor (excedente de conciliación aún no aplicado) ahora
+   *  mismo -- más barato que traer toda la distribuidora cuando lo único que se necesita es
+   *  comprobar el saldo antes de autorizar un vale. */
+  saldoDisponible(id: number): Observable<{ credito_disponible: number; saldo_excedente: number }> {
+    return this.http.get<{ credito_disponible: number; saldo_excedente: number }>(`${this.baseUrl}/${id}/saldo-disponible`);
   }
 
   actualizar(id: number, payload: ActualizarDistribuidoraPayload): Observable<DistribuidoraResumen> {

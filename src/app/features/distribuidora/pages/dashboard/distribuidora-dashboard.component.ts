@@ -46,4 +46,8 @@ export class DistribuidoraDashboardComponent implements OnInit {
       error: () => this.proximoPago.set(null)
     });
   }
+
+  tieneSaldoExcedente(perfil: DistribuidoraPerfil): boolean {
+    return Number(perfil.saldo_excedente || 0) > 0;
+  }
 }

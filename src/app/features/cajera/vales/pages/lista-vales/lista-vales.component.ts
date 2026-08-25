@@ -26,7 +26,7 @@ export class ListaValesComponent implements OnInit {
   private distribuidoraService = inject(DistribuidoraService);
   private relacionService = inject(RelacionService);
 
-  saldoPorDistribuidora = signal<Record<number, number | 'cargando' | 'error'>>({});
+  saldoPorDistribuidora = signal<Record<number, { credito_disponible: number; saldo_excedente: number } | 'cargando' | 'error'>>({});
   /** Referencia del próximo corte por distribuidora, para vales ya autorizados que todavía no
    *  tienen un corte real (v.cortes vacío) -- sin esto la cajera no sabe con qué referencia va
    *  a llegar el pago hasta que el corte ya se generó. */

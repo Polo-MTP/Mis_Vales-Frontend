@@ -42,9 +42,17 @@
             </ng-container>
             <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] === 'cargando'"> · cargando saldo...</span>
             <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] === 'error'" class="text-red-400"> · no se pudo cargar el saldo</span>
-            <span *ngIf="saldoPorDistribuidora()[v.distribuidora_id] !== undefined && saldoPorDistribuidora()[v.distribuidora_id] !== 'cargando' && saldoPorDistribuidora()[v.distribuidora_id] !== 'error'" class="font-bold text-emerald-400">
-              · Saldo disponible: {{ (saldoPorDistribuidora()[v.distribuidora_id]) | dinero }}
-            </span>
+            <ng-container *ngIf="saldoPorDistribuidora()[v.distribuidora_id] as saldo">
+              <span *ngIf="saldo !== 'cargando' && saldo !== 'error'" class="font-bold text-emerald-400">
+                · Saldo disponible: {{ ($any(saldo).credito_disponible) | dinero }}
+              </span>
+              <!-- Saldo a favor por un pago de más en conciliación bancaria -- se aplica solo al
+                   siguiente corte, pero mientras tanto la cajera necesita verlo para explicarle a
+                   la distribuidora por qué su próximo pago va a salir más chico. -->
+              <span *ngIf="saldo !== 'cargando' && saldo !== 'error' && $any(saldo).saldo_excedente > 0" class="font-bold text-amber-400">
+                · Saldo a favor: {{ ($any(saldo).saldo_excedente) | dinero }}
+              </span>
+            </ng-container>
           </p>
           <p class="text-xs text-slate-500 mt-0.5">
             {{ v.producto?.descripcion || (v.quincenas + ' quincenas') }} · Solicitado {{ v.fecha_solicitud | date:'short' }}
