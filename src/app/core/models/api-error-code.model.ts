@@ -11,7 +11,6 @@ export type ApiErrorCode =
   | 'UNAUTHENTICATED'
   | 'SESSION_IDLE_TIMEOUT'
   | 'ACCOUNT_INACTIVE'
-  | 'EMAIL_NOT_VERIFIED'
   // Autorización
   | 'FORBIDDEN'
   | 'VPN_REQUIRED'
