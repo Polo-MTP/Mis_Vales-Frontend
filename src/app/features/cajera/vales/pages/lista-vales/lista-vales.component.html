@@ -100,10 +100,18 @@
             <p *ngSwitchCase="'cargando'" class="text-xs text-slate-500 pt-1">Buscando referencia del próximo corte...</p>
             <p *ngSwitchCase="'error'" class="text-xs text-red-400 pt-1">No se pudo cargar la referencia del próximo corte.</p>
             <ng-container *ngSwitchDefault>
-              <p *ngIf="proximoPagoPorDistribuidora()[v.distribuidora_id] as p" class="text-xs text-slate-400 pt-1 border-t border-slate-800 mt-1">
-                Referencia del próximo corte ({{ $any(p).fecha_corte }}):
-                <span class="font-mono font-bold text-slate-200">{{ $any(p).referencia_pago }}</span>
-              </p>
+              <div *ngIf="proximoPagoPorDistribuidora()[v.distribuidora_id] as p" class="text-xs text-slate-400 pt-1 border-t border-slate-800 mt-1 space-y-0.5">
+                <p>
+                  Referencia del próximo corte ({{ $any(p).fecha_corte }}):
+                  <span class="font-mono font-bold text-slate-200">{{ $any(p).referencia_pago }}</span>
+                </p>
+                <!-- Siempre visible, sin importar cuántos vales traiga el corte -- si la
+                     distribuidora paga este vale por separado, este es el Concepto que debe
+                     poner en la transferencia para que se aplique a este vale y no a otro. -->
+                <p *ngIf="conceptoDelVale($any(p), v.id) as concepto">
+                  Concepto: <span class="font-mono font-bold text-slate-200">{{ concepto }}</span>
+                </p>
+              </div>
             </ng-container>
           </ng-container>
         </ng-container>

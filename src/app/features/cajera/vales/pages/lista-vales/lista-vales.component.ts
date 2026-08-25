@@ -152,6 +152,13 @@ export class ListaValesComponent implements OnInit {
     });
   }
 
+  /** El "Concepto" de un vale dentro del próximo corte -- distinto por vale, no por
+   *  distribuidora (ver construirConceptoVale() en el backend). El próximo pago ya trae todos
+   *  los vales pendientes de esa distribuidora; aquí se aísla el de este vale en particular. */
+  conceptoDelVale(p: ProximoPago, valeId: number): string | null {
+    return p.vales.find((v) => v.vale_id === valeId)?.concepto ?? null;
+  }
+
   verSaldoDisponible(distribuidoraId: number): void {
     this.saldoPorDistribuidora.update((mapa) => ({ ...mapa, [distribuidoraId]: 'cargando' }));
 
