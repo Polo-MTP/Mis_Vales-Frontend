@@ -6,25 +6,18 @@ import { Router } from '@angular/router';
 import { obtenerCodigoDeSoporte } from '../../models/api-error-code.model';
 
 /**
- * Nada se debe quedar "cargando" para siempre -- si el backend se cuelga (BD caída, red, lo que
- * sea) más de esto, se corta y se muestra un error claro en vez de un spinner indefinido que
- * invita al usuario a reintentar a ciegas sin saber si la petición original sigue viva o no
- * (ver la investigación de creación de clientes/distribuidores con la BD apagada). 45s da margen
- * de sobra sobre cualquier operación normal (el peor caso de BD caída falla en ~6-10s) sin
- * cortar de más un reporte pesado.
+ * Timeout global de 6 segundos para evitar que el navegador deje peticiones colgadas en estado Pending
+ * cuando el servidor o la BD no responden.
  */
-const TIMEOUT_PETICION_MS = 45_000;
+const TIMEOUT_PETICION_MS = 6_000;
 
-/** Las subidas de archivo (multipart) pueden tardar legítimamente más que eso en una conexión
- *  lenta -- no tiene sentido cortarlas con el mismo límite que una petición JSON normal. */
+/** Las subidas de archivo (multipart) pueden tardar legítimamente más tiempo en conexiones lentas */
 function esSubidaDeArchivo(body: unknown): boolean {
   return typeof FormData !== 'undefined' && body instanceof FormData;
 }
 
 /**
- * El operador timeout() de RxJS lanza un TimeoutError, no un HttpErrorResponse -- hay que
- * normalizarlo a la misma forma que el resto del pipeline de errores espera, para que
- * agregarCodigoDeSoporte()/las pantallas que hacen err.error?.message sigan funcionando igual.
+ * Normaliza el TimeoutError de RxJS a un HttpErrorResponse estándar con mensaje claro
  */
 function normalizarTimeout(error: unknown, url: string): HttpErrorResponse | unknown {
   if (!(error instanceof TimeoutError)) {
@@ -32,9 +25,9 @@ function normalizarTimeout(error: unknown, url: string): HttpErrorResponse | unk
   }
 
   return new HttpErrorResponse({
-    error: { message: 'La solicitud tardó demasiado en responder. Intenta de nuevo en unos momentos.' },
-    status: 0,
-    statusText: 'Timeout',
+    error: { message: 'Tiempo de espera agotado. El servidor tardó demasiado en responder.' },
+    status: 408,
+    statusText: 'Request Timeout',
     url
   });
 }
