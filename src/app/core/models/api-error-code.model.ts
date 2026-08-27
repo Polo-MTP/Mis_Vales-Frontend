@@ -9,7 +9,6 @@
 export type ApiErrorCode =
   // Autenticación / sesión
   | 'UNAUTHENTICATED'
-  | 'SESSION_IDLE_TIMEOUT'
   | 'ACCOUNT_INACTIVE'
   // Autorización
   | 'FORBIDDEN'
@@ -51,7 +50,6 @@ export function leerErrorCode(err: unknown): ApiErrorCode | null {
  */
 const CODIGOS_DE_SOPORTE: Record<ApiErrorCode, string> = {
   UNAUTHENTICATED: 'MV-101',
-  SESSION_IDLE_TIMEOUT: 'MV-102',
   ACCOUNT_INACTIVE: 'MV-103',
   FORBIDDEN: 'MV-201',
   VPN_REQUIRED: 'MV-202',
