@@ -20,7 +20,17 @@
             {{ d.numero_distribuidora }} · RFC: {{ d.rfc }} · {{ d.sucursal.nombre || 'Sin sucursal' }}
           </p>
         </div>
-        <app-estado-badge [tipo]="'distribuidora'" [estado]="d.estado"></app-estado-badge>
+        <div class="flex flex-col items-end gap-1.5">
+          <app-estado-badge [tipo]="'distribuidora'" [estado]="d.estado"></app-estado-badge>
+          <!-- Total acumulado de TODOS sus clientes, sumando todo lo que sigue sin pagar a
+               través de todos sus cortes -- lo primero que se ve al entrar a la distribuidora. -->
+          <div *ngIf="!cargandoEstadoCuenta() && estadoCuenta() as ec" class="text-right">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Total a Pagar (Acumulado)</p>
+            <p class="text-lg font-black" [class.text-red-400]="ec.total_pendiente > 0" [class.text-emerald-400]="ec.total_pendiente === 0">
+              {{ (ec.total_pendiente) | dinero }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -43,6 +53,46 @@
       <div class="stat-card">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Categoría</p>
         <p class="text-2xl font-black text-indigo-400 mt-1">{{ d.categoria?.nombre || 'Sin categoría' }}</p>
+      </div>
+    </div>
+
+    <!-- Estado de Cuenta acumulado por cliente -->
+    <div class="dash-card space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Estado de Cuenta</h2>
+        <span class="text-xs text-slate-500">Se actualiza solo con cada corte nuevo</span>
+      </div>
+
+      <div *ngIf="errorEstadoCuenta()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-sm">
+        {{ errorEstadoCuenta() }}
+      </div>
+
+      <div *ngIf="cargandoEstadoCuenta()" class="text-xs text-slate-500">Cargando estado de cuenta...</div>
+
+      <div *ngIf="!cargandoEstadoCuenta() && estadoCuenta() as ec">
+        <div *ngIf="ec.clientes.length === 0" class="text-xs text-slate-500">
+          Sin saldo pendiente -- todos sus clientes están al corriente.
+        </div>
+
+        <div *ngFor="let c of ec.clientes" class="border border-slate-700/60 rounded-xl overflow-hidden mb-2">
+          <button type="button" (click)="toggleCliente(c.cliente_id)"
+                  class="w-full flex items-center justify-between p-3 bg-slate-900/40 hover:bg-slate-900/70 text-left">
+            <span class="font-semibold text-slate-100 text-sm">{{ c.nombre }}</span>
+            <span class="font-black text-red-400">{{ (c.saldo_pendiente) | dinero }}</span>
+          </button>
+
+          <div *ngIf="clienteExpandido() === c.cliente_id" class="p-3 border-t border-slate-800 space-y-2">
+            <div *ngFor="let cuota of c.cuotas" class="flex items-center justify-between text-xs bg-slate-800/40 rounded-lg px-3 py-2">
+              <span class="text-slate-400">
+                {{ cuota.producto || ('Vale #' + cuota.vale_id) }} · Cuota {{ cuota.cuota }} · Corte {{ cuota.fecha_corte }}
+                <span class="font-mono"> · Concepto {{ cuota.concepto }}</span>
+              </span>
+              <span class="font-bold" [class.text-red-400]="cuota.estado !== 'pagado'" [class.text-emerald-400]="cuota.estado === 'pagado'">
+                {{ (cuota.saldo) | dinero }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

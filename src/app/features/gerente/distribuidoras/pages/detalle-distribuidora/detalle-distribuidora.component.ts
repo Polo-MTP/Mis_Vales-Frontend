@@ -13,6 +13,8 @@ import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
 import { RelacionService } from '../../../relaciones/services/relacion.service';
 import { ReporteService } from '../../../reportes/services/reporte.service';
 import { Relacion } from '../../../../../core/models/relacion.model';
+import { EstadoCuentaService } from '../../../../../core/services/estado-cuenta.service';
+import { EstadoCuenta } from '../../../../../core/models/estado-cuenta.model';
 
 @Component({
   selector: 'app-detalle-distribuidora',
@@ -30,6 +32,7 @@ export class DetalleDistribuidoraComponent implements OnInit {
   private usuarioService = inject(UsuarioService);
   private relacionService = inject(RelacionService);
   private reporteService = inject(ReporteService);
+  private estadoCuentaService = inject(EstadoCuentaService);
 
   distribuidora = signal<DistribuidoraResumen | null>(null);
   cargando = signal(true);
@@ -69,6 +72,13 @@ export class DetalleDistribuidoraComponent implements OnInit {
   hastaRelacionId = signal<number | null>(null);
   descargandoReporte = signal(false);
   errorReporte = signal<string | null>(null);
+
+  // Estado de cuenta acumulado por cliente -- vista en vivo, se actualiza sola en cuanto hay
+  // un corte nuevo (automático o "Generar Corte del Día"), sin ninguna acción aparte.
+  estadoCuenta = signal<EstadoCuenta | null>(null);
+  cargandoEstadoCuenta = signal(false);
+  errorEstadoCuenta = signal<string | null>(null);
+  clienteExpandido = signal<number | null>(null);
 
   creditoForm = this.fb.group({
     limite_credito: ['', [Validators.required, Validators.min(0)]],
@@ -129,12 +139,33 @@ export class DetalleDistribuidoraComponent implements OnInit {
         });
 
         this.cargarCortesDisponibles(id);
+        this.cargarEstadoCuenta(id);
       },
       error: () => {
         this.error.set('No se pudo cargar la distribuidora.');
         this.cargando.set(false);
       }
     });
+  }
+
+  private cargarEstadoCuenta(distribuidoraId: number): void {
+    this.cargandoEstadoCuenta.set(true);
+    this.errorEstadoCuenta.set(null);
+
+    this.estadoCuentaService.obtener(distribuidoraId).subscribe({
+      next: (res) => {
+        this.estadoCuenta.set(res.data ?? null);
+        this.cargandoEstadoCuenta.set(false);
+      },
+      error: () => {
+        this.errorEstadoCuenta.set('No se pudo cargar el estado de cuenta.');
+        this.cargandoEstadoCuenta.set(false);
+      }
+    });
+  }
+
+  toggleCliente(clienteId: number): void {
+    this.clienteExpandido.update((actual) => (actual === clienteId ? null : clienteId));
   }
 
   private cargarCortesDisponibles(distribuidoraId: number): void {

@@ -55,7 +55,8 @@ export class SharedSidebarComponent {
       { label: 'Historial de Puntos', route: '/distribuidora/puntos/historial' },
       { label: 'Mis Pagos y Abonos', route: '/distribuidora/conciliaciones' },
       { label: 'Aumento de Crédito', route: '/distribuidora/creditos/aumento' },
-      { label: 'Mis Cortes', route: '/distribuidora/relaciones' }
+      { label: 'Mis Cortes', route: '/distribuidora/relaciones' },
+      { label: 'Estado de Cuenta', route: '/distribuidora/estado-cuenta' }
     ]
   };
 

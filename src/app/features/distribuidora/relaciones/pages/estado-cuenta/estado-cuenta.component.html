@@ -1,0 +1,53 @@
+<div class="layout-view-mobile">
+
+  <div class="dash-card flex items-start justify-between">
+    <div>
+      <h1 class="text-2xl font-black text-slate-100 tracking-tight">Estado de Cuenta</h1>
+      <p class="text-xs text-slate-400 font-medium mt-1">
+        Lo que sigue pendiente de cada cliente, sumado a través de todos tus cortes.
+      </p>
+    </div>
+    <div *ngIf="!cargando() && estadoCuenta() as ec" class="text-right shrink-0">
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Total a Pagar</p>
+      <p class="text-2xl font-black" [class.text-red-400]="ec.total_pendiente > 0" [class.text-emerald-400]="ec.total_pendiente === 0">
+        {{ (ec.total_pendiente) | dinero }}
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="cargando()" class="state-loading">Cargando estado de cuenta...</div>
+
+  <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+    {{ error() }}
+  </div>
+
+  <ng-container *ngIf="!cargando() && !error() && estadoCuenta() as ec">
+    <div *ngIf="ec.clientes.length === 0" class="state-empty">
+      Sin saldo pendiente -- estás al corriente con todos tus clientes.
+    </div>
+
+    <div *ngFor="let c of ec.clientes" class="dash-card p-0 overflow-hidden">
+      <button type="button" (click)="toggleCliente(c.cliente_id)"
+              class="w-full flex items-center justify-between p-4 hover:bg-slate-900/40 text-left">
+        <span class="font-bold text-slate-100">{{ c.nombre }}</span>
+        <span class="font-black text-red-400 text-lg">{{ (c.saldo_pendiente) | dinero }}</span>
+      </button>
+
+      <div *ngIf="clienteExpandido() === c.cliente_id" class="p-4 border-t border-slate-800 space-y-2">
+        <div *ngFor="let cuota of c.cuotas" class="bg-slate-800/60 border border-slate-700 rounded-lg p-2.5 text-xs">
+          <div class="flex items-center justify-between gap-1.5">
+            <span class="text-slate-400">{{ cuota.producto || ('Vale #' + cuota.vale_id) }} · Cuota {{ cuota.cuota }} · Corte {{ cuota.fecha_corte }}</span>
+            <span class="font-bold" [class.text-red-400]="cuota.estado !== 'pagado'" [class.text-emerald-400]="cuota.estado === 'pagado'">
+              {{ (cuota.saldo) | dinero }}
+            </span>
+          </div>
+          <p class="text-slate-500 mt-1">
+            Referencia <span class="font-mono font-bold text-slate-300">{{ cuota.referencia_pago }}</span>
+            · Concepto (si la pagas por separado) <span class="font-mono font-bold text-slate-300">{{ cuota.concepto }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
