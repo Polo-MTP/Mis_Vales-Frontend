@@ -2,7 +2,7 @@ import { EstadoBadgeComponent } from '../../../../../shared/components/estado-ba
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DistribuidoraService } from '../../services/distribuidora.service';
 import { CategoriaDistribuidoraService } from '../../services/categoria-distribuidora.service';
 import { ActualizarDistribuidoraPayload, CategoriaDistribuidora, DistribuidoraResumen, EstadoDistribuidora, HistorialEstadoDistribuidora } from '../../../../../core/models/distribuidora.model';
@@ -10,11 +10,14 @@ import { PuntoMovimiento } from '../../../../../core/models/punto-movimiento.mod
 import { UsuarioService } from '../../../../../core/services/usuario.service';
 import { User } from '../../../../../core/models/user.model';
 import { DineroPipe } from '../../../../../shared/pipes/dinero.pipe';
+import { RelacionService } from '../../../relaciones/services/relacion.service';
+import { ReporteService } from '../../../reportes/services/reporte.service';
+import { Relacion } from '../../../../../core/models/relacion.model';
 
 @Component({
   selector: 'app-detalle-distribuidora',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, DineroPipe, EstadoBadgeComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, DineroPipe, EstadoBadgeComponent],
   templateUrl: './detalle-distribuidora.component.html',
   styleUrl: './detalle-distribuidora.component.css'
 })
@@ -25,6 +28,8 @@ export class DetalleDistribuidoraComponent implements OnInit {
   private distribuidoraService = inject(DistribuidoraService);
   private categoriaService = inject(CategoriaDistribuidoraService);
   private usuarioService = inject(UsuarioService);
+  private relacionService = inject(RelacionService);
+  private reporteService = inject(ReporteService);
 
   distribuidora = signal<DistribuidoraResumen | null>(null);
   cargando = signal(true);
@@ -56,6 +61,14 @@ export class DetalleDistribuidoraComponent implements OnInit {
   editandoInfo = signal(false);
   guardandoInfo = signal(false);
   errorInfo = signal<string | null>(null);
+
+  // Reporte de pagos por quincena (Excel) -- "hasta qué corte" lo elige el gerente de entre
+  // los cortes más recientes de esta distribuidora.
+  cortesDisponibles = signal<Relacion[]>([]);
+  cargandoCortes = signal(false);
+  hastaRelacionId = signal<number | null>(null);
+  descargandoReporte = signal(false);
+  errorReporte = signal<string | null>(null);
 
   creditoForm = this.fb.group({
     limite_credito: ['', [Validators.required, Validators.min(0)]],
@@ -114,10 +127,50 @@ export class DetalleDistribuidoraComponent implements OnInit {
           coordinador_id: data.coordinador?.id ? String(data.coordinador.id) : '',
           comentarios_verificador: data.comentarios_verificador ?? ''
         });
+
+        this.cargarCortesDisponibles(id);
       },
       error: () => {
         this.error.set('No se pudo cargar la distribuidora.');
         this.cargando.set(false);
+      }
+    });
+  }
+
+  private cargarCortesDisponibles(distribuidoraId: number): void {
+    this.cargandoCortes.set(true);
+    this.relacionService.listar(1, undefined, distribuidoraId).subscribe({
+      next: (res) => {
+        const cortes = res.data?.data ?? [];
+        this.cortesDisponibles.set(cortes);
+        // Por defecto, "hasta el corte más reciente" -- lo más común al pedir el reporte.
+        this.hastaRelacionId.set(cortes[0]?.id ?? null);
+        this.cargandoCortes.set(false);
+      },
+      error: () => this.cargandoCortes.set(false)
+    });
+  }
+
+  descargarReportePagos(): void {
+    const d = this.distribuidora();
+    if (!d) return;
+
+    this.descargandoReporte.set(true);
+    this.errorReporte.set(null);
+
+    this.reporteService.pagosQuincena(d.id, this.hastaRelacionId() ?? undefined).subscribe({
+      next: (blob) => {
+        this.descargandoReporte.set(false);
+        const url = URL.createObjectURL(blob);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = `pagos-${d.numero_distribuidora ?? d.id}.xlsx`;
+        enlace.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => {
+        this.descargandoReporte.set(false);
+        this.errorReporte.set('No se pudo generar el reporte. Intenta de nuevo.');
       }
     });
   }

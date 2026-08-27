@@ -208,6 +208,39 @@
       </form>
     </div>
 
+    <!-- Reporte de Pagos por Quincena -->
+    <div class="dash-card space-y-3">
+      <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Reporte de Pagos por Quincena</h2>
+      <p class="text-xs text-slate-400">
+        Descarga en Excel las cuotas pendientes o atrasadas de esta distribuidora hasta el corte que elijas. Las cuotas ya liquidadas no se incluyen (salvo la primera y la última de cada vale).
+      </p>
+
+      <div *ngIf="errorReporte()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-3 text-sm">
+        {{ errorReporte() }}
+      </div>
+
+      <div *ngIf="cargandoCortes()" class="text-xs text-slate-500">Cargando cortes disponibles...</div>
+
+      <div *ngIf="!cargandoCortes() && cortesDisponibles().length === 0" class="text-xs text-slate-500">
+        Esta distribuidora todavía no tiene ningún corte generado.
+      </div>
+
+      <div *ngIf="!cargandoCortes() && cortesDisponibles().length > 0" class="flex flex-col sm:flex-row gap-3 sm:items-end">
+        <div class="flex-1">
+          <label class="form-label">Hasta el corte</label>
+          <select class="form-select" [ngModel]="hastaRelacionId()" (ngModelChange)="hastaRelacionId.set($event)">
+            <option *ngFor="let c of cortesDisponibles()" [value]="c.id">
+              {{ c.fecha_corte }} · Ref. {{ c.referencia_pago }} · {{ c.estado }}
+            </option>
+          </select>
+        </div>
+        <button type="button" (click)="descargarReportePagos()" [disabled]="descargandoReporte()" class="btn-primary w-auto shrink-0">
+          <span *ngIf="!descargandoReporte()">Descargar Excel</span>
+          <span *ngIf="descargandoReporte()">Generando...</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Contrato Firmado -->
     <div class="dash-card space-y-3">
       <h2 class="text-sm font-black text-slate-100 uppercase tracking-tight">Contrato Firmado</h2>
