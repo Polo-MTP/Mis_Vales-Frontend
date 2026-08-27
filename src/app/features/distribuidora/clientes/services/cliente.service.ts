@@ -20,7 +20,7 @@ export class ClienteService {
     return this.http.get<ApiResponse<DistribuidoraPerfil>>(`${this.baseUrl}/perfil`);
   }
 
-  listar(page = 1, search?: string, estado?: boolean): Observable<ApiResponse<PaginatedResponse<Cliente>>> {
+  listar(page = 1, search?: string, estado?: boolean, perPage?: number): Observable<ApiResponse<PaginatedResponse<Cliente>>> {
     let params = new HttpParams().set('page', String(page));
 
     if (search) {
@@ -29,6 +29,10 @@ export class ClienteService {
 
     if (estado !== undefined) {
       params = params.set('estado', String(estado));
+    }
+
+    if (perPage !== undefined) {
+      params = params.set('per_page', String(perPage));
     }
 
     return this.http.get<ApiResponse<PaginatedResponse<Cliente>>>(`${this.baseUrl}/clientes`, { params });

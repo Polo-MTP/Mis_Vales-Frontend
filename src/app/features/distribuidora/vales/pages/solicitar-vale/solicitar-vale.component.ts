@@ -41,8 +41,13 @@ export class SolicitarValeComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.clienteService.listar(1, undefined, true).subscribe({
-      next: (res) => this.clientes.set(res.data?.data ?? [])
+    // El selector debe listar TODOS los clientes activos, no solo la primera página -- con
+    // page=1 a secas (sin per_page) el endpoint regresaba máximo 15 (default del backend), así
+    // que una distribuidora con más de 15 clientes activos no podía elegir a los demás: el vale
+    // parecía fallar "a veces sí, a veces no" según qué tan grande fuera su cartera.
+    this.clienteService.listar(1, undefined, true, 1000).subscribe({
+      next: (res) => this.clientes.set(res.data?.data ?? []),
+      error: () => this.clientes.set([])
     });
 
     this.productoService.listarActivos().subscribe({
