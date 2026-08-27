@@ -46,6 +46,10 @@
       </button>
     </div>
 
+    <div *ngIf="errorToggle()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">
+      {{ errorToggle() }}
+    </div>
+
     <div *ngIf="cargando()" class="state-loading">Cargando productos...</div>
 
     <div *ngIf="!cargando() && error()" class="bg-red-950/40 text-red-300 border border-red-800/60 rounded-2xl p-4 text-sm">

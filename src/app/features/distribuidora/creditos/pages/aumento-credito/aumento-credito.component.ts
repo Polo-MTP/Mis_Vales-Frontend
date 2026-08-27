@@ -35,7 +35,8 @@ export class AumentoCreditoComponent implements OnInit {
 
   ngOnInit(): void {
     this.clienteService.miPerfil().subscribe({
-      next: (res) => this.distribuidoraId.set(res.data?.id ?? null)
+      next: (res) => this.distribuidoraId.set(res.data?.id ?? null),
+      error: () => this.errorSolicitar.set('No se pudo cargar tu perfil de distribuidora. Recarga la página para poder solicitar un aumento.')
     });
     this.cargarSolicitudes();
   }
@@ -58,7 +59,13 @@ export class AumentoCreditoComponent implements OnInit {
 
   solicitar(): void {
     const distribuidoraId = this.distribuidoraId();
-    if (!distribuidoraId || this.solicitudForm.invalid) {
+
+    if (!distribuidoraId) {
+      this.errorSolicitar.set('No se pudo cargar tu perfil de distribuidora. Recarga la página para poder solicitar un aumento.');
+      return;
+    }
+
+    if (this.solicitudForm.invalid) {
       this.solicitudForm.markAllAsTouched();
       return;
     }

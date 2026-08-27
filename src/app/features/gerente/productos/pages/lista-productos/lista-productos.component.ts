@@ -26,6 +26,7 @@ export class ListaProductosComponent implements OnInit {
   productos = signal<Producto[]>([]);
   cargando = signal(true);
   error = signal<string | null>(null);
+  errorToggle = signal<string | null>(null);
   mostrarInactivos = signal(false);
 
   creando = signal(false);
@@ -153,8 +154,13 @@ export class ListaProductosComponent implements OnInit {
   }
 
   toggleActivo(p: Producto): void {
+    this.errorToggle.set(null);
+
     if (p.activo) {
-      this.productoService.desactivar(p.id).subscribe({ next: () => this.cargar() });
+      this.productoService.desactivar(p.id).subscribe({
+        next: () => this.cargar(),
+        error: (err) => this.errorToggle.set(err.error?.message || 'No se pudo desactivar el producto.')
+      });
       return;
     }
 
@@ -166,6 +172,9 @@ export class ListaProductosComponent implements OnInit {
         descripcion: p.descripcion ?? undefined,
         activo: true
       })
-      .subscribe({ next: () => this.cargar() });
+      .subscribe({
+        next: () => this.cargar(),
+        error: (err) => this.errorToggle.set(err.error?.message || 'No se pudo activar el producto.')
+      });
   }
 }

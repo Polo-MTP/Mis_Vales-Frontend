@@ -24,6 +24,7 @@ export class ListaClientesComponent implements OnInit {
   clientes = signal<Cliente[]>([]);
   cargando = signal(true);
   error = signal<string | null>(null);
+  errorAccion = signal<string | null>(null);
   paginacion = signal<PaginatedResponse<Cliente> | null>(null);
 
   pagina = signal(1);
@@ -78,9 +79,11 @@ export class ListaClientesComponent implements OnInit {
 
   toggleEstado(cliente: Cliente, event: MouseEvent): void {
     event.stopPropagation();
+    this.errorAccion.set(null);
 
     this.clienteService.cambiarEstado(cliente.id, !cliente.estado).subscribe({
-      next: () => this.cargarClientes()
+      next: () => this.cargarClientes(),
+      error: (err) => this.errorAccion.set(err.error?.message || 'No se pudo cambiar el estado del cliente.')
     });
   }
 

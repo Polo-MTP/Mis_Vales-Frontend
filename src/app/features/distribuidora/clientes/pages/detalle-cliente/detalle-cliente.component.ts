@@ -231,8 +231,11 @@ export class DetalleClienteComponent implements OnInit {
     const c = this.cliente();
     if (!c) return;
 
+    this.errorGuardar.set(null);
+
     this.clienteService.cambiarEstado(c.id, !c.estado).subscribe({
-      next: (res) => this.cliente.set(res.data ?? c)
+      next: (res) => this.cliente.set(res.data ?? c),
+      error: (err) => this.errorGuardar.set(err.error?.message || 'No se pudo cambiar el estado del cliente.')
     });
   }
 
