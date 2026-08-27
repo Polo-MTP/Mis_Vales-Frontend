@@ -25,7 +25,10 @@ export class CrearPersonalSucursalComponent implements OnInit {
 
   readonly roles: RolPersonalSucursal[] = ['Coordinador', 'Verificador', 'Cajera'];
 
-  esGerenteGeneral = computed(() => this.authService.userRole() === 'Gerente General');
+  /** Gerente General y Administrador no están atados a una sucursal propia, así que deben
+   *  elegir explícitamente sucursal + Gerente de Sucursal; Gerente de Sucursal se asigna
+   *  automáticamente a sí mismo (ver backend: CrearPersonalSucursalRequest). */
+  debeElegirSucursal = computed(() => ['Gerente General', 'Administrador'].includes(this.authService.userRole()));
 
   sucursales = signal<Sucursal[]>([]);
   gerentesDeSucursal = signal<User[]>([]);
@@ -63,7 +66,7 @@ export class CrearPersonalSucursalComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    if (!this.esGerenteGeneral()) {
+    if (!this.debeElegirSucursal()) {
       this.cargandoOpciones.set(false);
       return;
     }
@@ -116,7 +119,7 @@ export class CrearPersonalSucursalComponent implements OnInit {
         ...datosPersonalesPayload(this.datosPersonales),
         rol: v.rol as RolPersonalSucursal,
         email: v.email!,
-        ...(this.esGerenteGeneral()
+        ...(this.debeElegirSucursal()
           ? { sucursal_id: Number(v.sucursal_id), gerente_id: Number(v.gerente_id) }
           : {})
       })

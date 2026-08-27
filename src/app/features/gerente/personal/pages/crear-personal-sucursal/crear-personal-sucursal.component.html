@@ -1,10 +1,10 @@
 <div class="dash-card space-y-4">
   <div>
     <h2 class="text-base font-black text-slate-100">Dar de alta Coordinador, Verificador o Cajera</h2>
-    <p class="text-xs text-slate-400 font-medium" *ngIf="esGerenteGeneral()">
+    <p class="text-xs text-slate-400 font-medium" *ngIf="debeElegirSucursal()">
       Elige la sucursal y el Gerente de Sucursal al que quedará relacionado.
     </p>
-    <p class="text-xs text-slate-400 font-medium" *ngIf="!esGerenteGeneral()">
+    <p class="text-xs text-slate-400 font-medium" *ngIf="!debeElegirSucursal()">
       Quedará relacionado automáticamente a tu sucursal y a ti como su gerente.
     </p>
     <p class="text-xs text-slate-500 font-medium">
@@ -38,7 +38,7 @@
         <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('email')">{{ errorFor('email') }}</p>
       </div>
 
-      <ng-container *ngIf="esGerenteGeneral()">
+      <ng-container *ngIf="debeElegirSucursal()">
         <div>
           <label class="form-label">Sucursal *</label>
           <select formControlName="sucursal_id" class="form-select" [disabled]="cargandoOpciones()">

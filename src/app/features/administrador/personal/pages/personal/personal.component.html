@@ -4,7 +4,7 @@
     <div>
       <h1 class="text-2xl font-black text-slate-100 tracking-tight">Personal</h1>
       <p class="text-xs text-slate-400 font-medium">
-        Alta de Gerente General, para arrancar o reponer la cadena de mando.
+        Alta de Gerente General, Gerente de Sucursal y personal operativo (Coordinador, Verificador, Cajera).
       </p>
     </div>
   </div>
@@ -20,5 +20,8 @@
   </div>
 
   <app-crear-gerente-general *ngIf="!cargandoGerenteGeneral() && !yaExisteGerenteGeneral()"></app-crear-gerente-general>
+
+  <app-crear-gerente-sucursal></app-crear-gerente-sucursal>
+  <app-crear-personal-sucursal></app-crear-personal-sucursal>
 
 </div>
