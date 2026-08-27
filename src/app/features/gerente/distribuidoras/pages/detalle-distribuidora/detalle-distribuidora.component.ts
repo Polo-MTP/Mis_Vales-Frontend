@@ -69,15 +69,14 @@ export class DetalleDistribuidoraComponent implements OnInit {
    * detalle-verificacion.component.ts, solo se manda al backend lo que realmente cambió
    * (ver soloCambios en guardarInfo), así que un rfc heredado e inválido que nadie tocó nunca
    * se reenvía y nunca dispara el error del backend.
+   *
+   * Los datos personales (nombre, apellidos, fecha/lugar de nacimiento) NO se editan desde
+   * aquí -- esta pantalla es de gerencia, no del flujo de verificación de identidad; editarlos
+   * fuera de ese flujo no queda auditado contra una identificación real.
    */
   infoForm = this.fb.group({
     rfc: ['', [Validators.required, Validators.maxLength(13)]],
     coordinador_id: ['', [Validators.required]],
-    nombre: ['', [Validators.required, Validators.maxLength(255)]],
-    apellido_paterno: ['', [Validators.required, Validators.maxLength(255)]],
-    apellido_materno: ['', [Validators.maxLength(255)]],
-    fecha_nacimiento: [''],
-    lugar_nacimiento: ['', [Validators.maxLength(255)]],
     comentarios_verificador: ['']
   });
 
@@ -113,11 +112,6 @@ export class DetalleDistribuidoraComponent implements OnInit {
         this.infoForm.patchValue({
           rfc: data.rfc ?? '',
           coordinador_id: data.coordinador?.id ? String(data.coordinador.id) : '',
-          nombre: data.datos_personales.nombre ?? '',
-          apellido_paterno: data.datos_personales.apellido_paterno ?? '',
-          apellido_materno: data.datos_personales.apellido_materno ?? '',
-          fecha_nacimiento: data.datos_personales.fecha_nacimiento ?? '',
-          lugar_nacimiento: data.datos_personales.lugar_nacimiento ?? '',
           comentarios_verificador: data.comentarios_verificador ?? ''
         });
       },
@@ -206,14 +200,6 @@ export class DetalleDistribuidoraComponent implements OnInit {
     if ((val.comentarios_verificador || null) !== (d.comentarios_verificador || null)) {
       payload.comentarios_verificador = val.comentarios_verificador || null;
     }
-
-    const datosPersonales: Record<string, string> = {};
-    if (val.nombre !== d.datos_personales.nombre) datosPersonales['nombre'] = val.nombre!;
-    if (val.apellido_paterno !== d.datos_personales.apellido_paterno) datosPersonales['apellido_paterno'] = val.apellido_paterno!;
-    if (val.apellido_materno !== d.datos_personales.apellido_materno) datosPersonales['apellido_materno'] = val.apellido_materno || '';
-    if (val.fecha_nacimiento !== d.datos_personales.fecha_nacimiento) datosPersonales['fecha_nacimiento'] = val.fecha_nacimiento || '';
-    if (val.lugar_nacimiento !== d.datos_personales.lugar_nacimiento) datosPersonales['lugar_nacimiento'] = val.lugar_nacimiento || '';
-    if (Object.keys(datosPersonales).length > 0) payload.datos_personales = datosPersonales;
 
     if (Object.keys(payload).length === 0) {
       this.guardandoInfo.set(false);
