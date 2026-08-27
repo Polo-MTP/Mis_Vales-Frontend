@@ -1,36 +1,9 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../../../features/auth/services/auth.service';
-import { catchError, throwError, timeout, TimeoutError } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { obtenerCodigoDeSoporte } from '../../models/api-error-code.model';
-
-/**
- * Timeout global de 6 segundos para evitar que el navegador deje peticiones colgadas en estado Pending
- * cuando el servidor o la BD no responden.
- */
-const TIMEOUT_PETICION_MS = 6_000;
-
-/** Las subidas de archivo (multipart) pueden tardar legítimamente más tiempo en conexiones lentas */
-function esSubidaDeArchivo(body: unknown): boolean {
-  return typeof FormData !== 'undefined' && body instanceof FormData;
-}
-
-/**
- * Normaliza el TimeoutError de RxJS a un HttpErrorResponse estándar con mensaje claro
- */
-function normalizarTimeout(error: unknown, url: string): HttpErrorResponse | unknown {
-  if (!(error instanceof TimeoutError)) {
-    return error;
-  }
-
-  return new HttpErrorResponse({
-    error: { message: 'Tiempo de espera agotado. El servidor tardó demasiado en responder.' },
-    status: 408,
-    statusText: 'Request Timeout',
-    url
-  });
-}
 
 /** Angular solo adjunta el header X-XSRF-TOKEN automáticamente en requests del MISMO origen
  *  (es una protección propia del framework contra filtrar el token a otros dominios) -- como el
@@ -105,9 +78,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   });
 
   return next(authReq).pipe(
-    esSubidaDeArchivo(authReq.body) ? (source) => source : timeout(TIMEOUT_PETICION_MS),
-    catchError((errorCrudo: unknown) => {
-      const error = normalizarTimeout(errorCrudo, authReq.url) as HttpErrorResponse;
+    catchError((error: HttpErrorResponse) => {
       const errorNormalizado = agregarCodigoDeSoporte(normalizarErrorDeRed(error));
 
       const isAuthChallengeRequest = req.url.includes('/login') || req.url.includes('/mfa/');
