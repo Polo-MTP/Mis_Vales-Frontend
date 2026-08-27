@@ -12,6 +12,7 @@ export interface CorteDeVale {
   cuota: string;
   estado_cuota: string;
   total: string;
+  pago: string;
 }
 
 /** Estimado del pago quincenal mientras el vale no tiene ninguna cuota facturada en un corte. */
@@ -50,6 +51,10 @@ export interface Vale {
    *  puede solicitar su reembolso. */
   saldo_excedente: number;
   created_at: string;
+  /** Suma de 'total' de todas las cuotas de este vale que ya entraron a un corte. */
+  total_acumulado_a_pagar: number;
+  /** Suma de 'pago' de todas esas mismas cuotas -- lo que ya se le ha abonado en total. */
+  total_acumulado_pagado: number;
   cortes: CorteDeVale[];
   estimacion: EstimacionPagoVale | null;
 }

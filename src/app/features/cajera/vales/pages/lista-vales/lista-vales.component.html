@@ -90,14 +90,27 @@
       </div>
 
       <!-- Cortes donde ya se facturó una cuota de este vale -- referencia de pago para comprobar contra la conciliación -->
-      <div *ngIf="v.cortes.length > 0" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 flex flex-wrap gap-2">
+      <div *ngIf="v.cortes.length > 0" class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-4 mt-1 space-y-2">
+        <!-- Suma de todas las cuotas que ya entraron a un corte -- cuánto lleva acumulado este
+             vale en total, sin tener que sumar los chips de abajo a mano. -->
+        <div class="flex items-center justify-between text-xs pb-2 border-b border-slate-800">
+          <span class="font-bold text-slate-300 uppercase tracking-wide">Acumulado del vale</span>
+          <span>
+            <span class="text-slate-500">Pagado</span> <span class="font-bold text-emerald-400">{{ (v.total_acumulado_pagado) | dinero }}</span>
+            <span class="text-slate-600 mx-1">/</span>
+            <span class="text-slate-500">Total</span> <span class="font-bold text-slate-200">{{ (v.total_acumulado_a_pagar) | dinero }}</span>
+          </span>
+        </div>
+        <div class="flex flex-wrap gap-2">
         <span *ngFor="let c of v.cortes"
               class="text-xs bg-slate-800/60 border border-slate-700 rounded-lg px-2.5 py-1.5 inline-flex flex-col gap-0.5">
           <span class="text-slate-400">Cuota {{ c.cuota }} · Corte {{ c.fecha_corte }}<span *ngIf="c.referencia_pago"> · Ref. <span class="font-mono">{{ c.referencia_pago }}</span></span><span> · Concepto <span class="font-mono">{{ c.concepto }}</span></span></span>
           <span class="font-bold" [class.text-emerald-400]="c.estado_cuota === 'pagado'" [class.text-amber-400]="c.estado_cuota !== 'pagado'">
             {{ (c.total) | dinero }}
+            <span *ngIf="+c.pago > 0" class="font-normal text-slate-400">(pagado {{ (c.pago) | dinero }})</span>
           </span>
         </span>
+        </div>
       </div>
 
       <!-- Estimado del pago quincenal mientras no tenga ninguna cuota facturada en un corte -->
