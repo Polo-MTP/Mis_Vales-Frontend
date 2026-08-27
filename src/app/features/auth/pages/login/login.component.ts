@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   mostrarPassword = signal<boolean>(false);
 
   mfaMethodId: string | null = null;
-  userId: number | null = null;
+  otpToken: string | null = null;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -125,8 +125,8 @@ export class LoginComponent implements OnInit {
     this.authService.verifyMfa(this.mfaMethodId, this.totpForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isLoading.set(false);
-        if (res.data?.requires_email_otp && res.data?.user_id) {
-          this.userId = res.data.user_id;
+        if (res.data?.requires_email_otp && res.data?.otp_token) {
+          this.otpToken = res.data.otp_token;
           this.step.set(3);
           return;
         }
@@ -143,7 +143,7 @@ export class LoginComponent implements OnInit {
   }
 
   async onOtpMailSubmit(): Promise<void> {
-    if (this.otpMailForm.invalid || !this.userId) return;
+    if (this.otpMailForm.invalid || !this.otpToken) return;
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
@@ -156,7 +156,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.authService.verifyEmailOtp(this.userId, this.otpMailForm.value.code!, recaptchaToken).subscribe({
+    this.authService.verifyEmailOtp(this.otpToken, this.otpMailForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isLoading.set(false);
         if (res.success && res.data?.user) {

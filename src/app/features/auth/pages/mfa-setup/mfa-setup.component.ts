@@ -32,7 +32,7 @@ export class MfaSetupComponent implements OnInit {
   // 'confirm' = vincular el dispositivo (código de la app); 'email_otp' = tercer factor,
   // solo para roles con factor_count 3 (Administrador, Gerente General, Gerente de Sucursal).
   step = signal<'confirm' | 'email_otp'>('confirm');
-  private userId: number | null = null;
+  private otpToken: string | null = null;
 
   confirmForm = this.fb.group({
     code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
@@ -89,8 +89,8 @@ export class MfaSetupComponent implements OnInit {
       next: (res) => {
         this.isSubmitting.set(false);
 
-        if (res.data?.requires_email_otp && res.data?.user_id) {
-          this.userId = res.data.user_id;
+        if (res.data?.requires_email_otp && res.data?.otp_token) {
+          this.otpToken = res.data.otp_token;
           this.step.set('email_otp');
           return;
         }
@@ -108,7 +108,7 @@ export class MfaSetupComponent implements OnInit {
   }
 
   async onOtpMailSubmit(): Promise<void> {
-    if (this.otpMailForm.invalid || !this.userId) return;
+    if (this.otpMailForm.invalid || !this.otpToken) return;
 
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
@@ -122,7 +122,7 @@ export class MfaSetupComponent implements OnInit {
       return;
     }
 
-    this.authService.verifyEmailOtp(this.userId, this.otpMailForm.value.code!, recaptchaToken).subscribe({
+    this.authService.verifyEmailOtp(this.otpToken, this.otpMailForm.value.code!, recaptchaToken).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
         if (res.success && res.data?.user) {

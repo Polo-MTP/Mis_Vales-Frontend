@@ -17,7 +17,7 @@ export interface LoginResultData {
   requires_setup?: boolean;
   step?: number;
   mfa_method_id?: string;
-  user_id?: number;
+  otp_token?: string;
   setup_url?: string;
 }
 

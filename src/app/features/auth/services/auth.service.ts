@@ -125,8 +125,8 @@ export class AuthService {
     );
   }
 
-  verifyEmailOtp(user_id: number, code: string, recaptcha?: string): Observable<ApiResponse<LoginResultData>> {
-    return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/mfa/email/verify`, { user_id, code, recaptcha }).pipe(
+  verifyEmailOtp(otp_token: string, code: string, recaptcha?: string): Observable<ApiResponse<LoginResultData>> {
+    return this.http.post<ApiResponse<LoginResultData>>(`${environment.apiUrl}/mfa/email/verify`, { otp_token, code, recaptcha }).pipe(
       tap(res => {
         if (res.success && res.data?.user) {
           this.setSession(res.data.user);
