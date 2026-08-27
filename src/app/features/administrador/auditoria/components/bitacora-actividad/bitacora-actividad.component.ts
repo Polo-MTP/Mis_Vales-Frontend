@@ -41,6 +41,7 @@ export class BitacoraActividadComponent implements OnInit {
     'Relaciones',
     'Puntos y Lealtad',
     'Alta Proveedores',
+    'Datos Personales',
     'Configuración',
     'General'
   ];
