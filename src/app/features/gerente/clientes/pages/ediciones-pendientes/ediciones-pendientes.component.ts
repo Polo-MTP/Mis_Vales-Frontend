@@ -62,6 +62,12 @@ export class EdicionesPendientesComponent implements OnInit {
     this.decidir(solicitud, 'rechazada', comentario);
   }
 
+  /** Valor actual (antes) de un campo propuesto, para mostrarlo junto al valor nuevo. */
+  antesDe(s: SolicitudEdicionCliente, seccion: 'datos_personales' | 'direccion', campo: string): string {
+    const valor = (s.antes?.[seccion] as Record<string, unknown> | undefined)?.[campo];
+    return valor !== null && valor !== undefined && valor !== '' ? String(valor) : '—';
+  }
+
   private decidir(solicitud: SolicitudEdicionCliente, decision: 'aprobada' | 'rechazada', comentario?: string): void {
     this.decidiendo.set(solicitud.id);
     this.errorDecidir.set(null);

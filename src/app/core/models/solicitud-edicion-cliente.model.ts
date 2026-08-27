@@ -10,6 +10,8 @@ export interface SolicitudEdicionCliente {
   solicitante: string | null;
   sucursal_id: number | null;
   campos_propuestos: EditarClientePayload;
+  /** Valor actual del cliente para esos mismos campos, leído en vivo -- para comparar antes/después. */
+  antes: EditarClientePayload;
   motivo: string;
   estado: EstadoSolicitudEdicionCliente;
   autorizado_por: number | null;

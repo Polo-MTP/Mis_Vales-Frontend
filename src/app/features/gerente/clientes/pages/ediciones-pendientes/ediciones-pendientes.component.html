@@ -40,13 +40,19 @@
         </div>
       </div>
 
-      <div class="bg-slate-900/40 rounded-2xl p-3 mt-3 w-full text-xs space-y-1">
-        <p class="font-bold text-slate-300 uppercase tracking-wide">Cambios propuestos</p>
+      <div class="bg-slate-900/40 rounded-2xl p-3 mt-3 w-full text-xs space-y-1.5">
+        <p class="font-bold text-slate-300 uppercase tracking-wide">Cambios propuestos (antes → después)</p>
         <p *ngFor="let campo of (s.campos_propuestos.datos_personales | keyvalue)">
-          <span class="text-slate-400">{{ campo.key }}:</span> <span class="text-slate-200">{{ campo.value }}</span>
+          <span class="text-slate-400">{{ campo.key }}:</span>
+          <span class="text-red-400 line-through">{{ antesDe(s, 'datos_personales', campo.key) }}</span>
+          →
+          <span class="text-emerald-400 font-semibold">{{ campo.value }}</span>
         </p>
         <p *ngFor="let campo of (s.campos_propuestos.direccion | keyvalue)">
-          <span class="text-slate-400">{{ campo.key }}:</span> <span class="text-slate-200">{{ campo.value }}</span>
+          <span class="text-slate-400">{{ campo.key }}:</span>
+          <span class="text-red-400 line-through">{{ antesDe(s, 'direccion', campo.key) }}</span>
+          →
+          <span class="text-emerald-400 font-semibold">{{ campo.value }}</span>
         </p>
       </div>
     </div>
