@@ -12,7 +12,7 @@ export class SolicitudService {
 
   listar(estado?: string, page = 1): Observable<ApiResponse<SolicitudProveedor[]>> {
     let params = new HttpParams()
-      .set('include', 'datosPersonales.direccion,sucursal,coordinador,verificador')
+      .set('include', 'datosPersonales.direccion,sucursal,coordinador,verificador,categoria')
       .set('page', String(page));
 
     if (estado) {

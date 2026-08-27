@@ -10,6 +10,8 @@ import { User } from '../../../../../core/models/user.model';
 import { EvidenciaService } from '../../../../../core/services/evidencia.service';
 import { DatosPersonalesFieldsComponent } from '../../../../../shared/components/datos-personales-fields/datos-personales-fields.component';
 import { crearGrupoDatosPersonales, datosPersonalesPayload } from '../../../../../shared/utils/datos-personales-form.util';
+import { CategoriaDistribuidoraService } from '../../../../gerente/distribuidoras/services/categoria-distribuidora.service';
+import { CategoriaDistribuidora } from '../../../../../core/models/distribuidora.model';
 
 @Component({
   selector: 'app-nueva-solicitud',
@@ -23,6 +25,7 @@ export class NuevaSolicitudComponent implements OnInit {
   private solicitudService = inject(SolicitudService);
   private evidenciaService = inject(EvidenciaService);
   private usuarioService = inject(UsuarioService);
+  private categoriaService = inject(CategoriaDistribuidoraService);
   private router = inject(Router);
 
   isLoading = signal(false);
@@ -30,6 +33,7 @@ export class NuevaSolicitudComponent implements OnInit {
   fieldErrors = signal<Record<string, string[]>>({});
 
   verificadores = signal<User[]>([]);
+  categorias = signal<CategoriaDistribuidora[]>([]);
 
   /** Solicitud ya creada (paso 2: subir evidencias). Null mientras seguimos en el paso 1. */
   solicitudCreada = signal<SolicitudProveedor | null>(null);
@@ -45,11 +49,17 @@ export class NuevaSolicitudComponent implements OnInit {
    *  verificador (propio de una distribuidora, no aplica a personal interno). */
   datosPersonales = crearGrupoDatosPersonales(this.fb);
   verificadorId = this.fb.control<string>('');
+  categoriaId = this.fb.control<string>('');
 
   ngOnInit(): void {
     this.usuarioService.listar('Verificador').subscribe({
       next: (res) => this.verificadores.set(res.data ?? []),
       error: () => this.verificadores.set([])
+    });
+
+    this.categoriaService.listar().subscribe({
+      next: (res) => this.categorias.set(res.data ?? []),
+      error: () => this.categorias.set([])
     });
   }
 
@@ -69,7 +79,8 @@ export class NuevaSolicitudComponent implements OnInit {
 
     const payload: CrearSolicitudProveedorPayload = {
       ...datosPersonalesPayload(this.datosPersonales),
-      verificador_id: this.verificadorId.value ? Number(this.verificadorId.value) : undefined
+      verificador_id: this.verificadorId.value ? Number(this.verificadorId.value) : undefined,
+      categoria_id: this.categoriaId.value ? Number(this.categoriaId.value) : undefined
     };
 
     this.solicitudService.crear(payload).subscribe({

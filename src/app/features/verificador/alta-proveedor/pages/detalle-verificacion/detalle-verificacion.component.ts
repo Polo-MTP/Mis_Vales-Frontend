@@ -12,11 +12,12 @@ import { parsearDireccionGoogle } from '../../../../../shared/utils/google-addre
 import { SoloNumerosDirective } from '../../../../../shared/directives/solo-numeros.directive';
 import { MayusculasDirective } from '../../../../../shared/directives/mayusculas.directive';
 import { MENSAJES_PATRON, codigoPostalValidators, curpValidators, numeroExtValidators, numeroIntValidators } from '../../../../../shared/utils/mexico-validators';
+import { SelectorFechaComponent } from '../../../../../shared/components/selector-fecha/selector-fecha.component';
 
 @Component({
   selector: 'app-detalle-verificacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, MapaUbicacionComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AlertComponent, MapaUbicacionComponent, GooglePlacesAutocompleteDirective, SoloNumerosDirective, MayusculasDirective, SelectorFechaComponent],
   templateUrl: './detalle-verificacion.component.html',
   styleUrl: './detalle-verificacion.component.css'
 })
@@ -40,11 +41,17 @@ export class DetalleVerificacionComponent implements OnInit {
   tiposDocumento = ['foto_fachada', 'foto_interior', 'foto_ine_titular', 'otro'];
   readonly mensajesPatron = MENSAJES_PATRON;
 
+  /** No se puede escribir la fecha a mano (readonly), solo elegirla en el calendario -- mismo
+   *  criterio que DatosPersonalesFieldsComponent, que captura este mismo dato al crear la solicitud. */
+  readonly fechaMaximaNacimiento = this.calcularFechaMaxima18Anios();
+
   datosForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_paterno: ['', [Validators.required, Validators.maxLength(255)]],
     apellido_materno: ['', [Validators.maxLength(255)]],
     curp: ['', curpValidators],
+    fecha_nacimiento: [''],
+    lugar_nacimiento: ['', [Validators.maxLength(255)]],
     calle: ['', [Validators.required, Validators.maxLength(255)]],
     colonia: ['', [Validators.required, Validators.maxLength(255)]],
     numero_ext: ['', numeroExtValidators],
@@ -94,6 +101,8 @@ export class DetalleVerificacionComponent implements OnInit {
             apellido_paterno: s.datos_personales.apellido_paterno ?? '',
             apellido_materno: s.datos_personales.apellido_materno ?? '',
             curp: s.datos_personales.curp ?? '',
+            fecha_nacimiento: s.datos_personales.fecha_nacimiento ?? '',
+            lugar_nacimiento: s.datos_personales.lugar_nacimiento ?? '',
             calle: s.datos_personales.direccion.calle ?? '',
             colonia: s.datos_personales.direccion.colonia ?? '',
             numero_ext: s.datos_personales.direccion.numero_ext ?? '',
@@ -109,6 +118,12 @@ export class DetalleVerificacionComponent implements OnInit {
         this.cargando.set(false);
       }
     });
+  }
+
+  private calcularFechaMaxima18Anios(): string {
+    const hoy = new Date();
+    const hace18 = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate());
+    return hace18.toISOString().slice(0, 10);
   }
 
   agregarEvidencia(): void {
@@ -234,13 +249,17 @@ export class DetalleVerificacionComponent implements OnInit {
         nombre: s.datos_personales.nombre,
         apellido_paterno: s.datos_personales.apellido_paterno,
         apellido_materno: s.datos_personales.apellido_materno,
-        curp: s.datos_personales.curp
+        curp: s.datos_personales.curp,
+        fecha_nacimiento: s.datos_personales.fecha_nacimiento,
+        lugar_nacimiento: s.datos_personales.lugar_nacimiento
       },
       {
         nombre: val.nombre!,
         apellido_paterno: val.apellido_paterno!,
         apellido_materno: val.apellido_materno!,
-        curp: val.curp!
+        curp: val.curp!,
+        fecha_nacimiento: val.fecha_nacimiento!,
+        lugar_nacimiento: val.lugar_nacimiento!
       }
     );
 

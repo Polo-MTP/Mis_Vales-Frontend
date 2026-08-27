@@ -43,6 +43,14 @@
           <input type="text" formControlName="curp" maxlength="18" appMayusculas class="form-input uppercase">
           <p class="text-xs text-red-400 mt-1" *ngIf="errorFor('curp')">{{ errorFor('curp') }}</p>
         </div>
+        <div>
+          <label class="form-label">Fecha de Nacimiento</label>
+          <app-selector-fecha formControlName="fecha_nacimiento" [fechaMaxima]="fechaMaximaNacimiento"></app-selector-fecha>
+        </div>
+        <div>
+          <label class="form-label">Lugar de Nacimiento</label>
+          <input type="text" formControlName="lugar_nacimiento" class="form-input">
+        </div>
 
         <div class="sm:col-span-2 -mb-2">
           <p class="text-xs text-slate-400">Escribe primero el código postal para filtrar mejor las sugerencias de la calle.</p>

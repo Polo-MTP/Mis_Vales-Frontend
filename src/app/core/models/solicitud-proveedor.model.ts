@@ -36,6 +36,12 @@ export interface Sucursal {
   es_matriz: boolean | null;
 }
 
+export interface CategoriaResumen {
+  id: number;
+  nombre: string;
+  porcentaje_comision: string;
+}
+
 export interface Evidencia {
   id?: number;
   tipo_documento: string;
@@ -88,6 +94,7 @@ export interface SolicitudProveedor {
   coordinador: UsuarioResumen;
   verificador: UsuarioResumen;
   gerente: UsuarioResumen;
+  categoria: CategoriaResumen | null;
   evidencias: Evidencia[];
   logs_auditoria: LogAuditoria[];
   created_at: string;
@@ -114,6 +121,7 @@ export interface CrearSolicitudProveedorPayload {
   datos_vehiculos?: Record<string, unknown>;
   datos_vivienda?: Record<string, unknown>;
   verificador_id?: number;
+  categoria_id?: number;
   evidencias?: Evidencia[];
 }
 

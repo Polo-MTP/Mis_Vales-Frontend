@@ -29,7 +29,7 @@ export class SolicitudService {
   /** Lista SOLO las solicitudes que este coordinador registró, opcionalmente filtradas por estado. */
   listar(coordinadorId: number, estado?: string, page = 1): Observable<ApiResponse<SolicitudProveedor[]>> {
     let params = new HttpParams()
-      .set('include', 'datosPersonales.direccion,sucursal,coordinador,verificador')
+      .set('include', 'datosPersonales.direccion,sucursal,coordinador,verificador,categoria')
       .set('filter[coordinador_id]', String(coordinadorId))
       .set('page', String(page));
 
