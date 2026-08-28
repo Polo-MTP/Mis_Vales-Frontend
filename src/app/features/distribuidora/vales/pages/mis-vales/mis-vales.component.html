@@ -54,13 +54,13 @@
           </span>
         </div>
         <div *ngFor="let c of v.cortes" class="bg-slate-800/60 border border-slate-700 rounded-lg p-2.5 text-xs">
-          <a [routerLink]="['/distribuidora/relaciones', c.relacion_id]" class="flex items-center justify-between gap-1.5 hover:underline">
+          <div class="flex items-center justify-between gap-1.5">
             <span class="text-slate-400">Cuota {{ c.cuota }} · Corte {{ c.fecha_corte }}</span>
             <span class="font-bold" [class.text-emerald-400]="c.estado_cuota === 'pagado'" [class.text-amber-400]="c.estado_cuota !== 'pagado'">
               {{ (c.total) | dinero }}
               <span *ngIf="+c.pago > 0" class="font-normal text-slate-400">(pagado {{ (c.pago) | dinero }})</span>
             </span>
-          </a>
+          </div>
           <p *ngIf="c.estado_cuota !== 'pagado'" class="text-slate-500 mt-1">
             Si pagas este vale por separado de los demás del mismo corte, pon en <strong class="text-slate-300">Concepto</strong>: <span class="font-mono font-bold text-slate-200">{{ c.concepto }}</span>
           </p>

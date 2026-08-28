@@ -49,8 +49,9 @@
 
   <!-- Próximo pago, antes de que exista como corte -- solo si ya hay algo autorizado detrás;
        una solicitud sola todavía se puede cancelar, así que no hay nada firme que mostrar.
-       Vive aquí y no en "Mis Cortes": esa pantalla es el historial de cortes reales, mezclar
-       ahí una proyección de lo que todavía no ha pasado confundía el propósito de la vista. -->
+       Vive aquí y no en "Estado de Cuenta": esa pantalla es el saldo real ya generado en
+       cortes, mezclar ahí una proyección de lo que todavía no ha pasado confundía el
+       propósito de la vista. -->
   <div *ngIf="proximoPagoConReferencia() as p" class="dash-card border border-blue-800/40 space-y-2">
     <h2 class="text-sm font-black text-blue-300 uppercase tracking-tight">Próximo Pago (estimado)</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
