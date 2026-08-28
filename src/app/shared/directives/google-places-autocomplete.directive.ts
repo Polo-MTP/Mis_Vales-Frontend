@@ -44,7 +44,17 @@ export class GooglePlacesAutocompleteDirective implements OnInit, OnChanges, OnD
   }
 
   private inicializar(): void {
-    this.autocomplete = new google.maps.places.Autocomplete(this.el.nativeElement, {
+    // La carga del script de Google es asíncrona y separada por campo -- si el usuario ya
+    // empezó a escribir antes de que termine, el constructor de Autocomplete de abajo puede
+    // robarle el foco y/o el valor al input a medio tecleo (visto como "a veces no deja
+    // escribir"). Guardamos el estado de foco/valor/cursor de antes y lo restauramos después
+    // para que la inicialización sea invisible si el usuario ya estaba interactuando.
+    const inputEl = this.el.nativeElement;
+    const teniaFoco = document.activeElement === inputEl;
+    const valorPrevio = inputEl.value;
+    const cursorPrevio = inputEl.selectionStart;
+
+    this.autocomplete = new google.maps.places.Autocomplete(inputEl, {
       componentRestrictions: { country: 'mx' },
       fields: ['address_components', 'geometry'],
       types: [this.appPlacesAutocompleteTipo],
@@ -63,6 +73,12 @@ export class GooglePlacesAutocompleteDirective implements OnInit, OnChanges, OnD
         this.lugarSeleccionado.emit(place);
       }
     });
+
+    if (teniaFoco) {
+      inputEl.value = valorPrevio;
+      inputEl.focus();
+      inputEl.setSelectionRange(cursorPrevio, cursorPrevio);
+    }
   }
 
   private aplicarSesgo(): void {
