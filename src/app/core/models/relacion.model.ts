@@ -4,8 +4,9 @@ export interface RelacionDetalle {
   id: number;
   vale_id: number;
   /** Identificador único de esta cuota dentro del corte -- lo que va en "Concepto" de la
-   *  transferencia si el corte junta más de un vale y se paga cada uno por separado. */
-  concepto: string;
+   *  transferencia si el corte junta más de un vale y se paga cada uno por separado. null si
+   *  estado es 'arrastrada': ya no se puede pagar por separado. */
+  concepto: string | null;
   cliente: { id: number | null; nombre: string };
   producto: string | null;
   cuota: string;

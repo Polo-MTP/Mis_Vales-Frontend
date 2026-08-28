@@ -6,8 +6,9 @@ export interface CorteDeVale {
   relacion_id: number;
   referencia_pago: string | null;
   /** Identificador único de esta cuota dentro del corte -- lo que va en "Concepto" de la
-   *  transferencia si el corte junta más de un vale y se paga cada uno por separado. */
-  concepto: string;
+   *  transferencia si el corte junta más de un vale y se paga cada uno por separado. null si
+   *  esta cuota es 'arrastrada': ya no se puede pagar por separado. */
+  concepto: string | null;
   fecha_corte: string | null;
   cuota: string;
   estado_cuota: string;

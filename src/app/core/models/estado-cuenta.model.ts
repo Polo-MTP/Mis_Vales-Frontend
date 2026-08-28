@@ -3,8 +3,9 @@ export interface CuotaEstadoCuenta {
   relacion_detalle_id: number;
   relacion_id: number;
   referencia_pago: string | null;
-  /** Concepto de ESTA cuota, para que la distribuidora pueda pagarla por separado. */
-  concepto: string;
+  /** Concepto de ESTA cuota, para que la distribuidora pueda pagarla por separado. null si
+   *  estado es 'arrastrada': ya no se puede pagar por separado. */
+  concepto: string | null;
   vale_id: number;
   producto: string | null;
   cuota: string;

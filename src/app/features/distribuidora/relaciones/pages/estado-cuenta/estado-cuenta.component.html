@@ -43,7 +43,7 @@
           </div>
           <p class="text-slate-500 mt-1">
             Referencia <span class="font-mono font-bold text-slate-300">{{ cuota.referencia_pago }}</span>
-            · Concepto (si la pagas por separado) <span class="font-mono font-bold text-slate-300">{{ cuota.concepto }}</span>
+            <span *ngIf="cuota.concepto">· Concepto (si la pagas por separado) <span class="font-mono font-bold text-slate-300">{{ cuota.concepto }}</span></span>
           </p>
         </div>
       </div>

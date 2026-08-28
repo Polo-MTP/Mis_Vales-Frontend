@@ -85,7 +85,7 @@
             <div *ngFor="let cuota of c.cuotas" class="flex items-center justify-between text-xs bg-slate-800/40 rounded-lg px-3 py-2">
               <span class="text-slate-400">
                 {{ cuota.producto || ('Vale #' + cuota.vale_id) }} · Cuota {{ cuota.cuota }} · Corte {{ cuota.fecha_corte }}
-                <span class="font-mono"> · Concepto {{ cuota.concepto }}</span>
+                <span *ngIf="cuota.concepto" class="font-mono"> · Concepto {{ cuota.concepto }}</span>
               </span>
               <span class="font-bold" [class.text-red-400]="cuota.estado !== 'pagado'" [class.text-emerald-400]="cuota.estado === 'pagado'">
                 {{ (cuota.saldo) | dinero }}

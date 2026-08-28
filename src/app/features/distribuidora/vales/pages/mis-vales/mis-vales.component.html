@@ -61,7 +61,7 @@
               <span *ngIf="+c.pago > 0" class="font-normal text-slate-400">(pagado {{ (c.pago) | dinero }})</span>
             </span>
           </div>
-          <p *ngIf="c.estado_cuota !== 'pagado'" class="text-slate-500 mt-1">
+          <p *ngIf="c.estado_cuota !== 'pagado' && c.concepto" class="text-slate-500 mt-1">
             Si pagas este vale por separado de los demás del mismo corte, pon en <strong class="text-slate-300">Concepto</strong>: <span class="font-mono font-bold text-slate-200">{{ c.concepto }}</span>
           </p>
         </div>
